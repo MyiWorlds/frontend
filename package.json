@@ -1,23 +1,58 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "react": "^16.4.2",
-    "react-dom": "^16.4.2",
-    "react-scripts-ts": "2.17.0"
+  "description": "A platform to build your worlds.",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daveyedwards/frontend.git"
   },
+  "author": "daveyedwards",
+  "license": "MIT",
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
+    "react-scripts-start": "react-scripts-ts start",
+    "start": "SET NODE_ENV=development && SET BROWSER=none&&npm run react-scripts-start",
+    "start-against-production": "SET NODE_ENV=production && SET BROWSER=none&&npm run react-scripts-start",
+    "build-production": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"
   },
+  "dependencies": {
+    "@material-ui/core": "^1.5.0",
+    "@material-ui/icons": "^2.0.2",
+    "apollo-boost": "^0.1.14",
+    "apollo-cache-inmemory": "^1.2.8",
+    "apollo-client": "^2.4.0",
+    "apollo-link": "^1.2.2",
+    "apollo-link-batch-http": "^1.2.2",
+    "apollo-link-context": "^1.0.8",
+    "apollo-link-state": "^0.4.1",
+    "cross-env": "^5.2.0",
+    "firebase": "^5.4.1",
+    "graphql": "^0.13.2",
+    "graphql-anywhere": "^4.1.17",
+    "graphql-tag": "^2.9.2",
+    "jss": "^9.8.7",
+    "jss-nested": "^6.0.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "react-apollo": "^2.1.11",
+    "react-dom": "^16.4.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "react-scripts-ts": "2.17.0"
+  },
   "devDependencies": {
+    "@types/firebase": "^3.2.1",
     "@types/jest": "^23.3.1",
+    "@types/jss": "^9.5.4",
+    "@types/lodash": "^4.14.116",
+    "@types/material-ui": "^0.21.5",
     "@types/node": "^10.7.1",
     "@types/react": "^16.4.11",
     "@types/react-dom": "^16.0.7",
+    "@types/react-router": "^4.0.30",
+    "@types/react-router-dom": "^4.3.0",
+    "@types/uuid": "^3.4.3",
     "typescript": "^3.0.1"
   }
 }
