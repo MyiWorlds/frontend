@@ -1,3 +1,5 @@
+# Currently in heavy development with breaking changes all the time
+
 # If you want to contribute or ask questions, I created a Discord channel
 
 https://discord.gg/28Gjv7S
