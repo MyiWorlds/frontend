@@ -2,34 +2,38 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import apolloClient from './apolloClient';
 import App from './App';
-import jssNested from 'jss-nested';
 import MaterialUI from './materialUI';
 import registerServiceWorker from './registerServiceWorker';
+import User from './User/User';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
-import { create } from 'jss';
-import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
-import { JssProvider } from 'react-jss';
-import { SheetsRegistry } from 'jss';
 import './index.css';
-
-const generateClassName = createGenerateClassName();
-
-const sheetsRegistry = new SheetsRegistry();
-const jss = create(jssPreset());
-jss.use(jssNested());
 
 const Root = () => (
   <BrowserRouter>
     <ApolloProvider client={apolloClient}>
-      <JssProvider
-        registry={sheetsRegistry}
-        generateClassName={generateClassName}
-      >
-        <MaterialUI>
-          <App />
-        </MaterialUI>
-      </JssProvider>
+      <User
+        render={({
+          selectedProfile,
+          user,
+          themeDark,
+          style,
+          handleToggleThemeDark,
+          handleLogin,
+          handleLogout,
+        }) => (
+          <MaterialUI themeDark={themeDark} style={style}>
+            <App
+              user={user}
+              themeDark={themeDark}
+              selectedProfile={selectedProfile}
+              handleToggleThemeDark={handleToggleThemeDark}
+              handleLogin={handleLogin}
+              handleLogout={handleLogout}
+            />
+          </MaterialUI>
+        )}
+      />
     </ApolloProvider>
   </BrowserRouter>
 );

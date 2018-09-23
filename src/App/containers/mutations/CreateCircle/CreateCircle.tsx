@@ -6,8 +6,26 @@ import { Mutation } from 'react-apollo';
 // const uuid = require('uuid/v1');
 
 const CREATE_CIRCLE = gql`
-  mutation createCircle($input: createCircleInput!) {
-    createCircle(input: $input) {
+  mutation createCircle(
+    $id: String
+    $collection: String!
+    $title: String
+    $type: String!
+    $creator: String!
+  ) {
+    createCircle(
+      id: $id
+      collection: $collection
+      title: $title
+      type: $type
+      creator: $creator
+    ) {
+      status
+      message
+      # Not working
+      creator {
+        id
+      }
       createdCircle {
         id
         type
@@ -36,7 +54,7 @@ const CREATE_CIRCLE = gql`
 //   description: string,
 //   media: string,
 //   icon: string,
-//   viewers: Array<string>,
+//   users: Array<string>,
 //   editors: Array<string>,
 //   string: string,
 //   object: object,
@@ -50,7 +68,7 @@ const CREATE_CIRCLE = gql`
 
 interface State {
   toCircle: boolean;
-  uid: string;
+  id: string;
   title: string;
   type: string;
   creator: string;
@@ -58,7 +76,7 @@ interface State {
 }
 
 interface Prop {
-  test: string;
+  selectedProfile: string;
 }
 
 class CreateCircle extends React.Component<Prop, State> {
@@ -66,9 +84,9 @@ class CreateCircle extends React.Component<Prop, State> {
     super(props);
     this.state = {
       toCircle: false,
-      uid: '',
-      title: '',
-      type: '',
+      id: '',
+      title: 'testing',
+      type: 'TEST',
       creator: '',
       dateCreated: 0,
     };
@@ -135,7 +153,7 @@ class CreateCircle extends React.Component<Prop, State> {
   //       description: state.description,
   //       media: state.media,
   //       icon: state.icon,
-  //       viewers: state.viewers,
+  //       users: state.users,
   //       editors: state.editors,
   //       string: state.string,
   //       object: state.object,
@@ -193,7 +211,10 @@ class CreateCircle extends React.Component<Prop, State> {
     // ][1];
 
     const builtCircle = {
+      collection: 'circles',
       title: this.state.title,
+      type: this.state.type,
+      creator: this.props.selectedProfile,
     };
 
     this.createCircle(createCircle, builtCircle);
@@ -201,9 +222,7 @@ class CreateCircle extends React.Component<Prop, State> {
 
   createCircle = (createCircle, builtCircle) => {
     createCircle({
-      variables: {
-        input: builtCircle,
-      },
+      variables: builtCircle,
       // refetchQueries: [{ query: GET_CIRCLES_BY_USER_KEY }],
     });
   };
@@ -229,10 +248,20 @@ class CreateCircle extends React.Component<Prop, State> {
             <input
               type="text"
               value={this.state.title}
+              placeholder="title"
               onChange={event => this.handleInputChange('title', event)}
             />
             <br />
-            <button onClick={event => this.submitCircle(createCircle)}>
+            <br />
+            <input
+              type="text"
+              value={this.state.type}
+              placeholder="type"
+              onChange={event => this.handleInputChange('type', event)}
+            />
+            <br />
+            <br />
+            <button onClick={() => this.submitCircle(createCircle)}>
               Create
             </button>
           </div>

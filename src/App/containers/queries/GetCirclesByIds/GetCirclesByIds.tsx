@@ -30,11 +30,11 @@ class GetCirclesByIds extends React.Component<Props> {
           variables={{
             ids: [
               'alksdjf',
-              'circle1',
-              '0b3b86f0-a328-11e8-923a-0501846e500a',
-              '0e038090-a328-11e8-923a-0501846e500a',
-              '2glKIlxBODp7pMbbacP1',
-              '3',
+              'fe53b0f0-bafd-11e8-a0c3-fd25557dc74a',
+              'fe6b7eb0-bafd-11e8-a0c3-fd25557dc74a',
+              'fe876b20-bafd-11e8-a0c3-fd25557dc74a',
+              '129324b0-ba3b-11e8-b981-bd1b33f64b64',
+              'f5d50cd0-ba3a-11e8-b981-bd1b33f64b64',
             ],
           }}
         >
