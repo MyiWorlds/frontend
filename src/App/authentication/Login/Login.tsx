@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
-import fire from '../../../firebase';
+import fire from '../../../services/firebase';
 require('firebase/auth');
 
 interface Error {

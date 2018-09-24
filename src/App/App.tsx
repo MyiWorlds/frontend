@@ -8,8 +8,10 @@ import Navigation from './Navigation';
 import Routes from '../routes';
 
 interface Props {
-  themeDark: boolean;
+  isDarkTheme: boolean;
+  styleEnabled: boolean;
   handleToggleThemeDark: () => void;
+  handleToggleStyleEnabled: () => void;
   handleLogin: () => void;
   user: any;
   selectedProfile: any;
@@ -20,10 +22,6 @@ interface State {
   errorMessage?: string;
   authenticating: boolean;
   showNavigation: boolean;
-}
-
-interface App {
-  timeout: number;
 }
 
 class App extends React.Component<Props, State> {
@@ -51,12 +49,14 @@ class App extends React.Component<Props, State> {
   render() {
     const { showNavigation } = this.state;
     const {
-      themeDark,
+      isDarkTheme,
       handleToggleThemeDark,
+      handleToggleStyleEnabled,
       handleLogin,
       user,
       selectedProfile,
       handleLogout,
+      styleEnabled,
     } = this.props;
 
     return (
@@ -68,17 +68,21 @@ class App extends React.Component<Props, State> {
           user={user}
           handleNavigationToggle={this.handleNavigationToggle}
           showNavigation={showNavigation}
-          themeDark={themeDark}
+          isDarkTheme={isDarkTheme}
+          styleEnabled={styleEnabled}
           handleToggleThemeDark={handleToggleThemeDark}
+          handleToggleStyleEnabled={handleToggleStyleEnabled}
           handleLogin={handleLogin}
           handleLogout={handleLogout}
         />
         <Navigation />
-        <Routes />
-        <Home user={user} />
-        {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
-        <GetCirclesByIds />
-        <GetCirclesByFilters />
+        <div style={{ marginTop: 60 }}>
+          <Routes />
+          <Home user={user} />
+          {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
+          <GetCirclesByIds />
+          <GetCirclesByFilters />
+        </div>
       </div>
     );
   }

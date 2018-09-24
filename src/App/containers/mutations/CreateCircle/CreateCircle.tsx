@@ -12,6 +12,7 @@ const CREATE_CIRCLE = gql`
     $title: String
     $type: String!
     $creator: String!
+    $data: JSON
   ) {
     createCircle(
       id: $id
@@ -19,6 +20,7 @@ const CREATE_CIRCLE = gql`
       title: $title
       type: $type
       creator: $creator
+      data: $data
     ) {
       status
       message
@@ -57,7 +59,7 @@ const CREATE_CIRCLE = gql`
 //   users: Array<string>,
 //   editors: Array<string>,
 //   string: string,
-//   object: object,
+//   data: object,
 //   number: number,
 //   bigNumber: number,
 //   boolean: boolean,
@@ -72,6 +74,7 @@ interface State {
   title: string;
   type: string;
   creator: string;
+  data: any;
   dateCreated: number;
 }
 
@@ -84,9 +87,19 @@ class CreateCircle extends React.Component<Prop, State> {
     super(props);
     this.state = {
       toCircle: false,
-      id: '',
+      id: 'appstyle',
       title: 'testing',
-      type: 'TEST',
+      type: 'STYLE',
+      data: {
+        palette: {
+          primary: {
+            main: '#2196F3',
+          },
+          secondary: {
+            main: '#f44336',
+          },
+        },
+      },
       creator: '',
       dateCreated: 0,
     };
@@ -156,7 +169,7 @@ class CreateCircle extends React.Component<Prop, State> {
   //       users: state.users,
   //       editors: state.editors,
   //       string: state.string,
-  //       object: state.object,
+  //       data: state.data,
   //       number: state.number,
   //       bigNumber: state.bigNumber,
   //       boolean: state.boolean,
@@ -211,9 +224,11 @@ class CreateCircle extends React.Component<Prop, State> {
     // ][1];
 
     const builtCircle = {
+      id: this.state.id,
       collection: 'circles',
       title: this.state.title,
       type: this.state.type,
+      data: this.state.data,
       creator: this.props.selectedProfile,
     };
 

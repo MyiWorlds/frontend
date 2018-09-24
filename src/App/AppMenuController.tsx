@@ -44,9 +44,11 @@ interface Props {
   handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   user: any;
   showNavigation: boolean;
-  themeDark: boolean;
+  isDarkTheme: boolean;
+  styleEnabled: boolean;
   handleNavigationToggle: () => void;
   handleToggleThemeDark: () => void;
+  handleToggleStyleEnabled: () => void;
   handleLogin: () => void;
   handleLogout: () => void;
 }
@@ -107,8 +109,10 @@ class AppMenuController extends React.Component<Props, State> {
       handleChange,
       classes,
       handleNavigationToggle,
-      themeDark,
+      isDarkTheme,
+      styleEnabled,
       handleToggleThemeDark,
+      handleToggleStyleEnabled,
       user,
       handleLogout,
       handleLogin,
@@ -190,7 +194,16 @@ class AppMenuController extends React.Component<Props, State> {
                   <Icon>invert_colors</Icon>
                 </ListItemIcon>
                 <ListItemText
-                  primary={themeDark ? 'Light Theme' : 'Dark Theme'}
+                  primary={isDarkTheme ? 'Light Theme' : 'Dark Theme'}
+                  style={{ width: 150 }}
+                />
+              </MenuItem>
+              <MenuItem onClick={() => handleToggleStyleEnabled()}>
+                <ListItemIcon>
+                  <Icon>color_lens</Icon>
+                </ListItemIcon>
+                <ListItemText
+                  primary={`${styleEnabled ? 'Disable' : 'Enable'} Styles`}
                   style={{ width: 150 }}
                 />
               </MenuItem>
@@ -210,7 +223,7 @@ class AppMenuController extends React.Component<Props, State> {
               <Divider />
               <MenuItem onClick={() => handleLogout()}>
                 <ListItemIcon>
-                  <Icon>subject</Icon>
+                  <Icon>exit_to_app</Icon>
                 </ListItemIcon>
                 Logout
               </MenuItem>

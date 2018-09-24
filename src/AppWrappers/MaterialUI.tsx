@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as React from 'react';
 import jssNested from 'jss-nested';
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -17,26 +18,12 @@ interface Props {
     app: string;
     root: string;
   };
-  themeDark: boolean;
+  isDarkTheme: boolean;
+  styleEnabled: boolean;
   style: any | null;
 }
 
-const theme = props =>
-  createMuiTheme(
-    props.style
-      ? props.style
-      : {
-          palette: {
-            primary: {
-              main: '#2196F3',
-            },
-            secondary: {
-              main: '#f44336',
-            },
-            type: props.themeDark ? 'dark' : 'light',
-          },
-        },
-  );
+const theme = style => createMuiTheme(style);
 
 const styles = createStyles({
   app: {
@@ -60,14 +47,30 @@ jss.use(jssNested());
 
 class MaterialUI extends React.Component<Props> {
   render() {
-    const { classes, themeDark, style } = this.props;
+    const { classes, isDarkTheme, style, styleEnabled } = this.props;
+
+    let profileTheme =
+      style && styleEnabled
+        ? _.cloneDeep(style)
+        : {
+            palette: {
+              primary: {
+                main: '#2196F3',
+              },
+              secondary: {
+                main: '#f44336',
+              },
+              type: 'dark',
+            },
+          };
+    profileTheme.palette.type = isDarkTheme ? 'dark' : 'light';
 
     return (
       <JssProvider
         registry={sheetsRegistry}
         generateClassName={generateClassName}
       >
-        <MuiThemeProvider theme={theme({ themeDark, style })}>
+        <MuiThemeProvider theme={theme(profileTheme)}>
           <Card className={classes.app}>
             <div className={classes.root}>{this.props.children}</div>
           </Card>

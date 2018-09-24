@@ -2,7 +2,7 @@ import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../apolloClient';
 import CREATE_USER from './createUser';
-import fire from '../firebase';
+import fire from '../../services/firebase';
 import USER from './userQuery';
 import { Query } from 'react-apollo';
 require('firebase/auth');
@@ -15,14 +15,12 @@ interface State {
   errorMessage?: string;
   authenticating: boolean;
   selectedProfile: string;
-  themeDark: boolean;
+  isDarkTheme: boolean;
+  styleEnabled: boolean;
 }
 
 interface User {
   timeout: number;
-}
-
-interface User {
   email: string;
 }
 
@@ -38,7 +36,8 @@ class User extends React.Component<Props, State> {
       errorMessage: undefined,
       authenticating: false,
       selectedProfile: '',
-      themeDark: true,
+      isDarkTheme: true,
+      styleEnabled: false,
     };
     this.timeout = 0;
   }
@@ -150,8 +149,17 @@ class User extends React.Component<Props, State> {
   };
 
   handleToggleThemeDark = () => {
-    console.log(this.state.themeDark);
-    this.setState({ themeDark: !this.state.themeDark });
+    // TODO: add update profile function (mutation required)
+    // TODO: Create app level breadcrumb
+    // TOOD: Create a breadcrumb after x amount of time saying your settings have been saved
+    this.setState({ isDarkTheme: !this.state.isDarkTheme });
+  };
+
+  handleToggleStyleEnabled = () => {
+    // TODO: add update profile function (mutation required)
+    // TODO: Create app level breadcrumb
+    // TOOD: Create a breadcrumb after x amount of time saying your settings have been saved
+    this.setState({ styleEnabled: !this.state.styleEnabled });
   };
 
   authWithGoogle = () => {
@@ -190,7 +198,7 @@ class User extends React.Component<Props, State> {
   };
 
   render() {
-    const { authenticating, themeDark } = this.state;
+    const { authenticating, isDarkTheme } = this.state;
     const { render } = this.props;
 
     if (authenticating) {
@@ -211,28 +219,38 @@ class User extends React.Component<Props, State> {
                 profiles: [],
               };
 
-          const selectedProfile =
+          // Need better logic picking selected profile
+          const selectedProfileId =
             user.id !== null
               ? this.state.selectedProfile || user.profiles[0].id
               : null;
 
-          this.setUserLS(selectedProfile, user.id);
+          this.setUserLS(selectedProfileId, user.id);
 
-          const style =
-            selectedProfile && selectedProfile.style
-              ? selectedProfile || null
-              : null;
+          const selectedProfile = user.profiles.find(
+            user => user.id === selectedProfileId,
+          );
+
+          const style = selectedProfileId
+            ? selectedProfile.style.data || null
+            : null;
+
+          const styleIsEnabled = this.state.styleEnabled;
+          // selectedProfile && selectedProfile.styleEnabled
+          //   ? selectedProfile.styleEnabled
+          //   : this.state.styleEnabled;
 
           return (
             <div>
               {render({
-                selectedProfile,
+                selectedProfileId,
                 user,
-                themeDark,
+                isDarkTheme,
                 handleToggleThemeDark: this.handleToggleThemeDark,
+                handleToggleStyleEnabled: this.handleToggleStyleEnabled,
                 handleLogin: this.authWithGoogle,
+                styleEnabled: styleIsEnabled,
                 handleLogout: () => this.handleLogout(refetch),
-                refetch,
                 style,
               })}
             </div>

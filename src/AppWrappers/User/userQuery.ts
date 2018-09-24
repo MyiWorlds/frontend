@@ -9,6 +9,11 @@ export default gql`
       profiles {
         username
         dateCreated
+        styleEnabled
+        style {
+          id
+          data
+        }
         id
       }
     }
