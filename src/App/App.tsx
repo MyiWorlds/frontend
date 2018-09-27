@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AppMenuController from './AppMenuController';
 import CreateCircle from './containers/mutations/CreateCircle';
+import CreateProfile from './containers/Profile/mutations/CreateProfile';
 import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
 import GetCirclesByIds from './containers/queries/GetCirclesByIds';
 import Home from './components/Home';
@@ -80,6 +81,7 @@ class App extends React.Component<Props, State> {
           <Routes />
           <Home user={user} />
           {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
+          {user.id ? <CreateProfile user={user} /> : null}
           <GetCirclesByIds />
           <GetCirclesByFilters />
         </div>

@@ -232,7 +232,10 @@ class User extends React.Component<Props, State> {
           );
 
           const style = selectedProfileId
-            ? selectedProfile.style.data || null
+            ? (selectedProfile &&
+                selectedProfile.selectedStyle &&
+                selectedProfile.selectedStyle.data) ||
+              null
             : null;
 
           const styleIsEnabled = this.state.styleEnabled;
@@ -243,7 +246,7 @@ class User extends React.Component<Props, State> {
           return (
             <div>
               {render({
-                selectedProfileId,
+                selectedProfile,
                 user,
                 isDarkTheme,
                 handleToggleThemeDark: this.handleToggleThemeDark,

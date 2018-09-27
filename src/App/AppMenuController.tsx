@@ -160,10 +160,10 @@ class AppMenuController extends React.Component<Props, State> {
                 onClick={this.handleMenu}
                 color="inherit"
               >
-                {user.profileMedia ? (
+                {user.defaultMedia ? (
                   <Avatar
                     alt={user.username}
-                    src={user.profileMedia.string}
+                    src={user.defaultMedia.string}
                     className={classes.avatar}
                   />
                 ) : (

@@ -10,7 +10,7 @@ export default gql`
         username
         dateCreated
         styleEnabled
-        style {
+        selectedStyle {
           id
           data
         }

@@ -79,7 +79,9 @@ interface State {
 }
 
 interface Prop {
-  selectedProfile: string;
+  selectedProfile: {
+    id: string;
+  };
 }
 
 class CreateCircle extends React.Component<Prop, State> {
@@ -229,7 +231,7 @@ class CreateCircle extends React.Component<Prop, State> {
       title: this.state.title,
       type: this.state.type,
       data: this.state.data,
-      creator: this.props.selectedProfile,
+      creator: this.props.selectedProfile.id,
     };
 
     this.createCircle(createCircle, builtCircle);
