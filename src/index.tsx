@@ -16,28 +16,21 @@ const Root = () => (
         render={({
           selectedProfile,
           user,
-          isDarkTheme,
-          styleEnabled,
-          style,
           handleToggleThemeDark,
           handleToggleStyleEnabled,
           handleLogin,
           handleLogout,
+          changeSelectedProfile,
         }) => (
-          <MaterialUI
-            isDarkTheme={isDarkTheme}
-            styleEnabled={styleEnabled}
-            style={style}
-          >
+          <MaterialUI selectedProfile={selectedProfile}>
             <App
               user={user}
-              isDarkTheme={isDarkTheme}
-              styleEnabled={styleEnabled}
               selectedProfile={selectedProfile}
               handleToggleThemeDark={handleToggleThemeDark}
               handleToggleStyleEnabled={handleToggleStyleEnabled}
               handleLogin={handleLogin}
               handleLogout={handleLogout}
+              changeSelectedProfile={changeSelectedProfile}
             />
           </MaterialUI>
         )}

@@ -1,26 +1,56 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../apolloClient';
-import CREATE_USER from './createUser';
+import CREATE_USER from '../../App/containers/User/mutations/createUser';
 import fire from '../../services/firebase';
-import USER from './userQuery';
+import GET_PROFILE_BY_ID from '../../App/containers/Profile/queries/getProfileById';
+import GET_USER from '../../App/containers/User/queries/getUserQuery';
+import ProfileUsernameEditor from '../../App/containers/Profile/mutations/ProfileUsernameEditor';
+import ProgressWithMessage from '../../App/components/ProgressWithMessage';
+import SelectProfile from '../../App/containers/Profile/SelectProfile';
+import UPDATE_PROFILE from '../../App/containers/Profile/mutations/updateProfile';
 import { Query } from 'react-apollo';
+import {
+  createStyles,
+  Paper,
+  Typography,
+  withStyles,
+  Slide,
+  Snackbar,
+} from '@material-ui/core';
+
+// import apolloClient from '../apolloClient';
 require('firebase/auth');
 
 interface Props {
   render: any;
+  classes: {
+    card: string;
+    container: string;
+  };
+}
+
+interface SelectedProfile {
+  id: string | null;
+  isDarkTheme: boolean;
+  isMyTheme: boolean;
+  myTheme: {
+    id: string;
+    data: any;
+  } | null;
 }
 
 interface State {
   errorMessage?: string;
   authenticating: boolean;
-  selectedProfile: string;
-  isDarkTheme: boolean;
-  styleEnabled: boolean;
+  selectedProfile: SelectedProfile | null;
+  showProfileUpdatedSnackbar: boolean;
+  profileUpdatedSnackbarMessage: string;
 }
 
 interface User {
-  timeout: number;
+  timeoutFirebaseAuthToken: number;
+  timeoutUpdateProfile: number | any;
   email: string;
 }
 
@@ -29,17 +59,47 @@ interface Error {
   message: string;
 }
 
+function TransitionUp(props: any) {
+  return <Slide {...props} direction="up" />;
+}
+
+const styles = theme =>
+  createStyles({
+    card: {
+      ...theme.mixins.gutters(),
+      paddingTop: theme.spacing.unit * 2,
+      paddingBottom: theme.spacing.unit * 2,
+    },
+    container: {
+      margin: '42px auto',
+    },
+  });
+
+const defaultEmptySelectedProfile: SelectedProfile = {
+  id: null,
+  isDarkTheme: true,
+  isMyTheme: false,
+  myTheme: null,
+};
+
+const defaultGuestUser = {
+  id: null,
+  email: 'guest@email.com',
+  profiles: [],
+};
+
 class User extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       errorMessage: undefined,
       authenticating: false,
-      selectedProfile: '',
-      isDarkTheme: true,
-      styleEnabled: false,
+      selectedProfile: defaultEmptySelectedProfile,
+      showProfileUpdatedSnackbar: false,
+      profileUpdatedSnackbarMessage: '',
     };
-    this.timeout = 0;
+    this.timeoutFirebaseAuthToken = 0;
+    this.timeoutUpdateProfile = 0;
   }
 
   async componentDidMount() {
@@ -49,10 +109,15 @@ class User extends React.Component<Props, State> {
     await this.createUserIfNewUser();
 
     this.authListener();
+
+    const lastUsedProfileOnDevice:
+      | string
+      | null = this.getSelectedProfileIdLS();
+    this.changeSelectedProfile(lastUsedProfileOnDevice);
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeout);
+    clearTimeout(this.timeoutFirebaseAuthToken);
   }
 
   createUserIfNewUser = () => {
@@ -68,14 +133,14 @@ class User extends React.Component<Props, State> {
           await this.createUser(result.user.uid, result.user.email);
         }
       })
-      .catch(function(error: any) {
+      .catch((error: any) => {
         console.log(error);
       });
   };
 
   firebaseAuthRefreshTimeout = () => {
     // Reset token every 55min, it expires every hour
-    this.timeout = window.setTimeout(() => {
+    this.timeoutFirebaseAuthToken = window.setTimeout(() => {
       this.authListener();
     }, 3300000);
   };
@@ -106,11 +171,13 @@ class User extends React.Component<Props, State> {
   };
 
   authListener = () => {
-    clearTimeout(this.timeout);
+    clearTimeout(this.timeoutFirebaseAuthToken);
     if (navigator.onLine) {
+      // This may be a place where if it goes online and inbetween
       this.setState(
         {
           authenticating: true,
+          // offlines: false // Might want to try playing with this
         },
         () => {
           try {
@@ -133,15 +200,22 @@ class User extends React.Component<Props, State> {
       );
     } else {
       console.log('Checking for internet connection...');
-      this.timeout = window.setTimeout(() => {
+      this.timeoutFirebaseAuthToken = window.setTimeout(() => {
         this.authListener();
       }, 5000);
     }
   };
 
-  setUserLS = (profileId: string, userId: string) => {
-    localStorage.setItem('profile-id', profileId);
+  setUserLS = (userId: string) => {
     localStorage.setItem('user-id', userId);
+  };
+
+  setSelectedProfileLS = (selectedProfileId: string) => {
+    localStorage.setItem('selected-profile-id', selectedProfileId);
+  };
+
+  getSelectedProfileIdLS = () => {
+    return localStorage.getItem('selected-profile-id');
   };
 
   handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -149,17 +223,67 @@ class User extends React.Component<Props, State> {
   };
 
   handleToggleThemeDark = () => {
-    // TODO: add update profile function (mutation required)
-    // TODO: Create app level breadcrumb
-    // TOOD: Create a breadcrumb after x amount of time saying your settings have been saved
-    this.setState({ isDarkTheme: !this.state.isDarkTheme });
+    if (this.timeoutUpdateProfile) {
+      clearTimeout(this.timeoutUpdateProfile);
+    }
+    let selectedProfile = Object.assign({}, this.state.selectedProfile);
+    selectedProfile.isDarkTheme = !selectedProfile.isDarkTheme;
+    this.setState({ selectedProfile });
+
+    this.timeoutUpdateProfile = setTimeout(async () => {
+      if (selectedProfile.id) {
+        const updateProfile = await this.updateProfile(selectedProfile.id, {
+          isDarkTheme: selectedProfile.isDarkTheme,
+        });
+
+        if (updateProfile.data) {
+          this.displaySnackbar(updateProfile.data.updateProfile.status);
+        }
+      }
+    }, 500);
+  };
+
+  displaySnackbar = (status: string) => {
+    const profileUpdatedSnackbarMessage =
+      status === 'SUCCESS' ? 'I saved your changes' : 'I had an error';
+
+    this.setState({
+      showProfileUpdatedSnackbar: true,
+      profileUpdatedSnackbarMessage,
+    });
   };
 
   handleToggleStyleEnabled = () => {
-    // TODO: add update profile function (mutation required)
     // TODO: Create app level breadcrumb
     // TOOD: Create a breadcrumb after x amount of time saying your settings have been saved
-    this.setState({ styleEnabled: !this.state.styleEnabled });
+    let selectedProfile = Object.assign({}, this.state.selectedProfile);
+    selectedProfile.isMyTheme = !selectedProfile.isMyTheme;
+
+    this.setState({ selectedProfile });
+
+    this.timeoutUpdateProfile = setTimeout(async () => {
+      if (selectedProfile.id) {
+        const updateProfile = await this.updateProfile(selectedProfile.id, {
+          isMyTheme: selectedProfile.isMyTheme,
+        });
+
+        if (updateProfile.data) {
+          this.displaySnackbar(updateProfile.data.updateProfile.status);
+        }
+      }
+    }, 500);
+  };
+
+  updateProfile = async (id: string, data: any) => {
+    const updatedProfileMutation = await client.mutate({
+      mutation: UPDATE_PROFILE,
+      variables: {
+        id,
+        data,
+      },
+    });
+
+    return updatedProfileMutation;
   };
 
   authWithGoogle = () => {
@@ -187,7 +311,7 @@ class User extends React.Component<Props, State> {
       .then(() => {
         console.log('You were signed out');
         localStorage.removeItem('token');
-        localStorage.removeItem('profileId');
+        localStorage.removeItem('selectedProfileId');
         localStorage.removeItem('userId');
       })
       .catch((error: Error) =>
@@ -197,65 +321,129 @@ class User extends React.Component<Props, State> {
     refetch();
   };
 
+  changeSelectedProfile = async (id: string | null) => {
+    if (id) {
+      const optomisticSelectedProfile = Object.assign(
+        {},
+        this.state.selectedProfile,
+        { id },
+      );
+      this.setState({
+        selectedProfile: optomisticSelectedProfile,
+      });
+
+      const query: any = await client.query({
+        query: GET_PROFILE_BY_ID,
+        fetchPolicy: 'no-cache',
+        variables: {
+          id,
+        },
+      });
+      const selectedProfile =
+        query.data.getProfileById || defaultEmptySelectedProfile;
+
+      if (selectedProfile) {
+        this.setSelectedProfileLS(selectedProfile.id);
+      }
+
+      this.setState({
+        selectedProfile,
+      });
+    } else {
+      this.setState({
+        selectedProfile: defaultEmptySelectedProfile,
+      });
+    }
+  };
+
+  handleCloseSnackbar = () => {
+    this.setState({ showProfileUpdatedSnackbar: false });
+  };
+
   render() {
-    const { authenticating, isDarkTheme } = this.state;
-    const { render } = this.props;
+    const { authenticating, selectedProfile } = this.state;
+    const { render, classes } = this.props;
 
     if (authenticating) {
       return <h1>Authenticating your account...</h1>;
     }
 
     return (
-      <Query query={USER}>
+      <Query query={GET_USER}>
         {({ loading, error, data, refetch }) => {
-          if (loading) return <p>loading...</p>;
           if (error) return <p>error</p>;
+          if (loading) {
+            return (
+              <ProgressWithMessage
+                message="Getting your Account Information"
+                hideBackground={true}
+              />
+            );
+          }
 
-          const user = data.user
-            ? data.user
-            : {
-                id: null,
-                email: 'guest@email.com',
-                profiles: [],
-              };
+          const user = data.user ? data.user : defaultGuestUser;
 
-          // Need better logic picking selected profile
-          const selectedProfileId =
-            user.id !== null
-              ? this.state.selectedProfile || user.profiles[0].id
-              : null;
+          if (user.id) {
+            if (
+              user.profiles.length > 1 &&
+              (selectedProfile && !selectedProfile.id)
+            ) {
+              return (
+                <div className={classes.container}>
+                  <Paper className={classes.card} elevation={1}>
+                    <Typography variant="h2">Select Profile</Typography>
+                    <SelectProfile
+                      list={user.profiles}
+                      changeSelectedProfile={this.changeSelectedProfile}
+                    />
+                  </Paper>
+                </div>
+              );
+            }
 
-          this.setUserLS(selectedProfileId, user.id);
-
-          const selectedProfile = user.profiles.find(
-            user => user.id === selectedProfileId,
-          );
-
-          const style = selectedProfileId
-            ? (selectedProfile &&
-                selectedProfile.selectedStyle &&
-                selectedProfile.selectedStyle.data) ||
-              null
-            : null;
-
-          const styleIsEnabled = this.state.styleEnabled;
-          // selectedProfile && selectedProfile.styleEnabled
-          //   ? selectedProfile.styleEnabled
-          //   : this.state.styleEnabled;
+            if (!user.profiles.length) {
+              return (
+                <div className={classes.container}>
+                  <Paper className={classes.card} elevation={1}>
+                    <ProfileUsernameEditor />
+                  </Paper>
+                </div>
+              );
+            }
+          }
 
           return (
             <div>
               {render({
                 selectedProfile,
                 user,
-                isDarkTheme,
                 handleToggleThemeDark: this.handleToggleThemeDark,
                 handleToggleStyleEnabled: this.handleToggleStyleEnabled,
                 handleLogin: this.authWithGoogle,
-                styleEnabled: styleIsEnabled,
                 handleLogout: () => this.handleLogout(refetch),
-                style,
+                changeSelectedProfile: this.changeSelectedProfile,
               })}
+
+              <Snackbar
+                open={this.state.showProfileUpdatedSnackbar}
+                onClose={this.handleCloseSnackbar}
+                autoHideDuration={2000}
+                TransitionComponent={TransitionUp}
+                disableWindowBlurListener={true}
+                ClickAwayListenerProps={{
+                  onClickAway: () => {
+                    return;
+                  },
+                }}
+                ContentProps={{
+                  'aria-describedby': 'message-id',
+                }}
+                message={
+                  <span id="message-id">
+                    {this.state.profileUpdatedSnackbarMessage}
+                  </span>
+                }
+              />
             </div>
           );
         }}
@@ -264,4 +452,4 @@ class User extends React.Component<Props, State> {
   }
 }
 
-export default User;
+export default withStyles(styles)(User);

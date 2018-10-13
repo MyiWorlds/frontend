@@ -1,25 +1,21 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import {
-  Avatar,
   IconButton,
   Menu,
   Toolbar,
   AppBar,
-  // FormControl,
-  // InputLabel,
   MenuItem,
   Icon,
   Button,
-  // Select,
   createStyles,
   withStyles,
   Typography,
   ListItemIcon,
   Divider,
   ListItemText,
-  // ListItemSecondaryAction,
+  Switch,
+  Collapse,
 } from '@material-ui/core';
 
 interface Profile {
@@ -29,6 +25,7 @@ interface Profile {
 
 interface State {
   anchorEl: any;
+  profilesOpen: boolean;
 }
 
 interface Props {
@@ -38,19 +35,28 @@ interface Props {
     siteTitle: string;
     avatar: string;
     siteIcon: string;
+    nested: string;
+    selectedProfile: string;
   };
   profiles: [Profile];
-  selectedProfile: string;
-  handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  selectedProfile: {
+    id: string;
+    username: string;
+    isDarkTheme: boolean;
+    isMyTheme: boolean;
+    myTheme: {
+      id: string | null;
+      data: any | null;
+    };
+  };
   user: any;
   showNavigation: boolean;
-  isDarkTheme: boolean;
-  styleEnabled: boolean;
   handleNavigationToggle: () => void;
   handleToggleThemeDark: () => void;
   handleToggleStyleEnabled: () => void;
   handleLogin: () => void;
   handleLogout: () => void;
+  changeSelectedProfile: (id: string | null) => void;
 }
 
 const styles = theme =>
@@ -83,6 +89,12 @@ const styles = theme =>
       maxHeight: 32,
       margin: '4px 8px 0px 0px',
     },
+    nested: {
+      paddingLeft: theme.spacing.unit * 4,
+    },
+    selectedProfile: {
+      marginTop: -theme.spacing.unit,
+    },
   });
 
 class AppMenuController extends React.Component<Props, State> {
@@ -90,6 +102,7 @@ class AppMenuController extends React.Component<Props, State> {
     super(props);
     this.state = {
       anchorEl: null,
+      profilesOpen: false,
     };
   }
 
@@ -101,16 +114,18 @@ class AppMenuController extends React.Component<Props, State> {
     this.setState({ anchorEl: null });
   };
 
+  handleToggleProfiles = () => {
+    this.setState({ profilesOpen: !this.state.profilesOpen });
+  };
+
   render() {
-    const { anchorEl } = this.state;
+    const { anchorEl, profilesOpen } = this.state;
     const {
       profiles,
       selectedProfile,
-      handleChange,
       classes,
+      changeSelectedProfile,
       handleNavigationToggle,
-      isDarkTheme,
-      styleEnabled,
       handleToggleThemeDark,
       handleToggleStyleEnabled,
       user,
@@ -120,13 +135,12 @@ class AppMenuController extends React.Component<Props, State> {
     const open = Boolean(anchorEl);
 
     const login = (
-      <Button variant="raised" color="primary" onClick={() => handleLogin()}>
+      <Button variant="contained" color="primary" onClick={() => handleLogin()}>
         <Icon style={{ marginRight: 8 }}>account_circle</Icon>
         Login / Signup
       </Button>
     );
 
-    console.log(profiles, selectedProfile, handleChange);
     return (
       <AppBar className={classes.appBar}>
         <Toolbar style={{ minHeight: 48 }}>
@@ -145,9 +159,10 @@ class AppMenuController extends React.Component<Props, State> {
             className={classes.siteIcon}
           />
           <Typography
-            variant="title"
+            variant="h4"
             color="inherit"
             className={classes.siteTitle}
+            // component={(props: any) => <Link {...props} to="/" />}
           >
             MyiWorlds
           </Typography>
@@ -160,15 +175,7 @@ class AppMenuController extends React.Component<Props, State> {
                 onClick={this.handleMenu}
                 color="inherit"
               >
-                {user.defaultMedia ? (
-                  <Avatar
-                    alt={user.username}
-                    src={user.defaultMedia.string}
-                    className={classes.avatar}
-                  />
-                ) : (
-                  <Icon>account_circle</Icon>
-                )}
+                <Icon>account_circle</Icon>
               </IconButton>
             ) : (
               login
@@ -180,52 +187,122 @@ class AppMenuController extends React.Component<Props, State> {
               open={open}
               onClose={this.handleClose}
             >
+              <MenuItem selected className={classes.selectedProfile}>
+                <ListItemIcon>
+                  <Icon>account_circle</Icon>
+                </ListItemIcon>
+                <ListItemText inset primary={selectedProfile.username} />
+              </MenuItem>
+
+              {profiles && profiles.length
+                ? [
+                    <MenuItem
+                      key="allprofilestoggler"
+                      onClick={() => this.handleToggleProfiles()}
+                    >
+                      <ListItemIcon>
+                        <Icon>group</Icon>
+                      </ListItemIcon>
+                      <ListItemText inset primary="Switch Profile" />
+                      <ListItemIcon>
+                        <Icon>
+                          {profilesOpen ? 'expand_less' : 'expand_more'}
+                        </Icon>
+                      </ListItemIcon>
+                    </MenuItem>,
+                    <Collapse
+                      key="profilescollapser"
+                      in={profilesOpen}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      {profiles.map(profile => {
+                        return (
+                          <MenuItem
+                            key={profile.id}
+                            className={classes.nested}
+                            selected={
+                              selectedProfile &&
+                              selectedProfile.id === profile.id
+                            }
+                            onClick={
+                              selectedProfile &&
+                              selectedProfile.id === profile.id
+                                ? () => {
+                                    return;
+                                  }
+                                : () => changeSelectedProfile(profile.id)
+                            }
+                          >
+                            <ListItemIcon>
+                              <Icon>account_circle</Icon>
+                            </ListItemIcon>
+                            <ListItemText inset primary={profile.username} />
+                          </MenuItem>
+                        );
+                      })}
+                    </Collapse>,
+                  ]
+                : null}
+
+              <Divider />
+
               <MenuItem
                 onClick={this.handleClose}
-                component={(props: any) => <Link {...props} to="/settings" />}
+                component={(props: any) => <Link {...props} to="/account" />}
               >
                 <ListItemIcon>
                   <Icon>settings</Icon>
                 </ListItemIcon>
-                Settings
+                <ListItemText primary="Account Settings" />
               </MenuItem>
+
               <MenuItem onClick={() => handleToggleThemeDark()}>
                 <ListItemIcon>
                   <Icon>invert_colors</Icon>
                 </ListItemIcon>
-                <ListItemText
-                  primary={isDarkTheme ? 'Light Theme' : 'Dark Theme'}
-                  style={{ width: 150 }}
+                <ListItemText primary="Dark Theme" />
+                <Switch
+                  checked={selectedProfile && selectedProfile.isDarkTheme}
                 />
               </MenuItem>
-              <MenuItem onClick={() => handleToggleStyleEnabled()}>
+              <MenuItem
+                onClick={() => handleToggleStyleEnabled()}
+                disabled={
+                  selectedProfile.myTheme && selectedProfile.myTheme.data
+                    ? false
+                    : true
+                }
+              >
                 <ListItemIcon>
                   <Icon>color_lens</Icon>
                 </ListItemIcon>
-                <ListItemText
-                  primary={`${styleEnabled ? 'Disable' : 'Enable'} Styles`}
-                  style={{ width: 150 }}
-                />
+                <ListItemText primary="My Custom Theme" />
+                <Switch checked={selectedProfile.isMyTheme} />
               </MenuItem>
+
               <Divider />
+
               <MenuItem onClick={this.handleClose}>
                 <ListItemIcon>
                   <Icon>report</Icon>
                 </ListItemIcon>
-                Privacy Policy
+                <ListItemText primary="Privacy Policy" />
               </MenuItem>
+
               <MenuItem onClick={this.handleClose}>
                 <ListItemIcon>
                   <Icon>subject</Icon>
                 </ListItemIcon>
-                Terms of Service
+                <ListItemText primary="Terms of Service" />
               </MenuItem>
+
               <Divider />
               <MenuItem onClick={() => handleLogout()}>
                 <ListItemIcon>
                   <Icon>exit_to_app</Icon>
                 </ListItemIcon>
-                Logout
+                <ListItemText primary="Logout" />
               </MenuItem>
             </Menu>
           </div>
@@ -236,30 +313,3 @@ class AppMenuController extends React.Component<Props, State> {
 }
 
 export default withStyles(styles)(AppMenuController);
-
-{
-  /* <div>
-  <FormControl style={{ width: 200 }}>
-    <InputLabel htmlFor="select-profile">Select Profile</InputLabel>
-    {profiles.length ? (
-      <Select
-        value={selectedProfile || profiles[0].username}
-        onChange={handleChange}
-        inputProps={{
-          name: 'selectedProfile',
-          id: 'selected-profile',
-        }}
-      >
-        {profiles.map(profile => {
-          return (
-            <MenuItem key={profile.id} value={profile.id}>
-              {profile.username}
-            </MenuItem>
-          );
-        })}
-        <MenuItem value={30}>Create</MenuItem>
-      </Select>
-    ) : null}
-  </FormControl>
-</div> */
-}

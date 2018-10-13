@@ -5,16 +5,12 @@ export default gql`
     user {
       email
       id
-      dateCreated
-      profiles {
-        username
-        dateCreated
-        styleEnabled
-        selectedStyle {
-          id
-          data
-        }
+      selectedProfile {
         id
+      }
+      profiles {
+        id
+        username
       }
     }
   }

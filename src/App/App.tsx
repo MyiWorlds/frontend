@@ -1,21 +1,27 @@
 import * as React from 'react';
-import AppMenuController from './AppMenuController';
-import CreateCircle from './containers/mutations/CreateCircle';
-import CreateProfile from './containers/Profile/mutations/CreateProfile';
-import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
-import GetCirclesByIds from './containers/queries/GetCirclesByIds';
-import Home from './components/Home';
-import Navigation from './Navigation';
+import AppMenuController from './components/AppMenuController';
+import Navigation from './components/Navigation';
 import Routes from '../routes';
+import withWidth from '@material-ui/core/withWidth';
+
+// import CreateCircle from './containers/Circle/mutations/CreateCircle';
+// import CreateProfile from './containers/Profile/mutations/CreateProfile';
+// import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
+// import GetCirclesByIds from './containers/queries/GetCirclesByIds';
+// import Home from './components/Home';
 
 interface Props {
-  isDarkTheme: boolean;
-  styleEnabled: boolean;
   handleToggleThemeDark: () => void;
   handleToggleStyleEnabled: () => void;
   handleLogin: () => void;
+  changeSelectedProfile: () => void;
   user: any;
-  selectedProfile: any;
+  selectedProfile: {
+    id: string | null;
+    isDarkTheme: boolean;
+    isMyTheme: boolean;
+  };
+  width: string;
   handleLogout: () => void;
 }
 
@@ -31,13 +37,10 @@ class App extends React.Component<Props, State> {
     this.state = {
       errorMessage: undefined,
       authenticating: false,
-      showNavigation: true,
+      showNavigation:
+        props.width === 'xs' || props.width === 'sm' ? false : true,
     };
   }
-
-  handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ [event.target.name]: event.target.value } as any);
-  };
 
   handleNavigationToggle = () => {
     this.setState({ showNavigation: !this.state.showNavigation });
@@ -50,44 +53,51 @@ class App extends React.Component<Props, State> {
   render() {
     const { showNavigation } = this.state;
     const {
-      isDarkTheme,
       handleToggleThemeDark,
       handleToggleStyleEnabled,
       handleLogin,
+      changeSelectedProfile,
       user,
       selectedProfile,
       handleLogout,
-      styleEnabled,
     } = this.props;
 
     return (
-      <div>
+      <>
         <AppMenuController
           profiles={user.profiles}
           selectedProfile={selectedProfile}
-          handleChange={this.handleChange}
           user={user}
           handleNavigationToggle={this.handleNavigationToggle}
           showNavigation={showNavigation}
-          isDarkTheme={isDarkTheme}
-          styleEnabled={styleEnabled}
           handleToggleThemeDark={handleToggleThemeDark}
           handleToggleStyleEnabled={handleToggleStyleEnabled}
           handleLogin={handleLogin}
           handleLogout={handleLogout}
+          changeSelectedProfile={changeSelectedProfile}
         />
-        <Navigation />
-        <div style={{ marginTop: 60 }}>
+        <Navigation
+          showNavigation={showNavigation}
+          handleNavigationToggle={this.handleNavigationToggle}
+        />
+        <div
+          style={{
+            marginTop: 60,
+            width: '100%',
+            paddingBottom: 120,
+            overflow: 'auto',
+          }}
+        >
           <Routes />
-          <Home user={user} />
+          {/* <Home user={user} />
           {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
           {user.id ? <CreateProfile user={user} /> : null}
           <GetCirclesByIds />
-          <GetCirclesByFilters />
+          <GetCirclesByFilters /> */}
         </div>
-      </div>
+      </>
     );
   }
 }
 
-export default App;
+export default withWidth()(App);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import AccountSettings from './App/pages/AccountSettings';
 import GetCircleById from './App/containers/queries/GetCircleById';
 import { Route, Switch } from 'react-router';
 // import { createBrowserHistory } from 'history';
@@ -21,6 +22,11 @@ const Routes = props => {
         exact
         path="/id/:id"
         render={(props: any) => <GetCircleById id={props.match.params.id} />}
+      />
+      <Route
+        exact
+        path="/account"
+        render={(props: any) => <AccountSettings />}
       />
       {/* <Route
         path="/uid/:uid"

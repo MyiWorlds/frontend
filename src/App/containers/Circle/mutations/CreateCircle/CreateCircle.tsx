@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 // import { Button, Card, TextField } from '@material-ui/core';
 // import { Redirect } from 'react-router-dom';
-// const uuid = require('uuid/v1');
 
 const CREATE_CIRCLE = gql`
   mutation createCircle(
@@ -80,7 +79,7 @@ interface State {
 
 interface Prop {
   selectedProfile: {
-    id: string;
+    id: string | null;
   };
 }
 
@@ -339,7 +338,7 @@ class CreateCircle extends React.Component<Prop, State> {
       //                       <br />
       //                       <Button
       //                         style={{ float: 'right' }}
-      //                         variant="raised"
+      //                         variant="contained"
       //                         color="primary"
       //                         type="submit"
       //                       >
