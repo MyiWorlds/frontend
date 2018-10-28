@@ -4,9 +4,9 @@ import injectSheet from 'react-jss';
 import { Link } from 'react-router-dom';
 
 import {
-  Hidden,
-  Drawer,
   Divider,
+  Drawer,
+  Hidden,
   Icon,
   ListItem,
   ListItemIcon,
@@ -163,6 +163,16 @@ class Navigation extends React.Component<Props, State> {
         icon: 'query_builder',
         title: 'Recents',
         slug: '/recents',
+      },
+
+      {
+        type: 'BUTTON',
+        settings: {
+          primary: true,
+        },
+        icon: 'color_lens',
+        title: 'Theme Color Picker',
+        slug: '/theme-color-picker',
       },
     ];
 

@@ -5,10 +5,10 @@ import { createGenerateClassName } from '@material-ui/core/styles';
 import { JssProvider } from 'react-jss';
 import { SheetsRegistry } from 'jss';
 import {
-  createMuiTheme,
-  MuiThemeProvider,
   Card,
+  createMuiTheme,
   createStyles,
+  MuiThemeProvider,
 } from '@material-ui/core';
 
 interface Props {
@@ -25,20 +25,21 @@ interface Props {
 
 const theme = theme => createMuiTheme(theme);
 
-const styles = createStyles({
-  app: {
-    position: 'fixed',
-    height: '100%',
-    width: '100%',
-    borderRadius: 0,
-  },
-  root: {
-    position: 'relative',
-    display: 'flex',
-    height: '100%',
-    width: '100%',
-  },
-});
+const styles = theme =>
+  createStyles({
+    app: {
+      position: 'fixed',
+      height: '100%',
+      width: '100%',
+      borderRadius: 0,
+    },
+    root: {
+      position: 'relative',
+      display: 'flex',
+      height: '100%',
+      width: '100%',
+    },
+  });
 
 const generateClassName = createGenerateClassName();
 
@@ -49,7 +50,10 @@ class MaterialUI extends React.Component<Props> {
     const { classes, selectedProfile } = this.props;
 
     let profileTheme =
-      selectedProfile && selectedProfile.myTheme && selectedProfile.isMyTheme
+      selectedProfile &&
+      selectedProfile.myTheme &&
+      selectedProfile.myTheme.data &&
+      selectedProfile.isMyTheme
         ? _.cloneDeep(selectedProfile.myTheme.data)
         : {
             palette: {
@@ -66,7 +70,9 @@ class MaterialUI extends React.Component<Props> {
     if (
       selectedProfile &&
       selectedProfile.isDarkTheme !== undefined &&
-      selectedProfile.isDarkTheme !== null
+      selectedProfile.isDarkTheme !== null &&
+      profileTheme &&
+      profileTheme.palette
     ) {
       profileTheme.palette.type =
         selectedProfile && selectedProfile.isDarkTheme ? 'dark' : 'light';

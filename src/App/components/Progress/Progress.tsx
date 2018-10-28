@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {
-  createStyles,
   CircularProgress,
+  createStyles,
   Paper,
   withStyles,
   Zoom,

@@ -1,21 +1,21 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  IconButton,
-  Menu,
-  Toolbar,
   AppBar,
-  MenuItem,
-  Icon,
   Button,
-  createStyles,
-  withStyles,
-  Typography,
-  ListItemIcon,
-  Divider,
-  ListItemText,
-  Switch,
   Collapse,
+  createStyles,
+  Divider,
+  Icon,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Switch,
+  Toolbar,
+  Typography,
+  withStyles,
 } from '@material-ui/core';
 
 interface Profile {
@@ -79,6 +79,7 @@ const styles = theme =>
     siteTitle: {
       flexGrow: 1,
       fontSize: '1.2125rem',
+      textDecoration: 'none',
     },
     avatar: {
       height: 36,
@@ -162,7 +163,7 @@ class AppMenuController extends React.Component<Props, State> {
             variant="h4"
             color="inherit"
             className={classes.siteTitle}
-            // component={(props: any) => <Link {...props} to="/" />}
+            component={(props: any) => <Link {...props} to="/" />}
           >
             MyiWorlds
           </Typography>

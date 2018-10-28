@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AppMenuController from './components/AppMenuController';
 import Navigation from './components/Navigation';
-import Routes from '../routes';
+import Routes from './routes';
 import withWidth from '@material-ui/core/withWidth';
 
 // import CreateCircle from './containers/Circle/mutations/CreateCircle';
@@ -20,6 +20,7 @@ interface Props {
     id: string | null;
     isDarkTheme: boolean;
     isMyTheme: boolean;
+    myTheme: MyTheme;
   };
   width: string;
   handleLogout: () => void;
@@ -88,7 +89,7 @@ class App extends React.Component<Props, State> {
             overflow: 'auto',
           }}
         >
-          <Routes />
+          <Routes selectedProfile={selectedProfile} />
           {/* <Home user={user} />
           {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
           {user.id ? <CreateProfile user={user} /> : null}

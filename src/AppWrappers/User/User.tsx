@@ -1,25 +1,24 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../apolloClient';
-import CREATE_USER from '../../App/containers/User/mutations/createUser';
+import CREATE_USER from '../../App/components/User/mutations/createUser';
 import fire from '../../services/firebase';
-import GET_PROFILE_BY_ID from '../../App/containers/Profile/queries/getProfileById';
-import GET_USER from '../../App/containers/User/queries/getUserQuery';
-import ProfileUsernameEditor from '../../App/containers/Profile/mutations/ProfileUsernameEditor';
+import GET_PROFILE_BY_ID from '../../App/components/User/Profile/queries/getUsersProfileById';
+import GET_USER from '../../App/components/User/queries/getUserQuery';
+import ProfileUsernameEditor from '../../App/components/User/Profile/mutations/ProfileUsernameEditor';
 import ProgressWithMessage from '../../App/components/ProgressWithMessage';
-import SelectProfile from '../../App/containers/Profile/SelectProfile';
-import UPDATE_PROFILE from '../../App/containers/Profile/mutations/updateProfile';
+import SelectProfile from '../../App/components/User/Profile/SelectProfile';
+import UPDATE_PROFILE from '../../App/components/User/Profile/mutations/updateProfile';
 import { Query } from 'react-apollo';
 import {
   createStyles,
   Paper,
-  Typography,
-  withStyles,
   Slide,
   Snackbar,
+  Typography,
+  withStyles,
 } from '@material-ui/core';
 
-// import apolloClient from '../apolloClient';
 require('firebase/auth');
 
 interface Props {
@@ -151,12 +150,25 @@ class User extends React.Component<Props, State> {
       .currentUser.getIdToken(true)
       .then((idToken: any) => {
         console.log('I put a new token in your Local Storage');
-        localStorage.setItem('token', idToken);
+        this.setTokenLS(idToken);
 
-        this.setState({
-          authenticating: false,
-        });
-        this.firebaseAuthRefreshTimeout();
+        const selectedProfileLS = this.getSelectedProfileIdLS();
+
+        this.setState(
+          {
+            authenticating: false,
+          },
+          () => {
+            this.firebaseAuthRefreshTimeout();
+            if (
+              selectedProfileLS &&
+              selectedProfileLS !== '' &&
+              selectedProfileLS !== 'null'
+            ) {
+              this.changeSelectedProfile(selectedProfileLS);
+            }
+          },
+        );
       })
       .catch((error: any) => {
         console.log(error);
@@ -173,7 +185,6 @@ class User extends React.Component<Props, State> {
   authListener = () => {
     clearTimeout(this.timeoutFirebaseAuthToken);
     if (navigator.onLine) {
-      // This may be a place where if it goes online and inbetween
       this.setState(
         {
           authenticating: true,
@@ -204,6 +215,16 @@ class User extends React.Component<Props, State> {
         this.authListener();
       }, 5000);
     }
+  };
+
+  clearLS = () => {
+    this.setTokenLS('');
+    this.setUserLS('');
+    this.setSelectedProfileLS('');
+  };
+
+  setTokenLS = (idToken: string) => {
+    localStorage.setItem('token', idToken);
   };
 
   setUserLS = (userId: string) => {
@@ -254,8 +275,6 @@ class User extends React.Component<Props, State> {
   };
 
   handleToggleStyleEnabled = () => {
-    // TODO: Create app level breadcrumb
-    // TOOD: Create a breadcrumb after x amount of time saying your settings have been saved
     let selectedProfile = Object.assign({}, this.state.selectedProfile);
     selectedProfile.isMyTheme = !selectedProfile.isMyTheme;
 
@@ -322,15 +341,17 @@ class User extends React.Component<Props, State> {
   };
 
   changeSelectedProfile = async (id: string | null) => {
-    if (id) {
-      const optomisticSelectedProfile = Object.assign(
+    if (id && id !== 'null') {
+      const optimisticSelectedProfile = Object.assign(
         {},
         this.state.selectedProfile,
         { id },
       );
       this.setState({
-        selectedProfile: optomisticSelectedProfile,
+        selectedProfile: optimisticSelectedProfile,
       });
+
+      this.setSelectedProfileLS(id);
 
       const query: any = await client.query({
         query: GET_PROFILE_BY_ID,
@@ -340,11 +361,7 @@ class User extends React.Component<Props, State> {
         },
       });
       const selectedProfile =
-        query.data.getProfileById || defaultEmptySelectedProfile;
-
-      if (selectedProfile) {
-        this.setSelectedProfileLS(selectedProfile.id);
-      }
+        query.data.getUsersProfileById || defaultEmptySelectedProfile;
 
       this.setState({
         selectedProfile,
@@ -396,6 +413,10 @@ class User extends React.Component<Props, State> {
                       list={user.profiles}
                       changeSelectedProfile={this.changeSelectedProfile}
                     />
+                    <Typography variant="h5">
+                      Or Create a New Profile
+                    </Typography>
+                    <ProfileUsernameEditor />
                   </Paper>
                 </div>
               );
@@ -410,6 +431,8 @@ class User extends React.Component<Props, State> {
                 </div>
               );
             }
+          } else {
+            this.clearLS();
           }
 
           return (
