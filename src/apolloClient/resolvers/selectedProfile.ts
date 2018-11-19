@@ -1,3 +1,9 @@
+// This is not working as intended
+// using updateSelectedProfile does not work
+// Get many warnings in the console about __typename's
+// Think it may be what prevents updateSelectedProfile
+// from working
+
 const selectedProfile = {
   defaults: {
     selectedProfile: {
