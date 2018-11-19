@@ -50,7 +50,7 @@ const TypeSelector: React.SFC<Props> = ({ updateType, classes }) => {
       <Grid container spacing={24}>
         {types.map(type => {
           return (
-            <Grid item xs={4}>
+            <Grid key={type.id} item xs={4}>
               <Card className={classes.card}>
                 <CardActionArea>
                   <CardMedia
@@ -62,10 +62,10 @@ const TypeSelector: React.SFC<Props> = ({ updateType, classes }) => {
                     title="Contemplative Reptile"
                   />
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5">
                       Lizard
                     </Typography>
-                    <Typography component="p">
+                    <Typography variant="body1">
                       Lizards are a widespread group of squamate reptiles, with
                       over 6,000 species, ranging across all continents except
                       Antarctica

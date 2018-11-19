@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
-import client from '../../services/apolloClient';
+import client from '../..//apolloClient';
 import CREATE_USER from './mutations/createUser';
 import fire from '../../services/firebase';
 import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
@@ -23,20 +23,11 @@ require('firebase/auth');
 
 interface Props {
   render: any;
+  isConnected: boolean;
   classes: {
     card: string;
     container: string;
   };
-}
-
-interface SelectedProfile {
-  id: string | null;
-  isDarkTheme: boolean;
-  isMyTheme: boolean;
-  myTheme: {
-    id: string;
-    data: any;
-  } | null;
 }
 
 interface State {
@@ -184,7 +175,7 @@ class User extends React.Component<Props, State> {
 
   authListener = () => {
     clearTimeout(this.timeoutFirebaseAuthToken);
-    if (navigator.onLine) {
+    if (this.props.isConnected) {
       this.setState(
         {
           authenticating: true,
@@ -210,11 +201,6 @@ class User extends React.Component<Props, State> {
           }
         },
       );
-    } else {
-      console.log('Checking for internet connection...');
-      this.timeoutFirebaseAuthToken = window.setTimeout(() => {
-        this.authListener();
-      }, 5000);
     }
   };
 

@@ -1,29 +1,17 @@
 import ApolloClient from 'apollo-client';
+import networkStatus from './resolvers/networkStatus';
 import { ApolloLink } from 'apollo-link';
 import { BatchHttpLink } from 'apollo-link-batch-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { merge } from 'lodash';
 import { setContext } from 'apollo-link-context';
 import { withClientState } from 'apollo-link-state';
 
 const cache = new InMemoryCache();
 
 const stateLink = withClientState({
+  ...merge(networkStatus),
   cache,
-  resolvers: {
-    Mutation: {
-      updateNetworkStatus: (_: null, { isConnected }, { cache }) => {
-        const data = {
-          networkStatus: {
-            __typename: 'NetworkStatus',
-            isConnected,
-          },
-        };
-        cache.writeData({ data });
-        return null;
-      },
-    },
-  },
-  defaults: {},
 });
 
 export const authLink = setContext((_, { headers }) => {

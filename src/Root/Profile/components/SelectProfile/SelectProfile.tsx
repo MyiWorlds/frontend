@@ -22,7 +22,7 @@ interface Props {
 }
 
 interface State {
-  selected: string | undefined;
+  selected: string;
 }
 
 const styles = () =>
@@ -37,7 +37,7 @@ const styles = () =>
 
 class SelectProfile extends React.Component<Props, State> {
   state = {
-    selected: undefined,
+    selected: '',
   };
 
   onListItemClick = id => {

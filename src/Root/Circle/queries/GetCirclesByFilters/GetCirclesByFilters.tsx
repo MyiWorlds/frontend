@@ -1,5 +1,5 @@
 import * as React from 'react';
-import apolloClient from '../../../../services/apolloClient';
+import apolloClient from '../../../..//apolloClient';
 import gql from 'graphql-tag';
 // import { Query } from 'react-apollo';
 

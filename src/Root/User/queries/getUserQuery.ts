@@ -1,7 +1,10 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query user {
+  query {
+    networkStatus @client {
+      isConnected
+    }
     user {
       email
       id
