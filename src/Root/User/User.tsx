@@ -1,13 +1,13 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
-import client from '../..//apolloClient';
+import client from '../../apolloClient';
 import CREATE_USER from './mutations/createUser';
 import fire from '../../services/firebase';
 import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
 import GET_USER from './queries/getUserQuery';
 import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
-import SelectProfile from '../Profile/components/SelectProfile';
+import SelectProfile from './components/SelectProfile';
 import UPDATE_PROFILE from '../Profile/mutations/updateProfile';
 import { Query } from 'react-apollo';
 import {
@@ -15,7 +15,6 @@ import {
   Paper,
   Slide,
   Snackbar,
-  Typography,
   withStyles,
 } from '@material-ui/core';
 
@@ -67,8 +66,11 @@ const styles = theme =>
 
 const defaultEmptySelectedProfile: SelectedProfile = {
   id: null,
+  username: 'guest',
   isDarkTheme: true,
   isMyTheme: false,
+  addToHistory: false,
+  profileHistoryId: null,
   myTheme: null,
 };
 
@@ -205,9 +207,7 @@ class User extends React.Component<Props, State> {
   };
 
   clearLS = () => {
-    this.setTokenLS('');
-    this.setUserLS('');
-    this.setSelectedProfileLS('');
+    localStorage.clear();
   };
 
   setTokenLS = (idToken: string) => {
@@ -220,6 +220,14 @@ class User extends React.Component<Props, State> {
 
   setSelectedProfileLS = (selectedProfileId: string) => {
     localStorage.setItem('selected-profile-id', selectedProfileId);
+  };
+
+  setProfileHistoryIdLS = (profileHistoryId: string) => {
+    localStorage.setItem('profile-history-id', profileHistoryId);
+  };
+
+  setAddToHistoryLS = (addToHistory: string) => {
+    localStorage.setItem('add-to-history', addToHistory);
   };
 
   getSelectedProfileIdLS = () => {
@@ -278,6 +286,29 @@ class User extends React.Component<Props, State> {
         }
       }
     }, 500);
+  };
+
+  handleToggleAddToHistory = () => {
+    let selectedProfile = Object.assign({}, this.state.selectedProfile);
+
+    if (selectedProfile && selectedProfile.id) {
+      selectedProfile.addToHistory = !selectedProfile.addToHistory;
+      this.setState({ selectedProfile }, () => {
+        this.timeoutUpdateProfile = setTimeout(async () => {
+          if (selectedProfile.id) {
+            const updateProfile = await this.updateProfile(selectedProfile.id, {
+              addToHistory: selectedProfile.addToHistory,
+            });
+
+            this.setAddToHistoryLS(selectedProfile.addToHistory.toString());
+
+            if (updateProfile.data) {
+              this.displaySnackbar(updateProfile.data.updateProfile.status);
+            }
+          }
+        }, 500);
+      });
+    }
   };
 
   updateProfile = async (id: string, data: any) => {
@@ -350,6 +381,9 @@ class User extends React.Component<Props, State> {
       const selectedProfile =
         query.data.getUsersProfileById || defaultEmptySelectedProfile;
 
+      this.setProfileHistoryIdLS(selectedProfile.history.id);
+      this.setAddToHistoryLS(selectedProfile.addToHistory);
+
       this.setState({
         selectedProfile,
       });
@@ -393,19 +427,10 @@ class User extends React.Component<Props, State> {
               (selectedProfile && !selectedProfile.id)
             ) {
               return (
-                <div className={classes.container}>
-                  <Paper className={classes.card} elevation={1}>
-                    <Typography variant="h2">Select Profile</Typography>
-                    <SelectProfile
-                      list={user.profiles}
-                      changeSelectedProfile={this.changeSelectedProfile}
-                    />
-                    <Typography variant="h5">
-                      Or Create a New Profile
-                    </Typography>
-                    <ProfileUsernameEditor />
-                  </Paper>
-                </div>
+                <SelectProfile
+                  changeSelectedProfile={this.changeSelectedProfile}
+                  profiles={user.profiles}
+                />
               );
             }
 
@@ -429,6 +454,7 @@ class User extends React.Component<Props, State> {
                 user,
                 handleToggleThemeDark: this.handleToggleThemeDark,
                 handleToggleStyleEnabled: this.handleToggleStyleEnabled,
+                handleToggleAddToHistory: this.handleToggleAddToHistory,
                 handleLogin: this.authWithGoogle,
                 handleLogout: () => this.handleLogout(refetch),
                 changeSelectedProfile: this.changeSelectedProfile,

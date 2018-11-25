@@ -44,6 +44,7 @@ interface Props {
     username: string;
     isDarkTheme: boolean;
     isMyTheme: boolean;
+    addToHistory: boolean;
     myTheme: {
       id: string | null;
       data: any | null;
@@ -57,6 +58,7 @@ interface Props {
   handleLogin: () => void;
   handleLogout: () => void;
   changeSelectedProfile: (id: string | null) => void;
+  handleToggleAddToHistory: () => void;
 }
 
 const styles = theme =>
@@ -128,6 +130,7 @@ class AppMenuController extends React.Component<Props, State> {
       changeSelectedProfile,
       handleNavigationToggle,
       handleToggleThemeDark,
+      handleToggleAddToHistory,
       handleToggleStyleEnabled,
       user,
       handleLogout,
@@ -284,6 +287,19 @@ class AppMenuController extends React.Component<Props, State> {
 
               <Divider />
 
+              <MenuItem
+                onClick={() => handleToggleAddToHistory()}
+                disabled={selectedProfile.id === null}
+              >
+                <ListItemIcon>
+                  <Icon>history</Icon>
+                </ListItemIcon>
+                <ListItemText primary="History Enabled" />
+                <Switch checked={selectedProfile.addToHistory} />
+              </MenuItem>
+
+              <Divider />
+
               <MenuItem onClick={this.handleClose}>
                 <ListItemIcon>
                   <Icon>report</Icon>
@@ -299,6 +315,7 @@ class AppMenuController extends React.Component<Props, State> {
               </MenuItem>
 
               <Divider />
+
               <MenuItem onClick={() => handleLogout()}>
                 <ListItemIcon>
                   <Icon>exit_to_app</Icon>

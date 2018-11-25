@@ -3,13 +3,14 @@ import apolloClient from '..//apolloClient';
 import App from './App';
 import MaterialUI from '../services/MaterialUI';
 import NetworkUpdater from './NetworkUpdater';
+import ReactContext from './ReactContext';
 import User from './User';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 import { Detector } from 'react-detect-offline';
 
 const Root: React.SFC = () => (
-  <div>
+  <ReactContext>
     <BrowserRouter>
       <ApolloProvider client={apolloClient}>
         <Detector
@@ -26,6 +27,7 @@ const Root: React.SFC = () => (
                   handleLogin,
                   handleLogout,
                   changeSelectedProfile,
+                  handleToggleAddToHistory,
                 }) => (
                   <MaterialUI selectedProfile={selectedProfile}>
                     <App
@@ -36,6 +38,7 @@ const Root: React.SFC = () => (
                       handleLogin={handleLogin}
                       handleLogout={handleLogout}
                       changeSelectedProfile={changeSelectedProfile}
+                      handleToggleAddToHistory={handleToggleAddToHistory}
                     />
                   </MaterialUI>
                 )}
@@ -45,7 +48,7 @@ const Root: React.SFC = () => (
         />
       </ApolloProvider>
     </BrowserRouter>
-  </div>
+  </ReactContext>
 );
 
 export default Root;

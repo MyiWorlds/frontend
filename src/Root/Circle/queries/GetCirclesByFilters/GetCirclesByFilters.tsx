@@ -1,6 +1,13 @@
 import * as React from 'react';
 import apolloClient from '../../../..//apolloClient';
 import gql from 'graphql-tag';
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@material-ui/core';
 // import { Query } from 'react-apollo';
 
 interface Props {
@@ -101,20 +108,21 @@ class GetCirclesByFilters extends React.Component<Props, State> {
         }}
       >
         <div>
-          <h1>Get Circles by Filters</h1>
+          <Typography variant="h3">Get Circles by Filters</Typography>
           <br />
           {circle.lines ? (
-            <ul>
+            <List>
               {circle.lines.map((doc: any) => {
                 return (
-                  <li key={doc.id}>
-                    <h3>{doc.title}</h3>
-                    <p>{doc.type}</p>
-                    <p>{doc.creator.username}</p>
-                  </li>
+                  <div key={doc.id}>
+                    <ListItem button>
+                      <ListItemText inset primary={doc.type} />
+                    </ListItem>
+                    <Divider />
+                  </div>
                 );
               })}
-            </ul>
+            </List>
           ) : null}
           <button onClick={() => this.getData()}>Refetch</button>
         </div>

@@ -3,7 +3,6 @@ import AppMenuController from './components/AppMenuController';
 import Navigation from './components/Navigation';
 import Routes from '../../routes';
 import withWidth from '@material-ui/core/withWidth';
-
 // import CreateCircle from './containers/Circle/mutations/CreateCircle';
 // import CreateProfile from './containers/Profile/mutations/CreateProfile';
 // import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
@@ -20,10 +19,12 @@ interface Props {
     id: string | null;
     isDarkTheme: boolean;
     isMyTheme: boolean;
+    addToHistory: boolean;
     myTheme: MyTheme;
   };
   width: string;
   handleLogout: () => void;
+  handleToggleAddToHistory: () => void;
 }
 
 interface State {
@@ -61,6 +62,7 @@ class App extends React.Component<Props, State> {
       user,
       selectedProfile,
       handleLogout,
+      handleToggleAddToHistory,
     } = this.props;
 
     return (
@@ -76,6 +78,7 @@ class App extends React.Component<Props, State> {
           handleLogin={handleLogin}
           handleLogout={handleLogout}
           changeSelectedProfile={changeSelectedProfile}
+          handleToggleAddToHistory={handleToggleAddToHistory}
         />
         <Navigation
           showNavigation={showNavigation}

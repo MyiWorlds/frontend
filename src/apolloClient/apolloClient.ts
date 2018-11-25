@@ -15,17 +15,20 @@ const stateLink = withClientState({
 });
 
 export const authLink = setContext((_, { headers }) => {
-  // get the authentication token from local storage if it exists
   const token = localStorage.getItem('token');
-  const profileid = localStorage.getItem('selected-profile-id') || null;
-  const userid = localStorage.getItem('user-id');
-  // return the headers to the context so httpLink can read them
+  const profileId = localStorage.getItem('selected-profile-id') || null;
+  const userId = localStorage.getItem('user-id');
+  const addToHistory = localStorage.getItem('add-to-history');
+  const profileHistoryId = localStorage.getItem('profile-history-id');
+
   return {
     headers: {
       ...headers,
       token: token,
-      'selected-profile-id': profileid,
-      'user-id': userid,
+      'selected-profile-id': profileId,
+      'user-id': userId,
+      'add-to-history': addToHistory,
+      'profile-history-id': profileHistoryId,
     },
   };
 });

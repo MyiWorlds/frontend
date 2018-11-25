@@ -8,9 +8,10 @@ const selectedProfile = {
   defaults: {
     selectedProfile: {
       __typename: 'Profile',
-      id: '',
+      id: null,
       isDarkTheme: false,
       isMyTheme: false,
+      addToHistory: false,
       myTheme: {
         __typename: 'Circle',
         id: '',

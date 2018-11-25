@@ -7,6 +7,10 @@ export default gql`
       username
       isDarkTheme
       isMyTheme
+      addToHistory
+      history {
+        id
+      }
       myTheme {
         id
         type

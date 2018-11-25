@@ -12,11 +12,17 @@ interface MyTheme {
   };
 }
 
-interface SelectedProfile {
+interface Profile {
   id: string | null;
+  username: string;
+}
+
+interface SelectedProfile extends Profile {
   isDarkTheme: boolean;
   isMyTheme: boolean;
-  myTheme: {
+  addToHistory: boolean;
+  profileHistoryId: string | null;
+  myTheme?: {
     id: string;
     data: any;
   } | null;
