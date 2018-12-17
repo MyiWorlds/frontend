@@ -67,8 +67,10 @@ class ProfileSettings extends React.Component<Props, State> {
     const { profiles, classes } = this.props;
     const { expanded, addProfile } = this.state;
     return (
-      <Card style={{ maxWidth: '100%', padding: 12, margin: 12 }}>
-        <Typography variant="h4">My Profiles</Typography>
+      <div>
+        <Typography style={{ margin: 12 }} variant="h4">
+          My Profiles
+        </Typography>
         <br />
         {profiles.map(profile => {
           return (
@@ -85,7 +87,7 @@ class ProfileSettings extends React.Component<Props, State> {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div style={{ width: '100%' }}>
-                  <Typography variant="body1" color="inherit">
+                  <Typography variant="body1" color="textPrimary">
                     Date Created:
                     <b>
                       {moment(profile.dateCreated).format(
@@ -95,7 +97,7 @@ class ProfileSettings extends React.Component<Props, State> {
                   </Typography>
                   <br />
                   <br />
-                  <Typography variant="body1" color="inherit">
+                  <Typography variant="body1" color="textPrimary">
                     Last Updated:
                     <b>
                       {moment(profile.dateUpdated).format(
@@ -135,7 +137,7 @@ class ProfileSettings extends React.Component<Props, State> {
             </Button>
           </CardActions>
         )}
-      </Card>
+      </div>
     );
   }
 }

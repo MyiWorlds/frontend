@@ -1,7 +1,7 @@
 import * as React from 'react';
 import GET_PROFILE_BY_USERNAME from '../../queries/getProfileByUsername';
 import GET_USER from '../../../User/queries/getUserQuery';
-import GET_USER_AND_PROFILE from '../../../User/components/AccountSettings/getUserAndProfile';
+import GET_USER_AND_PROFILE from '../../../User/components/UserSettings/getUserAndProfile';
 import gql from 'graphql-tag';
 import Progress from '../../../components/Progress';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
@@ -20,6 +20,7 @@ import {
 interface Props {
   classes: {
     secondaryHeading: string;
+    usernameTextField: string;
     textfieldProgress: string;
     actions: string;
     actionsFill: string;
@@ -54,10 +55,13 @@ const styles = theme =>
       fontSize: theme.typography.pxToRem(15),
       color: theme.palette.text.secondary,
     },
+    usernameTextField: {
+      width: `calc(100% - ${theme.spacing.unit * 2}px)`,
+    },
     textfieldProgress: {
       position: 'relative',
-      width: 14,
-      height: 14,
+      width: theme.spacing.unit * 4,
+      height: theme.spacing.unit * 4,
       marginRight: 4,
       marginLeft: 6,
     },
@@ -261,6 +265,7 @@ class ProfileUsernameEditor extends React.Component<
                             margin="normal"
                             value={username}
                             fullWidth
+                            className={classes.usernameTextField}
                             onChange={event =>
                               this.handleInputChange(
                                 'username',

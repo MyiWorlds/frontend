@@ -5,6 +5,8 @@ import CREATE_USER from './mutations/createUser';
 import fire from '../../services/firebase';
 import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
 import GET_USER from './queries/getUserQuery';
+import guestProfile from '../Profile/constants/guestProfile';
+import guestUser from './constants/guestUser';
 import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
 import SelectProfile from './components/SelectProfile';
@@ -32,7 +34,7 @@ interface Props {
 interface State {
   errorMessage?: string;
   authenticating: boolean;
-  selectedProfile: SelectedProfile | null;
+  selectedProfile: SelectedProfile;
   showProfileUpdatedSnackbar: boolean;
   profileUpdatedSnackbarMessage: string;
 }
@@ -64,29 +66,13 @@ const styles = theme =>
     },
   });
 
-const defaultEmptySelectedProfile: SelectedProfile = {
-  id: null,
-  username: 'guest',
-  isDarkTheme: true,
-  isMyTheme: false,
-  addToHistory: false,
-  profileHistoryId: null,
-  myTheme: null,
-};
-
-const defaultGuestUser = {
-  id: null,
-  email: 'guest@email.com',
-  profiles: [],
-};
-
 class User extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
       errorMessage: undefined,
       authenticating: false,
-      selectedProfile: defaultEmptySelectedProfile,
+      selectedProfile: guestProfile,
       showProfileUpdatedSnackbar: false,
       profileUpdatedSnackbarMessage: '',
     };
@@ -378,10 +364,11 @@ class User extends React.Component<Props, State> {
           id,
         },
       });
-      const selectedProfile =
-        query.data.getUsersProfileById || defaultEmptySelectedProfile;
+      const selectedProfile = query.data.getUsersProfileById || guestProfile;
 
-      this.setProfileHistoryIdLS(selectedProfile.history.id);
+      this.setProfileHistoryIdLS(
+        selectedProfile.history ? selectedProfile.history.id : null,
+      );
       this.setAddToHistoryLS(selectedProfile.addToHistory);
 
       this.setState({
@@ -389,7 +376,7 @@ class User extends React.Component<Props, State> {
       });
     } else {
       this.setState({
-        selectedProfile: defaultEmptySelectedProfile,
+        selectedProfile: guestProfile,
       });
     }
   };
@@ -419,7 +406,7 @@ class User extends React.Component<Props, State> {
             );
           }
 
-          const user = data.user ? data.user : defaultGuestUser;
+          const user = data.user ? data.user : guestUser;
 
           if (user.id) {
             if (

@@ -1,32 +1,98 @@
 import * as React from 'react';
+import client from '../../apolloClient';
+import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
+import guestProfile from '../Profile/constants/guestProfile';
+
+type AppContextInterface = {
+  updateSelectedProfile: (id: String | null) => void;
+  selectedProfile: SelectedProfile;
+};
 
 interface State {
-  selectedProfile?: SelectedProfile | null;
+  selectedProfile: SelectedProfile;
 }
 
-const AppContext = React.createContext<State | null>(null);
+const AppContextProvider = React.createContext<AppContextInterface>(
+  {} as AppContextInterface,
+);
+
+// export const AppContextProvider = ctxt.Provider;
+// export const AppContextConsumer = ctxt.Consumer;
+
+// const defaultAppContext: AppContextInterface = {
+//   selectedProfile: null,
+// };
 
 class ReactContext extends React.Component<State> {
-  state = {
-    selectedProfile: null,
+  state: State = {
+    selectedProfile: guestProfile,
   };
 
   // updateSelectedProfile = () => {};
 
+  setSelectedProfileLS = (selectedProfileId: string) => {
+    localStorage.setItem('selected-profile-id', selectedProfileId);
+  };
+
+  setProfileHistoryIdLS = (profileHistoryId: string) => {
+    localStorage.setItem('profile-history-id', profileHistoryId);
+  };
+
+  setAddToHistoryLS = (addToHistory: string) => {
+    localStorage.setItem('add-to-history', addToHistory);
+  };
+
+  updateSelectedProfile = async (id: string | null) => {
+    console.log('HEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
+    if (id && id !== 'null') {
+      const optimisticSelectedProfile = Object.assign(
+        {},
+        this.state.selectedProfile,
+        { id },
+      );
+      this.setState({
+        selectedProfile: optimisticSelectedProfile,
+      });
+
+      this.setSelectedProfileLS(id);
+
+      const query: any = await client.query({
+        query: GET_PROFILE_BY_ID,
+        fetchPolicy: 'no-cache',
+        variables: {
+          id,
+        },
+      });
+      const selectedProfile = query.data.getUsersProfileById || guestProfile;
+
+      this.setProfileHistoryIdLS(selectedProfile.history.id);
+      this.setAddToHistoryLS(selectedProfile.addToHistory);
+
+      this.setState({
+        selectedProfile,
+      });
+    } else {
+      this.setState({
+        selectedProfile: guestProfile,
+      });
+    }
+  };
+
   render() {
     const { selectedProfile } = this.state;
     return (
-      <AppContext.Provider
+      <AppContextProvider.Provider
         value={{
           selectedProfile,
-          // updateSelectedProfile: this.updateSelectedProfile,
+          updateSelectedProfile: this.updateSelectedProfile,
         }}
       >
         {this.props.children}
-      </AppContext.Provider>
+      </AppContextProvider.Provider>
     );
   }
 }
 
 export default ReactContext;
-export { AppContext };
+
+// const Consumer = ReactContext;

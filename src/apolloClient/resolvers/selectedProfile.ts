@@ -16,6 +16,9 @@ const selectedProfile = {
         __typename: 'Circle',
         id: '',
       },
+      history: {
+        id: null,
+      },
     },
   },
   resolvers: {

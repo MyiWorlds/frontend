@@ -21,7 +21,9 @@ interface SelectedProfile extends Profile {
   isDarkTheme: boolean;
   isMyTheme: boolean;
   addToHistory: boolean;
-  profileHistoryId: string | null;
+  history: {
+    id: string;
+  } | null;
   myTheme?: {
     id: string;
     data: any;

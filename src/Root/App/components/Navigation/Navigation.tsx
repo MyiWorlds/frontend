@@ -80,9 +80,7 @@ interface Props {
     drawerInner: string;
     bottomNav: string;
   };
-  profile: {
-    username: string;
-  };
+  selectedProfile: SelectedProfile;
   showNavigation: boolean;
   handleNavigationToggle: () => void;
 }
@@ -92,7 +90,7 @@ interface State {}
 class Navigation extends React.Component<Props, State> {
   state = {};
 
-  navItems = profile => {
+  navItems = selectedProfile => {
     const navItems = [
       {
         type: 'BUTTON',
@@ -130,7 +128,7 @@ class Navigation extends React.Component<Props, State> {
         title: 'Home',
         slug: `/private/home`,
       },
-      profile && profile.username
+      selectedProfile.id
         ? {
             type: 'BUTTON',
             settings: {
@@ -138,7 +136,7 @@ class Navigation extends React.Component<Props, State> {
             },
             icon: 'public',
             title: 'Public Profile',
-            slug: `/${profile.username}`,
+            slug: `/${selectedProfile.username}`,
           }
         : {
             type: '',
@@ -161,8 +159,8 @@ class Navigation extends React.Component<Props, State> {
           primary: true,
         },
         icon: 'query_builder',
-        title: 'Recents',
-        slug: '/recents',
+        title: 'History',
+        slug: '/history',
       },
 
       {
@@ -182,11 +180,11 @@ class Navigation extends React.Component<Props, State> {
   render() {
     const {
       classes,
-      profile,
+      selectedProfile,
       showNavigation,
       handleNavigationToggle,
     } = this.props;
-    const navItems = this.navItems(profile);
+    const navItems = this.navItems(selectedProfile);
 
     return (
       <div className={classes.navigation}>

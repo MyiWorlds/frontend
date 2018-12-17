@@ -1,19 +1,22 @@
 import * as React from 'react';
 import apolloClient from '../../../..//apolloClient';
 import gql from 'graphql-tag';
+import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import { Link } from 'react-router-dom';
+import { Query } from 'react-apollo';
 import {
   Divider,
+  Icon,
+  IconButton,
   List,
   ListItem,
   ListItemText,
   Typography,
 } from '@material-ui/core';
-// import { Query } from 'react-apollo';
 
 interface Props {
-  selectedProfile: {
-    id: string | null;
-  };
+  selectedProfile: SelectedProfile;
+  circle: Circle;
 }
 
 interface State {
@@ -34,12 +37,16 @@ const GET_CIRCLES_BY_FILTERS = gql`
       cursor: $cursor
       orderBy: $orderBy
     ) {
+      id
+      title
       settings
       lines {
         id
         title
         type
+        settings
         creator {
+          id
           username
         }
       }
@@ -51,39 +58,20 @@ class GetCirclesByFilters extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
     this.state = {
-      circle: {
-        settings: {
-          cursor: null,
-          numberOfResults: 12,
-          orderBy: 'dateCreated',
-        },
-      },
+      circle: props.circle,
       lines: [],
     };
-    this.getData();
+    // this.getData();
   }
 
   getData = async () => {
-    const settings = this.state.circle.settings;
-
-    const filters = [
-      {
-        property: 'public',
-        condition: '==',
-        value: true,
-      },
-      // {
-      //   property: 'creator',
-      //   condition: '==',
-      //   value: this.props.selectedProfile.id,
-      // },
-    ];
+    const settings = this.props.circle.settings;
 
     const results: any = await apolloClient.query({
       query: GET_CIRCLES_BY_FILTERS,
       fetchPolicy: 'no-cache',
       variables: {
-        filters,
+        filters: settings.filters,
         orderBy: settings.orderBy,
         numberOfResults: settings.numberOfResults,
         cursor: settings.cursor,
@@ -96,71 +84,69 @@ class GetCirclesByFilters extends React.Component<Props, State> {
   };
 
   render() {
-    const { circle } = this.state;
+    const { settings } = this.props.circle;
 
     return (
-      <div
-        style={{
-          border: '1px solid lightgrey',
-          borderRadius: 8,
-          margin: 8,
-          padding: 8,
+      <Query
+        query={GET_CIRCLES_BY_FILTERS}
+        variables={{
+          filters: settings.filters,
+          orderBy: settings.orderBy,
+          numberOfResults: settings.numberOfResults,
+          cursor: settings.cursor,
         }}
       >
-        <div>
-          <Typography variant="h3">Get Circles by Filters</Typography>
-          <br />
-          {circle.lines ? (
-            <List>
-              {circle.lines.map((doc: any) => {
-                return (
-                  <div key={doc.id}>
-                    <ListItem button>
-                      <ListItemText inset primary={doc.type} />
-                    </ListItem>
-                    <Divider />
-                  </div>
-                );
-              })}
-            </List>
-          ) : null}
-          <button onClick={() => this.getData()}>Refetch</button>
-        </div>
-
-        {/* <Query
-          query={GET_CIRCLES_BY_FILTERS}
-          variables={{
-            numberOfResults: 3,
-            cursor: null,
-          }}
-        >
-          {({ loading, error, data, refetch }) => {
-            if (loading) return <p>loading...</p>;
-            if (error)
-              return <p>GetCircleById had error {console.log(error)}</p>;
-            const documents = data.getCirclesByFilters.lines;
+        {({ loading, error, data, refetch }) => {
+          if (loading) {
             return (
+              <ProgressWithMessage
+                message="Getting Account"
+                hideBackground={true}
+              />
+            );
+          }
+
+          const circle = data.getCirclesByFilters;
+          const listTitle = this.props.circle.title || 'Get Circles by Filters';
+          return (
+            <div
+              style={{
+                border: '1px solid lightgrey',
+                borderRadius: 8,
+                margin: 8,
+                padding: 8,
+              }}
+            >
               <div>
-                <h1>Get Circles by Filters</h1>
+                <Typography variant="h3">{listTitle}</Typography>
                 <br />
-                {documents ? (
-                  <ul>
-                    {documents.map((doc: any) => {
+                {circle.lines ? (
+                  <List>
+                    {circle.lines.map((circle: any) => {
                       return (
-                        <li key={doc.id}>
-                          <h3>{doc.title}</h3>
-                          <p>{doc.type}</p>
-                        </li>
+                        <div key={circle.id}>
+                          <ListItem
+                            button
+                            component={(props: any) => (
+                              <Link {...props} to={`/id/${circle.id}`} />
+                            )}
+                          >
+                            <ListItemText inset primary={circle.type} />
+                          </ListItem>
+                          <Divider />
+                        </div>
                       );
                     })}
-                  </ul>
+                  </List>
                 ) : null}
-                <button onClick={() => refetch()}>Refetch</button>
+                <IconButton aria-label="Refetch" onClick={() => refetch()}>
+                  <Icon>refresh</Icon>
+                </IconButton>
               </div>
-            );
-          }}
-        </Query> */}
-      </div>
+            </div>
+          );
+        }}
+      </Query>
     );
   }
 }

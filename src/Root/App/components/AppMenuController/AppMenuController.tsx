@@ -300,22 +300,6 @@ class AppMenuController extends React.Component<Props, State> {
 
               <Divider />
 
-              <MenuItem onClick={this.handleClose}>
-                <ListItemIcon>
-                  <Icon>report</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Privacy Policy" />
-              </MenuItem>
-
-              <MenuItem onClick={this.handleClose}>
-                <ListItemIcon>
-                  <Icon>subject</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Terms of Service" />
-              </MenuItem>
-
-              <Divider />
-
               <MenuItem onClick={() => handleLogout()}>
                 <ListItemIcon>
                   <Icon>exit_to_app</Icon>

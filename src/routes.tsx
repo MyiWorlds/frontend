@@ -1,10 +1,10 @@
 import * as React from 'react';
-import AccountSettings from './Root/User/components/AccountSettings';
 import Circle from './Root/Circle';
 import CreateCircle from './Root/Circle/mutations/CreateCircle';
 import GetCircleById from './Root/Circle/queries/GetCircleById';
-import GetCirclesByFilters from './Root/Circle/queries/GetCirclesByFilters';
+import GetCircleByProfileUsername from './Root/Circle/queries/GetCircleByProfileUsername';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
+import UserSettings from './Root/User/components/UserSettings';
 import { Route, Switch } from 'react-router';
 
 // import { createBrowserHistory } from 'history';
@@ -12,6 +12,7 @@ import { Route, Switch } from 'react-router';
 // const history = createBrowserHistory({ forceRefresh: false });
 
 const circle = {
+  id: 'img',
   type: 'IMAGE-URL',
   // Add before/after for overwriting other peoples that you may have copied
   // Eventually it could be a smart system to pick out repeats asking user about which ones to keep
@@ -42,32 +43,31 @@ const circle = {
 };
 
 interface Props {
-  selectedProfile: {
-    id: string | null;
-    myTheme: MyTheme;
-  };
+  selectedProfile: SelectedProfile;
 }
 
 const Routes = (props: Props) => {
   const { selectedProfile } = props;
   return (
     <Switch>
-      <Route exact path="/" render={() => <Circle circle={circle} />} />
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <Circle selectedProfile={selectedProfile} circle={circle} />
+        )}
+      />
       <Route
         exact
         path="/id/:id"
-        render={(props: any) => <GetCircleById id={props.match.params.id} />}
+        render={(props: any) => (
+          <GetCircleById
+            id={props.match.params.id}
+            selectedProfile={selectedProfile}
+          />
+        )}
       />
-      <Route
-        exact
-        path="/account"
-        render={(props: any) => <AccountSettings />}
-      />
-      <Route
-        exact
-        path="/search"
-        render={() => <GetCirclesByFilters selectedProfile={selectedProfile} />}
-      />
+      <Route exact path="/account" render={(props: any) => <UserSettings />} />
       <Route
         exact
         path="/create"
@@ -78,7 +78,35 @@ const Routes = (props: Props) => {
         path="/theme-color-picker"
         render={() => <ThemeEditor selectedProfile={selectedProfile} />}
       />
-
+      <Route
+        path="/history"
+        render={props => (
+          <GetCircleById
+            id={selectedProfile.history ? selectedProfile.history.id : ''}
+            selectedProfile={selectedProfile}
+          />
+        )}
+      />
+      <Route
+        path="/:username"
+        render={props => (
+          <GetCircleByProfileUsername
+            username={props.match.params.username}
+            {...props}
+          />
+        )}
+      />
+      {/* <Route
+        path="/:username/:slug"
+        render={props => (
+          <CircleBySlug
+            username={props.match.params.username}
+            slug={props.match.params.slug}
+            isPrimaryContent={true}
+            {...props}
+          />
+        )}
+      /> */}
       {/* <Route
         path="/uid/:uid"
         render={props => (

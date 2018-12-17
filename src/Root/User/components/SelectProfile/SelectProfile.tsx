@@ -5,9 +5,10 @@ import SelectProfile from 'src/Root/Profile/components/SelectProfile';
 import {
   createStyles,
   Paper,
+  Theme,
   Typography,
-  withStyles
-  } from '@material-ui/core';
+  withStyles,
+} from '@material-ui/core';
 
 interface Props {
   classes: {
@@ -21,11 +22,12 @@ interface Props {
 
 interface State {}
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     container: {
       maxWidth: 420,
       margin: '42px auto',
+      padding: theme.spacing.unit * 3,
     },
     avatar: {
       backgroundColor: blue[100],
@@ -44,17 +46,15 @@ class SelectedProfile extends React.Component<Props, State> {
     const { classes, profiles, changeSelectedProfile } = this.props;
 
     return (
-      <div className={classes.container}>
-        <Paper className={classes.card} elevation={1}>
-          <Typography variant="h2">Select Profile</Typography>
-          <SelectProfile
-            list={profiles}
-            changeSelectedProfile={changeSelectedProfile}
-          />
-          <Typography variant="h5">Or Create a New Profile</Typography>
-          <ProfileUsernameEditor />
-        </Paper>
-      </div>
+      <Paper className={classes.container} elevation={1}>
+        <Typography variant="h2">Select Profile</Typography>
+        <SelectProfile
+          list={profiles}
+          changeSelectedProfile={changeSelectedProfile}
+        />
+        <Typography variant="h5">Or Create a New Profile</Typography>
+        <ProfileUsernameEditor />
+      </Paper>
     );
   }
 }

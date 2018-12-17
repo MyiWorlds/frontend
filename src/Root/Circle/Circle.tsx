@@ -1,19 +1,25 @@
 import * as React from 'react';
+import GetCirclesByFilters from './queries/GetCirclesByFilters';
 import Image from './components/Image';
 
-interface Circle {
-  type: string;
-}
-
 interface Props {
+  selectedProfile: SelectedProfile;
   circle: Circle;
 }
 
-const Circle: React.SFC<Props> = ({ circle }) => {
+const Circle: React.SFC<Props> = ({ selectedProfile, circle }) => {
   const type = circle.type.includes('-')
     ? circle.type.substring(0, circle.type.indexOf('-'))
     : circle.type;
+
   switch (type) {
+    case 'GET_CIRCLES_BY_FILTERS':
+      return (
+        <GetCirclesByFilters
+          selectedProfile={selectedProfile}
+          circle={circle}
+        />
+      );
     case 'NOT_FOUND':
       return <div>NOT FOUND</div>;
     case 'IMAGE':

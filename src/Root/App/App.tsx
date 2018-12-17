@@ -15,13 +15,7 @@ interface Props {
   handleLogin: () => void;
   changeSelectedProfile: () => void;
   user: any;
-  selectedProfile: {
-    id: string | null;
-    isDarkTheme: boolean;
-    isMyTheme: boolean;
-    addToHistory: boolean;
-    myTheme: MyTheme;
-  };
+  selectedProfile: SelectedProfile;
   width: string;
   handleLogout: () => void;
   handleToggleAddToHistory: () => void;
@@ -82,16 +76,17 @@ class App extends React.Component<Props, State> {
         />
         <Navigation
           showNavigation={showNavigation}
+          selectedProfile={selectedProfile}
           handleNavigationToggle={this.handleNavigationToggle}
         />
         <div
           style={{
-            marginTop: 60,
+            marginTop: 48,
             position: 'relative',
             width: '100%',
             maxWidth: '100%',
             paddingBottom: 120,
-            overflow: 'hidden',
+            overflow: 'auto',
           }}
         >
           <Routes selectedProfile={selectedProfile} />
