@@ -1,5 +1,6 @@
 import * as React from 'react';
 import apolloClient from '../../../..//apolloClient';
+import Error from 'src/Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
 import { Link } from 'react-router-dom';
@@ -29,7 +30,7 @@ const GET_CIRCLES_BY_FILTERS = gql`
     $filters: JSON!
     $numberOfResults: Int
     $cursor: JSON
-    $orderBy: String!
+    $orderBy: JSON!
   ) {
     getCirclesByFilters(
       filters: $filters
@@ -106,7 +107,15 @@ class GetCirclesByFilters extends React.Component<Props, State> {
             );
           }
 
+          if (error) return <Error error={error} />;
+
           const circle = data.getCirclesByFilters;
+
+          if (!circle) {
+            // Create default circle for no results (some shortcut to bring out list finding options)
+            return <Typography variant="h3">No Results</Typography>;
+          }
+
           const listTitle = this.props.circle.title || 'Get Circles by Filters';
           return (
             <div

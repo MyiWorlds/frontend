@@ -7,7 +7,10 @@ interface Filter {
 
 interface GetDocumentsByFilters {
   filters: Filter;
-  orderBy: string;
+  orderBy: {
+    property: string;
+    ascending: boolean;
+  };
   numberOfResults: number;
 }
 
@@ -27,7 +30,10 @@ interface IGetCirclesByFilters {
   settings: {
     cursor: string | null;
     numberOfResults: number;
-    orderBy: string;
+    orderBy: {
+      property: string;
+      ascending: boolean;
+    };
   };
 }
 
