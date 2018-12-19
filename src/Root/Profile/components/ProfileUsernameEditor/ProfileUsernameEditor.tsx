@@ -1,6 +1,6 @@
 import * as React from 'react';
-import GET_PROFILE_BY_USERNAME from '../../queries/getProfileByUsername';
-import GET_USER from '../../../User/queries/getUserQuery';
+import GET_PROFILE_BY_USERNAME from '../../containers/queries/getProfileByUsername';
+import GET_USER from '../../../User/containers/queries/getUserQuery';
 import GET_USER_AND_PROFILE from '../../../User/components/UserSettings/getUserAndProfile';
 import gql from 'graphql-tag';
 import Progress from '../../../components/Progress';

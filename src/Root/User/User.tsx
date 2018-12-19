@@ -1,16 +1,16 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../../apolloClient';
-import CREATE_USER from './mutations/createUser';
+import CREATE_USER from './containers/mutations/createUser';
 import fire from '../../services/firebase';
-import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
-import GET_USER from './queries/getUserQuery';
+import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById';
+import GET_USER from './containers/queries/getUserQuery';
 import guestProfile from '../Profile/constants/guestProfile';
 import guestUser from './constants/guestUser';
 import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
 import SelectProfile from './components/SelectProfile';
-import UPDATE_PROFILE from '../Profile/mutations/updateProfile';
+import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
 import { Query } from 'react-apollo';
 import {
   createStyles,
@@ -34,7 +34,7 @@ interface Props {
 interface State {
   errorMessage?: string;
   authenticating: boolean;
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
   showProfileUpdatedSnackbar: boolean;
   profileUpdatedSnackbarMessage: string;
 }

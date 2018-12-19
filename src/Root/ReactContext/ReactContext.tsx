@@ -1,15 +1,15 @@
 import * as React from 'react';
 import client from '../../apolloClient';
-import GET_PROFILE_BY_ID from '../Profile/queries/getUsersProfileById';
+import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById';
 import guestProfile from '../Profile/constants/guestProfile';
 
 type AppContextInterface = {
   updateSelectedProfile: (id: String | null) => void;
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
 };
 
 interface State {
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
 }
 
 const AppContextProvider = React.createContext<AppContextInterface>(
@@ -43,7 +43,7 @@ class ReactContext extends React.Component<State> {
   };
 
   updateSelectedProfile = async (id: string | null) => {
-    console.log('HEEEEEEEEEEEEEEEEEEEEEEEEEEEEE');
+    console.log('HEREEE NOT USED');
     if (id && id !== 'null') {
       const optimisticSelectedProfile = Object.assign(
         {},

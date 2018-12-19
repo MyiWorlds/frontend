@@ -3,7 +3,7 @@ import ThemeColorPicker from './components/ThemeColorPicker';
 import { createStyles, withStyles } from '@material-ui/core';
 
 interface Props {
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
   classes: {
     container: string;
   };

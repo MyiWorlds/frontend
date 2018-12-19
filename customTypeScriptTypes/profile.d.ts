@@ -1,4 +1,4 @@
-interface MyTheme {
+interface IMyTheme {
   id: string;
   data: {
     palette: {
@@ -12,12 +12,12 @@ interface MyTheme {
   };
 }
 
-interface Profile {
+interface IProfile {
   id: string | null;
   username: string;
 }
 
-interface SelectedProfile extends Profile {
+interface ISelectedProfile extends IProfile {
   isDarkTheme: boolean;
   isMyTheme: boolean;
   addToHistory: boolean;

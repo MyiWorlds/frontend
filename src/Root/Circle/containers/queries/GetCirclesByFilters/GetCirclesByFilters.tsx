@@ -1,5 +1,4 @@
 import * as React from 'react';
-import apolloClient from '../../../..//apolloClient';
 import Error from 'src/Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
@@ -16,13 +15,8 @@ import {
 } from '@material-ui/core';
 
 interface Props {
-  selectedProfile: SelectedProfile;
-  circle: Circle;
-}
-
-interface State {
-  circle: any;
-  lines: any[];
+  selectedProfile: ISelectedProfile;
+  circle: ICircle;
 }
 
 const GET_CIRCLES_BY_FILTERS = gql`
@@ -55,35 +49,7 @@ const GET_CIRCLES_BY_FILTERS = gql`
   }
 `;
 
-class GetCirclesByFilters extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      circle: props.circle,
-      lines: [],
-    };
-    // this.getData();
-  }
-
-  getData = async () => {
-    const settings = this.props.circle.settings;
-
-    const results: any = await apolloClient.query({
-      query: GET_CIRCLES_BY_FILTERS,
-      fetchPolicy: 'no-cache',
-      variables: {
-        filters: settings.filters,
-        orderBy: settings.orderBy,
-        numberOfResults: settings.numberOfResults,
-        cursor: settings.cursor,
-      },
-    });
-
-    this.setState({
-      circle: results.data.getCirclesByFilters,
-    });
-  };
-
+class GetCirclesByFilters extends React.Component<Props> {
   render() {
     const { settings } = this.props.circle;
 

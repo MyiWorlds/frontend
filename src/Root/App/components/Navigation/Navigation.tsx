@@ -80,7 +80,7 @@ interface Props {
     drawerInner: string;
     bottomNav: string;
   };
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
   showNavigation: boolean;
   handleNavigationToggle: () => void;
 }

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import GetCirclesByFilters from './queries/GetCirclesByFilters';
+import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
 import Image from './components/Image';
 
 interface Props {
-  selectedProfile: SelectedProfile;
-  circle: Circle;
+  selectedProfile: ISelectedProfile;
+  circle: ICircle;
 }
 
 const Circle: React.SFC<Props> = ({ selectedProfile, circle }) => {

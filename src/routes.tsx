@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Circle from './Root/Circle';
-import CreateCircle from './Root/Circle/mutations/CreateCircle';
-import GetCircleById from './Root/Circle/queries/GetCircleById';
-import GetCircleByProfileUsername from './Root/Circle/queries/GetCircleByProfileUsername';
+import CreateCircle from './Root/Circle/containers/mutations/CreateCircle';
+import GetCircleById from './Root/Circle/containers/queries/GetCircleById';
+import GetCircleByProfileUsername from './Root/Circle/containers/queries/GetCircleByProfileUsername';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
 import UserSettings from './Root/User/components/UserSettings';
 import { Route, Switch } from 'react-router';
@@ -43,7 +43,7 @@ const circle = {
 };
 
 interface Props {
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
 }
 
 const Routes = (props: Props) => {

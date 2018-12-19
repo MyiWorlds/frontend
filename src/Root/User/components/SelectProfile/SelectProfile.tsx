@@ -16,7 +16,7 @@ interface Props {
     avatar: string;
     card: string;
   };
-  profiles: [Profile];
+  profiles: [IProfile];
   changeSelectedProfile: () => void;
 }
 

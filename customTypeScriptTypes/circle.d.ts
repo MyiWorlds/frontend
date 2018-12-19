@@ -1,12 +1,12 @@
 //Todo rename all these to have I at the start to prevent naming conflicts
-interface Filter {
+interface IFilter {
   property: string;
   condition: string;
   value: string | number | boolean | Date | null;
 }
 
-interface GetDocumentsByFilters {
-  filters: Filter;
+interface IGetDocumentsByFilters {
+  filters: IFilter;
   orderBy: {
     property: string;
     ascending: boolean;
@@ -14,12 +14,12 @@ interface GetDocumentsByFilters {
   numberOfResults: number;
 }
 
-interface GetDocumentsByIds {
+interface IGetDocumentsByIds {
   collection: string;
   ids: string[];
 }
 
-interface GetDocumentById {
+interface IGetDocumentById {
   id: string;
   collection: string;
 }
@@ -64,7 +64,7 @@ interface IImage {
   };
 }
 
-interface Circle {
+interface ICircle {
   id?: string | null;
   cached?: boolean;
   cache?: any;

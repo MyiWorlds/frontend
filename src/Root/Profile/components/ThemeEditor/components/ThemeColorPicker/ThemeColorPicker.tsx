@@ -12,7 +12,7 @@ interface Props {
     themeDemo: string;
   };
   selectedProfile: {
-    myTheme: MyTheme;
+    myTheme: IMyTheme;
   };
 }
 

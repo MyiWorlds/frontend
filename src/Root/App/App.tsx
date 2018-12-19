@@ -15,7 +15,7 @@ interface Props {
   handleLogin: () => void;
   changeSelectedProfile: () => void;
   user: any;
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
   width: string;
   handleLogout: () => void;
   handleToggleAddToHistory: () => void;
@@ -90,11 +90,6 @@ class App extends React.Component<Props, State> {
           }}
         >
           <Routes selectedProfile={selectedProfile} />
-          {/* <Home user={user} />
-          {user.id ? <CreateCircle selectedProfile={selectedProfile} /> : null}
-          {user.id ? <CreateProfile user={user} /> : null}
-          <GetCirclesByIds />
-          <GetCirclesByFilters /> */}
         </div>
       </>
     );

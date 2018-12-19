@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Circle from '../../Circle';
-import Error from '../../../../Root/components/Error';
+import Circle from '../../../Circle';
+import Error from '../../../../../Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
 import { FullCircleFragment } from '../FullCircleFragment';
@@ -10,7 +10,7 @@ import { Query } from 'react-apollo';
 interface Props {
   id: string;
   location?: Location;
-  selectedProfile: SelectedProfile;
+  selectedProfile: ISelectedProfile;
 }
 
 const GET_CIRCLE_BY_ID = gql`
