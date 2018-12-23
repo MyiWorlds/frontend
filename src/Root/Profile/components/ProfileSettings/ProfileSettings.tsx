@@ -3,7 +3,6 @@ import * as React from 'react';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
 import {
   Button,
-  Card,
   CardActions,
   createStyles,
   ExpansionPanel,
@@ -26,7 +25,7 @@ interface Props {
 
 interface State {
   expanded: string;
-  addProfile: boolean;
+  showCreateProfileDialog: boolean;
 }
 
 const styles = theme =>
@@ -54,7 +53,7 @@ const styles = theme =>
 class ProfileSettings extends React.Component<Props, State> {
   state = {
     expanded: '',
-    addProfile: false,
+    showCreateProfileDialog: false,
   };
 
   handleExpansionChange = panel => (event, expanded) => {
@@ -63,9 +62,21 @@ class ProfileSettings extends React.Component<Props, State> {
     });
   };
 
+  showCreateProfileDialog = () => {
+    this.setState({
+      showCreateProfileDialog: true,
+    });
+  };
+
+  hideCreateProfileDialog = () => {
+    this.setState({
+      showCreateProfileDialog: false,
+    });
+  };
+
   render() {
     const { profiles, classes } = this.props;
-    const { expanded, addProfile } = this.state;
+    const { expanded, showCreateProfileDialog } = this.state;
     return (
       <div>
         <Typography style={{ margin: 12 }} variant="h4">
@@ -87,21 +98,21 @@ class ProfileSettings extends React.Component<Props, State> {
               </ExpansionPanelSummary>
               <ExpansionPanelDetails>
                 <div style={{ width: '100%' }}>
-                  <Typography variant="body1" color="textPrimary">
+                  <Typography color="textPrimary">
                     Date Created:
                     <b>
                       {moment(profile.dateCreated).format(
-                        'MMMM Do YYYY h:mm:ss',
+                        'MMMM Do YYYY h:mm:ss a',
                       )}
                     </b>
                   </Typography>
                   <br />
                   <br />
-                  <Typography variant="body1" color="textPrimary">
+                  <Typography color="textPrimary">
                     Last Updated:
                     <b>
                       {moment(profile.dateUpdated).format(
-                        'MMMM Do YYYY h:mm:ss',
+                        'MMMM Do YYYY h:mm:ss a',
                       )}
                     </b>
                   </Typography>
@@ -110,33 +121,26 @@ class ProfileSettings extends React.Component<Props, State> {
             </ExpansionPanel>
           );
         })}
+        <CardActions style={{ marginTop: 12 }}>
+          <div style={{ flexGrow: 1 }} />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => {
+              this.setState({
+                showCreateProfileDialog: true,
+              });
+            }}
+          >
+            Add Profile
+          </Button>
+        </CardActions>
 
-        {addProfile ? (
-          <Card style={{ padding: 12 }}>
-            <ProfileUsernameEditor
-              propsHandleCancel={() => {
-                this.setState({
-                  addProfile: false,
-                });
-              }}
-            />
-          </Card>
-        ) : (
-          <CardActions style={{ marginTop: 12 }}>
-            <div style={{ flexGrow: 1 }} />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                this.setState({
-                  addProfile: true,
-                });
-              }}
-            >
-              Add Profile
-            </Button>
-          </CardActions>
-        )}
+        <ProfileUsernameEditor
+          open={showCreateProfileDialog}
+          handleClose={this.hideCreateProfileDialog}
+          disableBackdropClick
+        />
       </div>
     );
   }

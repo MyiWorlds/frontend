@@ -65,7 +65,7 @@ const TypeSelector: React.SFC<Props> = ({ updateType, classes }) => {
                     <Typography gutterBottom variant="h5">
                       Lizard
                     </Typography>
-                    <Typography variant="body1">
+                    <Typography>
                       Lizards are a widespread group of squamate reptiles, with
                       over 6,000 species, ranging across all continents except
                       Antarctica

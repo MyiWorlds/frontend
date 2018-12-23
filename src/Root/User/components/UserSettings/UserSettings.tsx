@@ -69,18 +69,18 @@ class UserSettings extends React.Component<Props> {
               <div className={classes.container}>
                 <Spacer height={42} />
                 <Typography variant="caption">Email:</Typography>
-                <Typography variant="body1">{user.email}</Typography>
+                <Typography>{user.email}</Typography>
 
                 <Spacer />
                 <Typography variant="caption">Date Created:</Typography>
-                <Typography variant="body1">
-                  {moment(user.dateCreated).format('MMMM Do YYYY h:mm:ss')}
+                <Typography>
+                  {moment(user.dateCreated).format('MMMM Do YYYY h:mm:ss a')}
                 </Typography>
 
                 <Spacer />
                 <Typography variant="caption">Last Updated:</Typography>
-                <Typography variant="body1">
-                  {moment(user.dateUpdated).format('MMMM Do YYYY h:mm:ss')}
+                <Typography>
+                  {moment(user.dateUpdated).format('MMMM Do YYYY h:mm:ss a')}
                 </Typography>
               </div>
               <List>

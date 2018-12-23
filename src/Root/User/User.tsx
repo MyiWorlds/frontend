@@ -9,7 +9,7 @@ import guestProfile from '../Profile/constants/guestProfile';
 import guestUser from './constants/guestUser';
 import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
-import SelectProfile from './components/SelectProfile';
+import SelectProfile from '../Profile/components/SelectProfile';
 import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
 import { Query } from 'react-apollo';
 import {
@@ -425,7 +425,10 @@ class User extends React.Component<Props, State> {
               return (
                 <div className={classes.container}>
                   <Paper className={classes.card} elevation={1}>
-                    <ProfileUsernameEditor />
+                    <ProfileUsernameEditor
+                      open={true}
+                      handleClose={() => null}
+                    />
                   </Paper>
                 </div>
               );

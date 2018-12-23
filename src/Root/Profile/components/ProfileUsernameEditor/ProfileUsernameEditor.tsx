@@ -1,18 +1,27 @@
 import * as React from 'react';
+import FlexGrow from 'src/Root/components/FlexGrow';
 import GET_PROFILE_BY_USERNAME from '../../containers/queries/getProfileByUsername';
 import GET_USER from '../../../User/containers/queries/getUserQuery';
 import GET_USER_AND_PROFILE from '../../../User/components/UserSettings/getUserAndProfile';
 import gql from 'graphql-tag';
 import Progress from '../../../components/Progress';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
+import Spacer from 'src/Root/components/Spacer';
 import { Mutation, Query } from 'react-apollo';
 import {
   Button,
-  CardActions,
+  Collapse,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Icon,
   InputAdornment,
+  Paper,
   TextField,
+  Theme,
   Typography,
   withStyles,
 } from '@material-ui/core';
@@ -22,11 +31,15 @@ interface Props {
     secondaryHeading: string;
     usernameTextField: string;
     textfieldProgress: string;
-    actions: string;
-    actionsFill: string;
+    codeBlock: string;
+    infoPaper: string;
+    restrictionsList: string;
   };
   username?: string;
+  open: boolean;
+  disableBackdropClick?: boolean;
   propsHandleCancel?: () => void;
+  handleClose: () => void;
 }
 
 interface State {
@@ -36,6 +49,8 @@ interface State {
   isLoading: boolean;
   usernameAvailable: boolean;
   usernameInvalid: boolean;
+  showMoreInfo: boolean;
+  showUsernameRequirements: boolean;
 }
 
 const CREATE_PROFILE = gql`
@@ -49,7 +64,7 @@ const CREATE_PROFILE = gql`
   }
 `;
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(15),
@@ -65,11 +80,20 @@ const styles = theme =>
       marginRight: 4,
       marginLeft: 6,
     },
+    infoPaper: {
+      padding: theme.spacing.unit * 2,
+      margin: `0px ${theme.spacing.unit}px`,
+    },
     actions: {
       display: 'flex',
     },
-    actionsFill: {
-      flexGrow: 1,
+    codeBlock: {
+      background: theme.palette.background.default,
+      padding: theme.spacing.unit,
+      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
+    },
+    restrictionsList: {
+      color: theme.palette.text.primary,
     },
   });
 
@@ -91,6 +115,8 @@ class ProfileUsernameEditor extends React.Component<
       isLoading: false,
       usernameAvailable: false,
       usernameInvalid: false,
+      showMoreInfo: false,
+      showUsernameRequirements: false,
     };
     this.timeout = 0;
   }
@@ -162,6 +188,19 @@ class ProfileUsernameEditor extends React.Component<
       checkUsername: false,
       usernameInvalid: false,
     });
+    this.props.handleClose();
+  };
+
+  toggleMoreInfo = () => {
+    this.setState({
+      showMoreInfo: !this.state.showMoreInfo,
+    });
+  };
+
+  toggleUsernameRequirements = () => {
+    this.setState({
+      showUsernameRequirements: !this.state.showUsernameRequirements,
+    });
   };
 
   render() {
@@ -170,162 +209,253 @@ class ProfileUsernameEditor extends React.Component<
       checkUsername,
       isLoading,
       saving,
+      showMoreInfo,
       usernameAvailable,
       usernameInvalid,
+      showUsernameRequirements,
     } = this.state;
-    const { username: propsUsername, classes, propsHandleCancel } = this.props;
+    const {
+      username: propsUsername,
+      classes,
+      open,
+      propsHandleCancel,
+      handleClose,
+      disableBackdropClick,
+    } = this.props;
 
     return (
-      <Query query={GET_USER}>
-        {({ loading, error, data }) => {
-          if (error) return <p>`Error :( ${console.log(error)}`</p>;
-          if (loading) {
+      <Dialog
+        open={open}
+        disableBackdropClick={disableBackdropClick ? true : false}
+        onClose={() => handleClose()}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle id="draggable-dialog-title">
+          {propsUsername ? 'Edit Profile Username' : 'Create Profile'}
+        </DialogTitle>
+        <Query query={GET_USER}>
+          {({ loading, error, data }) => {
+            if (error) return <p>`Error :( ${console.log(error)}`</p>;
+            if (loading) {
+              return (
+                <ProgressWithMessage
+                  message="Getting Account Information"
+                  hideBackground={true}
+                />
+              );
+            }
+
             return (
-              <ProgressWithMessage
-                message="Getting Account Information"
-                hideBackground={true}
-              />
-            );
-          }
-
-          return (
-            <Mutation mutation={CREATE_PROFILE}>
-              {(createProfile, { data }) => (
-                <Query
-                  query={GET_PROFILE_BY_USERNAME}
-                  variables={{
-                    username: username,
-                  }}
-                  fetchPolicy="no-cache"
-                  skip={!checkUsername}
-                >
-                  {({ loading, error, data, refetch }) => {
-                    if (error) return <p>Error :( {console.log(error)}</p>;
-                    if (saving) {
-                      return (
-                        <ProgressWithMessage
-                          message="Saving Profile"
-                          hideBackground={true}
-                        />
-                      );
-                    }
-
-                    const progress = (
-                      <div className={classes.textfieldProgress}>
-                        <Progress hideBackground size={24} />
-                      </div>
-                    );
-
-                    const userIcon = (
-                      <Icon
-                        style={{
-                          color: usernameInvalid ? 'red' : 'green',
-                        }}
-                      >
-                        account_circle
-                      </Icon>
-                    );
-
-                    let usernameMessage: null | string = null;
-                    let textfieldIcon: null | any = null;
-
-                    if (isLoading) {
-                      usernameMessage = 'Checking if available...';
-                      textfieldIcon = progress;
-                    } else if (usernameAvailable) {
-                      usernameMessage = 'Yes this username is available!';
-                      textfieldIcon = userIcon;
-                    } else {
-                      usernameMessage = 'Try creating a unique username';
-                      textfieldIcon = userIcon;
-                    }
-
-                    return (
-                      <div>
-                        <div>
-                          <br />
-                          <Typography variant="h4">
-                            {propsUsername
-                              ? 'Edit Profile Username'
-                              : 'Create Profile'}
-                          </Typography>
-                          <br />
-                          <br />
-                          <Typography variant="body2">
-                            {propsUsername !== undefined
-                              ? 'This will change all your previous URLs you may have posted around the internet. All your old URLs will have your new username infront.'
-                              : "Choose your username. Think hard as you should avoid changing it at all costs! If you create custom URL's using your username and post them around the internet, then change your username, it will break all those links."}
-                            <br />
-                            <br />
-                          </Typography>
-
-                          <TextField
-                            label="Username"
-                            variant="outlined"
-                            margin="normal"
-                            value={username}
-                            fullWidth
-                            className={classes.usernameTextField}
-                            onChange={event =>
-                              this.handleInputChange(
-                                'username',
-                                event.target.value,
-                                refetch,
-                              )
-                            }
-                            error={usernameInvalid}
-                            helperText={usernameMessage}
-                            InputProps={{
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  {textfieldIcon}
-                                </InputAdornment>
-                              ),
-                            }}
+              <Mutation mutation={CREATE_PROFILE}>
+                {(createProfile, { data }) => (
+                  <Query
+                    query={GET_PROFILE_BY_USERNAME}
+                    variables={{
+                      username: username,
+                    }}
+                    fetchPolicy="no-cache"
+                    skip={!checkUsername}
+                  >
+                    {({ loading, error, data, refetch }) => {
+                      if (error) return <p>Error :( {console.log(error)}</p>;
+                      if (saving) {
+                        return (
+                          <ProgressWithMessage
+                            message="Saving Profile"
+                            hideBackground={true}
                           />
-                        </div>
+                        );
+                      }
 
-                        <CardActions
-                          className={classes.actions}
-                          disableActionSpacing
+                      const progress = (
+                        <div className={classes.textfieldProgress}>
+                          <Progress hideBackground size={24} />
+                        </div>
+                      );
+
+                      const userIcon = (
+                        <Icon
+                          style={{
+                            color: usernameInvalid ? 'red' : 'green',
+                          }}
                         >
-                          <div className={classes.actionsFill} />
-                          <Button
-                            onClick={() => {
-                              this.handleCancel(propsUsername);
-                              if (propsHandleCancel) {
-                                propsHandleCancel();
+                          account_circle
+                        </Icon>
+                      );
+
+                      let usernameMessage: null | string = null;
+                      let textfieldIcon: null | any = null;
+
+                      if (isLoading) {
+                        usernameMessage = 'Checking if available...';
+                        textfieldIcon = progress;
+                      } else if (usernameAvailable) {
+                        usernameMessage = 'Yes! This username is available!';
+                        textfieldIcon = userIcon;
+                      } else {
+                        usernameMessage = 'Try to create a unique username';
+                        textfieldIcon = userIcon;
+                      }
+
+                      return (
+                        <>
+                          <DialogContent>
+                            <DialogContentText>
+                              {propsUsername !== undefined
+                                ? 'This will change all your previous URLs you may have posted around the internet. All your old URLs will have your new username infront.'
+                                : 'Choose your username, but think hard as you should avoid changing it at all costs!'}
+                            </DialogContentText>
+                            <Spacer />
+                            <Button
+                              color="primary"
+                              onClick={() => this.toggleMoreInfo()}
+                              style={{ textTransform: 'none' }}
+                            >
+                              <Icon style={{ marginRight: 8 }}>help</Icon>
+                              Why
+                            </Button>
+
+                            <Collapse in={showMoreInfo}>
+                              <Paper className={classes.infoPaper}>
+                                <Spacer />
+
+                                <DialogContentText>
+                                  If you create custom URL's using your username
+                                  and give them out, for example:
+                                </DialogContentText>
+
+                                <Paper className={classes.codeBlock}>
+                                  <DialogContentText>
+                                    {window.location.protocol}//
+                                    {window.location.hostname}/
+                                    <b>my-username</b>
+                                    /something-you-created
+                                  </DialogContentText>
+                                </Paper>
+
+                                <DialogContentText>
+                                  then change your username to
+                                  "my-new-username", it will break all the old
+                                  links because your new one would look like:
+                                </DialogContentText>
+
+                                <Paper className={classes.codeBlock}>
+                                  <DialogContentText>
+                                    {window.location.protocol}//
+                                    {window.location.hostname}/
+                                    <b>my-new-username</b>
+                                    /something-you-created
+                                  </DialogContentText>
+                                </Paper>
+
+                                <DialogContentText>
+                                  If you only share using direct URL's you will
+                                  be fine (seen below), but this makes your
+                                  URL's hard for people to memorize
+                                </DialogContentText>
+
+                                <Paper className={classes.codeBlock}>
+                                  <DialogContentText>
+                                    {window.location.protocol}//
+                                    {window.location.hostname}/id/Faj8131kjvERa
+                                  </DialogContentText>
+                                </Paper>
+                              </Paper>
+                              <Spacer />
+                            </Collapse>
+
+                            <Spacer />
+                            <Button
+                              color="primary"
+                              onClick={() => this.toggleUsernameRequirements()}
+                              style={{ textTransform: 'none' }}
+                            >
+                              <Icon style={{ marginRight: 8 }}>warning</Icon>
+                              Username Requirements
+                            </Button>
+
+                            <Collapse in={showUsernameRequirements}>
+                              <Spacer />
+                              <Paper className={classes.infoPaper}>
+                                <Typography>
+                                  A valid username must follow the following
+                                  guidelines:
+                                </Typography>
+                                <ul className={classes.restrictionsList}>
+                                  <li>Must not be in use by anyone else</li>
+                                  <li>Must be 4 or more characters</li>
+                                  <li>
+                                    Can only contain characters A-Z, 0-9, -, or
+                                    _
+                                  </li>
+                                </ul>
+                              </Paper>
+                            </Collapse>
+
+                            <TextField
+                              label="Username"
+                              variant="outlined"
+                              margin="normal"
+                              value={username}
+                              fullWidth
+                              className={classes.usernameTextField}
+                              onChange={event =>
+                                this.handleInputChange(
+                                  'username',
+                                  event.target.value,
+                                  refetch,
+                                )
                               }
-                            }}
-                            color="primary"
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={event =>
-                              this.submitForm(
-                                event,
-                                createProfile,
-                                usernameInvalid,
-                              )
-                            }
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            disabled={!usernameAvailable || isLoading}
-                          >
-                            {propsUsername ? 'Edit' : 'Create'}
-                          </Button>
-                        </CardActions>
-                      </div>
-                    );
-                  }}
-                </Query>
-              )}
-            </Mutation>
-          );
-        }}
-      </Query>
+                              error={usernameInvalid}
+                              helperText={usernameMessage}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    {textfieldIcon}
+                                  </InputAdornment>
+                                ),
+                              }}
+                            />
+                          </DialogContent>
+                          <DialogActions>
+                            <FlexGrow />
+                            <Button
+                              onClick={() => {
+                                this.handleCancel(propsUsername);
+                                if (propsHandleCancel) {
+                                  propsHandleCancel();
+                                }
+                              }}
+                              color="primary"
+                            >
+                              Cancel
+                            </Button>
+                            <Button
+                              onClick={event =>
+                                this.submitForm(
+                                  event,
+                                  createProfile,
+                                  usernameInvalid,
+                                )
+                              }
+                              variant="contained"
+                              color="primary"
+                              type="submit"
+                              disabled={!usernameAvailable || isLoading}
+                            >
+                              {propsUsername ? 'Edit' : 'Create'}
+                            </Button>
+                          </DialogActions>
+                        </>
+                      );
+                    }}
+                  </Query>
+                )}
+              </Mutation>
+            );
+          }}
+        </Query>
+      </Dialog>
     );
   }
 }

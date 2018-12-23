@@ -39,7 +39,7 @@ class GetCircleById extends React.Component<Props> {
           id: this.props.id,
         }}
       >
-        {({ loading, error, data, refetch }) => {
+        {({ loading, error, data }) => {
           if (loading) {
             return (
               <ProgressWithMessage
@@ -53,20 +53,7 @@ class GetCircleById extends React.Component<Props> {
           const { selectedProfile } = this.props;
           if (!circle) return null;
 
-          return (
-            <div
-              style={{
-                border: '1px solid lightgrey',
-                borderRadius: 8,
-                margin: 8,
-                padding: 8,
-              }}
-            >
-              <Circle circle={circle} selectedProfile={selectedProfile} />
-              <br />
-              <button onClick={() => refetch()}>Refetch</button>
-            </div>
-          );
+          return <Circle circle={circle} selectedProfile={selectedProfile} />;
         }}
       </Query>
     );

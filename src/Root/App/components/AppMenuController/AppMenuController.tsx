@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -26,6 +27,7 @@ interface Profile {
 interface State {
   anchorEl: any;
   profilesOpen: boolean;
+  showCreateProfileDialog: boolean;
 }
 
 interface Props {
@@ -106,6 +108,7 @@ class AppMenuController extends React.Component<Props, State> {
     this.state = {
       anchorEl: null,
       profilesOpen: false,
+      showCreateProfileDialog: false,
     };
   }
 
@@ -121,8 +124,20 @@ class AppMenuController extends React.Component<Props, State> {
     this.setState({ profilesOpen: !this.state.profilesOpen });
   };
 
+  showCreateProfileDialog = () => {
+    this.setState({
+      showCreateProfileDialog: true,
+    });
+  };
+
+  hideCreateProfileDialog = () => {
+    this.setState({
+      showCreateProfileDialog: false,
+    });
+  };
+
   render() {
-    const { anchorEl, profilesOpen } = this.state;
+    const { anchorEl, profilesOpen, showCreateProfileDialog } = this.state;
     const {
       profiles,
       selectedProfile,
@@ -248,6 +263,15 @@ class AppMenuController extends React.Component<Props, State> {
                     </Collapse>,
                   ]
                 : null}
+              <MenuItem
+                className={classes.nested}
+                onClick={() => this.showCreateProfileDialog()}
+              >
+                <ListItemIcon>
+                  <Icon>add</Icon>
+                </ListItemIcon>
+                <ListItemText inset primary="Create Profile" />
+              </MenuItem>
 
               <Divider />
 
@@ -307,6 +331,11 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemText primary="Logout" />
               </MenuItem>
             </Menu>
+
+            <ProfileUsernameEditor
+              open={showCreateProfileDialog}
+              handleClose={this.hideCreateProfileDialog}
+            />
           </div>
         </Toolbar>
       </AppBar>

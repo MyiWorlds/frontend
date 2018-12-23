@@ -32,7 +32,6 @@ interface Props {
     | 'h6'
     | 'subtitle1'
     | 'subtitle2'
-    | 'body1'
     | 'body2'
     | 'caption'
     | 'button'
@@ -60,7 +59,7 @@ class Error extends React.Component<Props> {
     } = this.props;
 
     const errorMessage = message || '';
-    const variant = messageVariant || 'body1';
+    const variant = messageVariant || 'body2';
     const displayIcon = icon || 'error';
 
     console.error(error);
@@ -73,13 +72,11 @@ class Error extends React.Component<Props> {
         <Typography variant="h2">
           I'm sorry, I am not sure what I did
         </Typography>
-        <Typography variant="body1">
-          I have let someone know about this
-        </Typography>
+        <Typography>I have let someone know about this</Typography>
         <br />
         <br />
         <br />
-        <Typography variant="body1">
+        <Typography>
           If you would like to know when this has been fixed you can have it
           show up in your watch list by clicking the button below.
           <br />
