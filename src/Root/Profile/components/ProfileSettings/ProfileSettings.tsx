@@ -100,22 +100,20 @@ class ProfileSettings extends React.Component<Props, State> {
               <ExpansionPanelDetails>
                 <div style={{ width: '100%' }}>
                   <Typography color="textPrimary">
-                    Date Created:
-                    <b>
-                      {moment(profile.dateCreated).format(
-                        'MMMM Do YYYY h:mm:ss a',
-                      )}
-                    </b>
+                    <b>Date Created: </b>
+                    <br />
+                    {moment(profile.dateCreated).format(
+                      'MMMM Do YYYY h:mm:ss a',
+                    )}
                   </Typography>
                   <br />
                   <br />
                   <Typography color="textPrimary">
-                    Last Updated:
-                    <b>
-                      {moment(profile.dateUpdated).format(
-                        'MMMM Do YYYY h:mm:ss a',
-                      )}
-                    </b>
+                    <b>Last Updated: </b>
+                    <br />
+                    {moment(profile.dateUpdated).format(
+                      'MMMM Do YYYY h:mm:ss a',
+                    )}
                   </Typography>
                 </div>
               </ExpansionPanelDetails>
