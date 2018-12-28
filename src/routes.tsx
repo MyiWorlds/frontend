@@ -44,10 +44,11 @@ const circle = {
 
 interface Props {
   selectedProfile: ISelectedProfile;
+  changeSelectedProfile: (id: string | null) => void;
 }
 
 const Routes = (props: Props) => {
-  const { selectedProfile } = props;
+  const { selectedProfile, changeSelectedProfile } = props;
   return (
     <Switch>
       <Route
@@ -67,7 +68,13 @@ const Routes = (props: Props) => {
           />
         )}
       />
-      <Route exact path="/account" render={(props: any) => <UserSettings />} />
+      <Route
+        exact
+        path="/account"
+        render={(props: any) => (
+          <UserSettings changeSelectedProfile={changeSelectedProfile} />
+        )}
+      />
       <Route
         exact
         path="/create"

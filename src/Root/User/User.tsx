@@ -428,6 +428,7 @@ class User extends React.Component<Props, State> {
                     <ProfileUsernameEditor
                       open={true}
                       handleClose={() => null}
+                      changeSelectedProfile={this.changeSelectedProfile}
                     />
                   </Paper>
                 </div>

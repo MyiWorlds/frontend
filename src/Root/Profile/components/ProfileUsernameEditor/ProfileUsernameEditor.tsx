@@ -34,10 +34,12 @@ interface Props {
     codeBlock: string;
     infoPaper: string;
     restrictionsList: string;
+    savingProfileContainer: string;
   };
   username?: string;
   open: boolean;
   disableBackdropClick?: boolean;
+  changeSelectedProfile: (id: string | null) => void;
   propsHandleCancel?: () => void;
   handleClose: () => void;
 }
@@ -94,6 +96,9 @@ const styles = (theme: Theme) =>
     },
     restrictionsList: {
       color: theme.palette.text.primary,
+    },
+    savingProfileContainer: {
+      margin: theme.spacing.unit * 4,
     },
   });
 
@@ -169,17 +174,38 @@ class ProfileUsernameEditor extends React.Component<
       saving: true,
     });
 
-    await createProfile({
+    const profile = await createProfile({
       variables: {
         username: this.state.username,
       },
       refetchQueries: [{ query: GET_USER }, { query: GET_USER_AND_PROFILE }],
     });
 
-    this.setState({
-      checkUsername: false,
-      saving: false,
-    });
+    // Check if username was taken while trying and error it
+
+    if (!profile.data.createProfile.createdProfile) {
+      this.setState({
+        usernameInvalid: true,
+        checkUsername: false,
+        saving: false,
+      });
+    } else {
+      this.setState(
+        {
+          checkUsername: false,
+          saving: false,
+          username: '',
+        },
+        () => {
+          if (profile.data.createProfile.createdProfile) {
+            this.props.changeSelectedProfile(
+              profile.data.createProfile.createdProfile.id,
+            );
+            this.props.handleClose();
+          }
+        },
+      );
+    }
   };
 
   handleCancel = propsUsername => {
@@ -260,10 +286,12 @@ class ProfileUsernameEditor extends React.Component<
                       if (error) return <p>Error :( {console.log(error)}</p>;
                       if (saving) {
                         return (
-                          <ProgressWithMessage
-                            message="Saving Profile"
-                            hideBackground={true}
-                          />
+                          <div className={classes.savingProfileContainer}>
+                            <ProgressWithMessage
+                              message="Saving Profile"
+                              hideBackground={true}
+                            />
+                          </div>
                         );
                       }
 

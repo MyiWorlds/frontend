@@ -24,6 +24,7 @@ interface Props {
   classes: {
     container: string;
   };
+  changeSelectedProfile: (id: string | null) => void;
 }
 
 const styles = () =>
@@ -35,7 +36,7 @@ const styles = () =>
 
 class UserSettings extends React.Component<Props> {
   render() {
-    const { classes } = this.props;
+    const { classes, changeSelectedProfile } = this.props;
     return (
       <Query query={GET_USER_AND_PROFILE}>
         {({ loading, error, data, refetch }) => {
@@ -63,7 +64,10 @@ class UserSettings extends React.Component<Props> {
               </div>
 
               <Paper className={classes.container} elevation={1}>
-                <ProfileSettings profiles={user.profiles} />
+                <ProfileSettings
+                  profiles={user.profiles}
+                  changeSelectedProfile={changeSelectedProfile}
+                />
               </Paper>
 
               <div className={classes.container}>

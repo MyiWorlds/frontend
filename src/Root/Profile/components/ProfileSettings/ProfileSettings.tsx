@@ -21,6 +21,7 @@ interface Props {
     secondaryHeading: string;
   };
   profiles: any;
+  changeSelectedProfile: (id: string | null) => void;
 }
 
 interface State {
@@ -75,7 +76,7 @@ class ProfileSettings extends React.Component<Props, State> {
   };
 
   render() {
-    const { profiles, classes } = this.props;
+    const { profiles, classes, changeSelectedProfile } = this.props;
     const { expanded, showCreateProfileDialog } = this.state;
     return (
       <div>
@@ -139,6 +140,7 @@ class ProfileSettings extends React.Component<Props, State> {
         <ProfileUsernameEditor
           open={showCreateProfileDialog}
           handleClose={this.hideCreateProfileDialog}
+          changeSelectedProfile={changeSelectedProfile}
           disableBackdropClick
         />
       </div>

@@ -89,7 +89,10 @@ class App extends React.Component<Props, State> {
             overflow: 'auto',
           }}
         >
-          <Routes selectedProfile={selectedProfile} />
+          <Routes
+            selectedProfile={selectedProfile}
+            changeSelectedProfile={changeSelectedProfile}
+          />
         </div>
       </>
     );

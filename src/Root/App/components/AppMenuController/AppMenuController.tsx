@@ -335,6 +335,7 @@ class AppMenuController extends React.Component<Props, State> {
             <ProfileUsernameEditor
               open={showCreateProfileDialog}
               handleClose={this.hideCreateProfileDialog}
+              changeSelectedProfile={changeSelectedProfile}
             />
           </div>
         </Toolbar>
