@@ -18,6 +18,7 @@ interface IProfile {
 }
 
 interface ISelectedProfile extends IProfile {
+  username: string;
   isDarkTheme: boolean;
   isMyTheme: boolean;
   addToHistory: boolean;

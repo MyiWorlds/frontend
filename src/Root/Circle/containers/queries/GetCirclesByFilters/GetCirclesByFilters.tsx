@@ -3,8 +3,8 @@ import client from '../../../../../apolloClient';
 import Error from 'src/Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import { ApolloError } from 'apollo-client';
 import { Link } from 'react-router-dom';
-import { Query } from 'react-apollo';
 import {
   AppBar,
   Card,
@@ -34,8 +34,10 @@ interface Props {
 interface State {
   numberOfResults: number;
   showSearchSettings: boolean;
-  filters: [IFilter];
-  circles: ICircle[];
+  error: ApolloError | null;
+  filters: IFilter[];
+  lines: ICircle[];
+  loading: boolean;
 }
 
 const GET_CIRCLES_BY_FILTERS = gql`
@@ -82,7 +84,9 @@ class GetCirclesByFilters extends React.Component<Props, State> {
       filters: this.props.circle.settings.filters,
       numberOfResults: this.props.circle.settings.numberOfResults,
       showSearchSettings: false,
-      circles: [],
+      lines: [],
+      error: null,
+      loading: false,
     };
   }
 
@@ -90,116 +94,132 @@ class GetCirclesByFilters extends React.Component<Props, State> {
     this.getCirclesByFilters();
   }
 
-  getCirclesByFilters = async () => {
-    const { settings } = this.props.circle;
-    const state = this.state;
-    const query: any = await client.query({
-      query: GET_CIRCLES_BY_FILTERS,
-      fetchPolicy: 'no-cache',
-      variables: {
-        filters: state.filters,
-        orderBy: settings.orderBy,
-        numberOfResults: state.numberOfResults,
-        cursor: settings.cursor,
+  getCirclesByFilters = () => {
+    this.setState(
+      {
+        loading: true,
       },
-    });
+      async () => {
+        const { settings } = this.props.circle;
+        const state = this.state;
 
-    this.setState({
-      circles: query.data.getCirclesByFilters,
-    });
+        try {
+          const query: any = await client.query({
+            query: GET_CIRCLES_BY_FILTERS,
+            fetchPolicy: 'no-cache',
+            variables: {
+              filters: state.filters,
+              orderBy: settings.orderBy,
+              numberOfResults: state.numberOfResults,
+              cursor: settings.cursor,
+            },
+          });
+
+          this.setState({
+            lines: query.data.getCirclesByFilters.lines,
+            loading: false,
+          });
+        } catch (error) {
+          this.setState({ error: error, loading: false });
+        }
+      },
+    );
   };
 
-  handleTextChange = (name: string) => event => {
+  handleNumberOfResultsChange = (numberOfResults: number) => {
+    if (numberOfResults < 0) {
+      numberOfResults = 0;
+    } else if (numberOfResults > 99) {
+      numberOfResults = 99;
+    }
     this.setState({
-      [name]: event.currentTarget.value,
-    } as any);
+      numberOfResults,
+    });
   };
 
   render() {
-    const { showSearchSettings, numberOfResults } = this.state;
+    const {
+      showSearchSettings,
+      numberOfResults,
+      error,
+      loading,
+      lines,
+    } = this.state;
     const { classes } = this.props;
 
+    if (error) return <Error error={error} />;
+
+    if (loading) {
+      return <ProgressWithMessage message="Searching" hideBackground={true} />;
+    }
+
+    if (!lines) {
+      // Create default circle for no results (some shortcut to bring out list finding options)
+      return <Typography variant="h3">No Results</Typography>;
+    }
+
+    const listTitle = this.props.circle.title || 'Get Circles by Filters';
     return (
-      <Query query={GET_CIRCLES_BY_FILTERS} variables={{}}>
-        {({ loading, error, data, refetch }) => {
-          if (loading) {
-            return (
-              <ProgressWithMessage
-                message="Getting Account"
-                hideBackground={true}
-              />
-            );
-          }
+      <Card>
+        <AppBar position="static" color="inherit">
+          <Toolbar>
+            <Typography variant="h5">{listTitle}</Typography>
+            <div className={classes.spacer} />
+            <IconButton
+              aria-label="Refetch"
+              onClick={() => this.getCirclesByFilters()}
+            >
+              <Icon>refresh</Icon>
+            </IconButton>
+            <IconButton
+              onClick={() =>
+                this.setState({
+                  showSearchSettings: !showSearchSettings,
+                })
+              }
+            >
+              <Icon>settings</Icon>
+            </IconButton>
+          </Toolbar>
+          <Collapse in={showSearchSettings}>
+            <Grid container spacing={16}>
+              <Grid item>
+                <TextField
+                  id="number-of-results"
+                  label="Number of Results"
+                  // className={classes.textField}
+                  value={numberOfResults}
+                  type="number"
+                  onChange={event =>
+                    this.handleNumberOfResultsChange(Number(event.target.value))
+                  }
+                  margin="normal"
+                />
+              </Grid>
+            </Grid>
+          </Collapse>
+        </AppBar>
 
-          if (error) return <Error error={error} />;
-
-          const circle = data.getCirclesByFilters;
-
-          if (!circle) {
-            // Create default circle for no results (some shortcut to bring out list finding options)
-            return <Typography variant="h3">No Results</Typography>;
-          }
-
-          const listTitle = this.props.circle.title || 'Get Circles by Filters';
-          return (
-            <Card>
-              <AppBar position="static" color="inherit">
-                <Toolbar>
-                  <Typography variant="h5">{listTitle}</Typography>
-                  <div className={classes.spacer} />
-                  <IconButton aria-label="Refetch" onClick={() => refetch()}>
-                    <Icon>refresh</Icon>
-                  </IconButton>
-                  <IconButton
-                    onClick={() =>
-                      this.setState({
-                        showSearchSettings: !showSearchSettings,
-                      })
-                    }
+        {lines ? (
+          <List>
+            {lines.map((circle: any) => {
+              return (
+                <div key={circle.id}>
+                  <ListItem
+                    button
+                    component={(props: any) => (
+                      <Link {...props} to={`/id/${circle.id}`} />
+                    )}
                   >
-                    <Icon>settings</Icon>
-                  </IconButton>
-                </Toolbar>
-                <Collapse in={showSearchSettings}>
-                  <Grid container spacing={16}>
-                    <Grid item>
-                      <TextField
-                        id="number-of-results"
-                        label="Number of Results"
-                        // className={classes.textField}
-                        value={numberOfResults}
-                        type="number"
-                        onChange={this.handleTextChange('numberOfResults')}
-                        margin="normal"
-                      />
-                    </Grid>
-                  </Grid>
-                </Collapse>
-              </AppBar>
-
-              {circle.lines ? (
-                <List>
-                  {circle.lines.map((circle: any) => {
-                    return (
-                      <div key={circle.id}>
-                        <ListItem
-                          button
-                          component={(props: any) => (
-                            <Link {...props} to={`/id/${circle.id}`} />
-                          )}
-                        >
-                          <ListItemText inset primary={circle.type} />
-                        </ListItem>
-                        <Divider />
-                      </div>
-                    );
-                  })}
-                </List>
-              ) : null}
-            </Card>
-          );
-        }}
-      </Query>
+                    <ListItemText inset primary={circle.type} />
+                  </ListItem>
+                  <Divider />
+                </div>
+              );
+            })}
+          </List>
+        ) : null}
+      </Card>
     );
   }
 }
