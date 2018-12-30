@@ -126,6 +126,10 @@ class ProfileUsernameEditor extends React.Component<
     this.timeout = 0;
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
+  }
+
   updateState = object => {
     this.setState(object);
   };

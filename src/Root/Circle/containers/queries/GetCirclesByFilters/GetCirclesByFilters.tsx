@@ -3,6 +3,7 @@ import client from '../../../../../apolloClient';
 import Error from 'src/Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import Slider from '@material-ui/lab/Slider';
 import { ApolloError } from 'apollo-client';
 import { Link } from 'react-router-dom';
 import {
@@ -10,12 +11,14 @@ import {
   Card,
   Collapse,
   Divider,
+  FormControlLabel,
   Grid,
   Icon,
   IconButton,
   List,
   ListItem,
   ListItemText,
+  Switch,
   TextField,
   Theme,
   Toolbar,
@@ -28,6 +31,11 @@ interface Props {
   circle: ICircle;
   classes: {
     spacer: string;
+    slider: string;
+    sliderTextField: string;
+    sliderTextContainer: string;
+    gridContainer: string;
+    centerOption: string;
   };
 }
 
@@ -38,6 +46,14 @@ interface State {
   filters: IFilter[];
   lines: ICircle[];
   loading: boolean;
+  orderBy: {
+    property: string;
+    ascending: boolean;
+  };
+}
+
+interface GetCirclesByFilters {
+  searchTimeout: any;
 }
 
 const GET_CIRCLES_BY_FILTERS = gql`
@@ -75,26 +91,58 @@ const styles = (theme: Theme) => ({
   spacer: {
     flexGrow: 1,
   },
+  gridContainer: {
+    maxWidth: '100%',
+    margin: 0,
+  },
+  sliderTextContainer: {
+    display: 'flex',
+  },
+  slider: {
+    padding: '22px 0px',
+    minWidth: 200,
+  },
+  sliderTextField: {
+    marginTop: 5,
+    marginLeft: theme.spacing.unit * 2,
+    width: 100,
+  },
+  centerOption: {
+    marginTop: theme.spacing.unit * 2,
+  },
 });
 
+const maxAllowableNumberOfResults = 99;
+
 class GetCirclesByFilters extends React.Component<Props, State> {
-  constructor(props: any) {
+  constructor(props: Props) {
     super(props);
+    const { filters, numberOfResults, orderBy } = this.props.circle.settings;
+
     this.state = {
-      filters: this.props.circle.settings.filters,
-      numberOfResults: this.props.circle.settings.numberOfResults,
+      filters: filters,
+      numberOfResults,
+      orderBy,
       showSearchSettings: false,
       lines: [],
       error: null,
       loading: false,
     };
+    this.searchTimeout = 0;
   }
 
   componentDidMount() {
     this.getCirclesByFilters();
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.searchTimeout);
+  }
+
   getCirclesByFilters = () => {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
     this.setState(
       {
         loading: true,
@@ -109,7 +157,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
             fetchPolicy: 'no-cache',
             variables: {
               filters: state.filters,
-              orderBy: settings.orderBy,
+              orderBy: state.orderBy,
               numberOfResults: state.numberOfResults,
               cursor: settings.cursor,
             },
@@ -126,15 +174,45 @@ class GetCirclesByFilters extends React.Component<Props, State> {
     );
   };
 
+  timedGetCirclesByFilters = () => {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+
+    this.searchTimeout = setTimeout(async () => {
+      this.getCirclesByFilters();
+    }, 700);
+  };
+
   handleNumberOfResultsChange = (numberOfResults: number) => {
     if (numberOfResults < 0) {
       numberOfResults = 0;
-    } else if (numberOfResults > 99) {
-      numberOfResults = 99;
+    } else if (numberOfResults > maxAllowableNumberOfResults) {
+      numberOfResults = maxAllowableNumberOfResults;
     }
-    this.setState({
-      numberOfResults,
-    });
+    this.setState(
+      {
+        numberOfResults,
+      },
+      () => {
+        this.timedGetCirclesByFilters();
+      },
+    );
+  };
+
+  toggleOrderBy = () => {
+    const orderBy = {
+      property: this.state.orderBy.property,
+      ascending: !this.state.orderBy.ascending,
+    };
+    this.setState(
+      {
+        orderBy,
+      },
+      () => {
+        this.timedGetCirclesByFilters();
+      },
+    );
   };
 
   render() {
@@ -144,21 +222,45 @@ class GetCirclesByFilters extends React.Component<Props, State> {
       error,
       loading,
       lines,
+      orderBy,
     } = this.state;
     const { classes } = this.props;
 
     if (error) return <Error error={error} />;
 
-    if (loading) {
-      return <ProgressWithMessage message="Searching" hideBackground={true} />;
-    }
+    let results: any = null;
 
-    if (!lines) {
+    if (loading) {
+      results = (
+        <ProgressWithMessage message="Searching" hideBackground={true} />
+      );
+    } else if (!lines) {
       // Create default circle for no results (some shortcut to bring out list finding options)
-      return <Typography variant="h3">No Results</Typography>;
+      results = <Typography variant="h3">No Results</Typography>;
+    } else {
+      results = (
+        <List>
+          {lines.map((circle: any) => {
+            return (
+              <div key={circle.id}>
+                <ListItem
+                  button
+                  component={(props: any) => (
+                    <Link {...props} to={`/id/${circle.id}`} />
+                  )}
+                >
+                  <ListItemText inset primary={circle.type} />
+                </ListItem>
+                <Divider />
+              </div>
+            );
+          })}
+        </List>
+      );
     }
 
     const listTitle = this.props.circle.title || 'Get Circles by Filters';
+
     return (
       <Card>
         <AppBar position="static" color="inherit">
@@ -178,47 +280,59 @@ class GetCirclesByFilters extends React.Component<Props, State> {
                 })
               }
             >
-              <Icon>settings</Icon>
+              <Icon>tune</Icon>
             </IconButton>
           </Toolbar>
           <Collapse in={showSearchSettings}>
-            <Grid container spacing={16}>
-              <Grid item>
-                <TextField
-                  id="number-of-results"
-                  label="Number of Results"
-                  // className={classes.textField}
-                  value={numberOfResults}
-                  type="number"
-                  onChange={event =>
-                    this.handleNumberOfResultsChange(Number(event.target.value))
-                  }
-                  margin="normal"
-                />
+            <Grid container spacing={16} className={classes.gridContainer}>
+              <Grid item xs={6} md={4} lg={3}>
+                <Typography id="slider-image">Number of Results</Typography>
+                <div className={classes.sliderTextContainer}>
+                  <Slider
+                    classes={{ container: classes.slider }}
+                    value={numberOfResults}
+                    aria-labelledby="label"
+                    onChange={(event, value) =>
+                      this.handleNumberOfResultsChange(value)
+                    }
+                    min={0}
+                    max={maxAllowableNumberOfResults}
+                    step={1}
+                  />
+                  <TextField
+                    id="number-of-results"
+                    // label="Number of Results"
+                    className={classes.sliderTextField}
+                    value={numberOfResults}
+                    type="number"
+                    onChange={event =>
+                      this.handleNumberOfResultsChange(
+                        Number(event.target.value),
+                      )
+                    }
+                    margin="normal"
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={6} md={4} lg={3}>
+                <div className={classes.centerOption}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={orderBy.ascending}
+                        onChange={() => this.toggleOrderBy()}
+                        value="ascending"
+                      />
+                    }
+                    label="Ascending"
+                  />
+                </div>
               </Grid>
             </Grid>
           </Collapse>
         </AppBar>
 
-        {lines ? (
-          <List>
-            {lines.map((circle: any) => {
-              return (
-                <div key={circle.id}>
-                  <ListItem
-                    button
-                    component={(props: any) => (
-                      <Link {...props} to={`/id/${circle.id}`} />
-                    )}
-                  >
-                    <ListItemText inset primary={circle.type} />
-                  </ListItem>
-                  <Divider />
-                </div>
-              );
-            })}
-          </List>
-        ) : null}
+        {results}
       </Card>
     );
   }
