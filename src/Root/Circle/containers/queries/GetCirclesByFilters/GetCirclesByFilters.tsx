@@ -44,6 +44,7 @@ interface State {
   showSearchSettings: boolean;
   error: ApolloError | null;
   filters: IFilter[];
+  selectFields: string[];
   lines: ICircle[];
   loading: boolean;
   orderBy: {
@@ -59,12 +60,14 @@ interface GetCirclesByFilters {
 const GET_CIRCLES_BY_FILTERS = gql`
   query getCirclesByFilters(
     $filters: JSON!
+    $selectFields: [String]
     $numberOfResults: Int
     $cursor: JSON
     $orderBy: JSON!
   ) {
     getCirclesByFilters(
       filters: $filters
+      selectFields: $selectFields
       numberOfResults: $numberOfResults
       cursor: $cursor
       orderBy: $orderBy
@@ -117,10 +120,16 @@ const maxAllowableNumberOfResults = 99;
 class GetCirclesByFilters extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const { filters, numberOfResults, orderBy } = this.props.circle.settings;
+    const {
+      filters,
+      selectFields,
+      numberOfResults,
+      orderBy,
+    } = this.props.circle.settings;
 
     this.state = {
-      filters: filters,
+      filters,
+      selectFields,
       numberOfResults,
       orderBy,
       showSearchSettings: false,
@@ -157,6 +166,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
             fetchPolicy: 'no-cache',
             variables: {
               filters: state.filters,
+              selectFields: state.selectFields,
               orderBy: state.orderBy,
               numberOfResults: state.numberOfResults,
               cursor: settings.cursor,

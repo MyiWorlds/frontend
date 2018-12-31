@@ -5,8 +5,12 @@ interface IFilter {
   value: string | number | boolean | Date | null;
 }
 
+/**
+ * @param selectFields by default will return all fields
+ */
 interface IGetDocumentsByFilters {
   filters: IFilter;
+  selectFields: string[];
   orderBy: {
     property: string;
     ascending: boolean;
@@ -78,9 +82,9 @@ interface ICircle {
   settings?:
     | any
     | null
-    | GetDocumentsByFilters
-    | GetDocumentById
-    | GetDocumentsByIds;
+    | IGetDocumentsByFilters
+    | IGetDocumentById
+    | IGetDocumentsByIds;
   styles?: any | null;
   rating?: string | null;
   tags?: string[] | null;
