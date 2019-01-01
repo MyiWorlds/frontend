@@ -1,7 +1,7 @@
 //Todo rename all these to have I at the start to prevent naming conflicts
 interface IFilter {
   property: string;
-  condition: string;
+  condition: '==' | '<' | '>' | '<=' | '>=' | 'array-contains';
   value: string | number | boolean | Date | null;
 }
 

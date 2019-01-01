@@ -1,5 +1,6 @@
 import * as moment from 'moment';
 import * as React from 'react';
+import DeleteProfile from './DeleteProfile';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
 import {
   Button,
@@ -115,6 +116,11 @@ class ProfileSettings extends React.Component<Props, State> {
                       'MMMM Do YYYY h:mm:ss a',
                     )}
                   </Typography>
+                  <DeleteProfile id={profile.id}>
+                    <Button variant="contained" color="secondary">
+                      Delete Profile
+                    </Button>
+                  </DeleteProfile>
                 </div>
               </ExpansionPanelDetails>
             </ExpansionPanel>
