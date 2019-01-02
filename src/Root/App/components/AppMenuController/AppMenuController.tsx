@@ -1,4 +1,5 @@
 import * as React from 'react';
+import FlexGrow from 'src/Root/components/FlexGrow';
 import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
 import { Link } from 'react-router-dom';
 import {
@@ -81,7 +82,6 @@ const styles = theme =>
       marginRight: 8,
     },
     siteTitle: {
-      flexGrow: 1,
       fontSize: '1.2125rem',
       textDecoration: 'none',
     },
@@ -185,6 +185,7 @@ class AppMenuController extends React.Component<Props, State> {
           >
             MyiWorlds
           </Typography>
+          <FlexGrow />
 
           <div>
             {user.id ? (

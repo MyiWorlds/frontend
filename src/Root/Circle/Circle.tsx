@@ -1,6 +1,7 @@
 import * as React from 'react';
 import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
 import Image from './components/Image';
+import { Typography } from '@material-ui/core';
 
 interface Props {
   selectedProfile: ISelectedProfile;
@@ -25,7 +26,12 @@ const Circle: React.SFC<Props> = ({ selectedProfile, circle }) => {
     case 'IMAGE':
       return <Image circle={circle} />;
     default:
-      return null;
+      return (
+        <Typography>
+          You tried to give me a type of "{type}" and I am not sure what to do
+          with this. I do not support it yet.
+        </Typography>
+      );
   }
 };
 

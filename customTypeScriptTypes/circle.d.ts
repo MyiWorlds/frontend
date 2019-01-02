@@ -70,6 +70,7 @@ interface IImage {
 
 interface ICircle {
   id?: string | null;
+  type: string;
   cached?: boolean;
   cache?: any;
   collection?: string | null;
@@ -78,7 +79,6 @@ interface ICircle {
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;
-  type: string;
   settings?:
     | any
     | null
@@ -108,4 +108,8 @@ interface ICircle {
   geoPoint?: any | null;
   line?: string | null;
   lines?: string[] | null;
+}
+
+interface ICreatedCircle extends ICircle {
+  id: string;
 }

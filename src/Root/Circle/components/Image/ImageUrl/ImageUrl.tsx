@@ -54,6 +54,8 @@ class ImageUrl extends React.Component<Props, State> {
         <div style={styles.mediaContainer}>
           <img style={styles.media} src={circle.data.url} title="Paella dish" />
         </div>
+        <br />
+        <br />
         <CardContent>
           <TextField
             id="image-url"

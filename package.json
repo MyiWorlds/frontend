@@ -50,7 +50,6 @@
     "@types/jest": "^23.3.9",
     "@types/jss": "^9.5.7",
     "@types/lodash": "^4.14.118",
-    "@types/material-ui": "^0.21.5",
     "@types/moment": "^2.13.0",
     "@types/node": "^10.12.9",
     "@types/react": "^16.7.6",
