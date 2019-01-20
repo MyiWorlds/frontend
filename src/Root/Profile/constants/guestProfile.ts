@@ -1,5 +1,5 @@
-const guestProfile: ISelectedProfile = {
-  id: null,
+const guestProfile: IProfile = {
+  id: 'guest',
   username: 'guest',
   isDarkTheme: true,
   isMyTheme: false,

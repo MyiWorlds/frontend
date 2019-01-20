@@ -13,11 +13,8 @@ interface IMyTheme {
 }
 
 interface IProfile {
-  id: string | null;
+  id: string;
   username: string;
-}
-
-interface ISelectedProfile extends IProfile {
   username: string;
   isDarkTheme: boolean;
   isMyTheme: boolean;

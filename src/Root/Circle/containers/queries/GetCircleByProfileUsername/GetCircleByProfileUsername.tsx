@@ -3,6 +3,7 @@ import Error from 'src/Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
 import { Query } from 'react-apollo';
+import { Typography } from '@material-ui/core';
 
 interface Props {
   username: string;
@@ -40,11 +41,10 @@ class GetCircleByProfileUsername extends React.Component<Props> {
 
           if (!circle) return <div>None</div>;
 
-          console.log(data);
           return (
             <div>
-              {username}
-              {circle.id}
+              <Typography variant="body1">{username}</Typography>
+              <Typography variant="body1">{circle.id}</Typography>
               <br />
               <button onClick={() => refetch()}>Refetch</button>
             </div>
@@ -56,4 +56,3 @@ class GetCircleByProfileUsername extends React.Component<Props> {
 }
 
 export default GetCircleByProfileUsername;
-// export default withStyles(styles: object)(GetCircleByProfileUsername);

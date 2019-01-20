@@ -11,11 +11,12 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Theme,
 } from '@material-ui/core';
 
 const drawerWidth = 240;
 
-const styles = theme => ({
+const styles = (theme: Theme) => ({
   navigation: {
     overflow: 'hidden',
     width: '0px',
@@ -80,7 +81,7 @@ interface Props {
     drawerInner: string;
     bottomNav: string;
   };
-  selectedProfile: ISelectedProfile;
+  selectedProfile: IProfile;
   showNavigation: boolean;
   handleNavigationToggle: () => void;
 }

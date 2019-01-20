@@ -13,7 +13,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 
-function Transition(props: ConfirmCancelCreateCircle) {
+function Transition(props: ConfirmCancelCircleEditor) {
   return <Slide direction="up" {...props} />;
 }
 
@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-class ConfirmCancelCreateCircle extends React.Component<Props> {
+class ConfirmCancelCircleEditor extends React.Component<Props> {
   updateSelectedType = (type: ICreatedCircle) => {
     this.setState({
       selectedType: type,
@@ -71,4 +71,4 @@ class ConfirmCancelCreateCircle extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles)(ConfirmCancelCreateCircle);
+export default withStyles(styles)(ConfirmCancelCircleEditor);

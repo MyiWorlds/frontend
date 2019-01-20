@@ -1,15 +1,15 @@
 import * as React from 'react';
 import ThemeColorPicker from './components/ThemeColorPicker';
-import { createStyles, withStyles } from '@material-ui/core';
+import { createStyles, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
-  selectedProfile: ISelectedProfile;
+  selectedProfile: IProfile;
   classes: {
     container: string;
   };
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     container: {
       position: 'relative',

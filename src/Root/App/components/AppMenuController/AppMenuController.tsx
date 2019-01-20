@@ -161,7 +161,7 @@ class AppMenuController extends React.Component<Props, State> {
     );
 
     return (
-      <AppBar className={classes.appBar}>
+      <AppBar className={classes.appBar} color="default">
         <Toolbar style={{ minHeight: 48 }}>
           <IconButton
             className={classes.menuButton}
@@ -314,7 +314,7 @@ class AppMenuController extends React.Component<Props, State> {
 
               <MenuItem
                 onClick={() => handleToggleAddToHistory()}
-                disabled={selectedProfile.id === null}
+                disabled={selectedProfile.id === 'guest'}
               >
                 <ListItemIcon>
                   <Icon>history</Icon>

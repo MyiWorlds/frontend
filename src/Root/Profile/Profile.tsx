@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 interface Props {
-  selectedProfile: ISelectedProfile;
-  circle: ICircle;
+  selectedProfile: IProfile;
+  circle: ICreatedCircle;
 }
 
 const Profile: React.SFC<Props> = ({ selectedProfile, circle }) => {

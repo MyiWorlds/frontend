@@ -1,4 +1,5 @@
 import * as React from 'react';
+import convertCreatedCircleToEditingCircle from '../../../../../functions/convertCreatedCircleToEditingCircle';
 import types from './defaultTypes';
 import {
   Button,
@@ -24,8 +25,9 @@ function Transition(props: TypeSelector) {
 }
 
 interface Props {
-  updateType: (type: ICreatedCircle | null) => void;
+  updateCircle: (type: IEditingCircle | null, noDelay: boolean) => void;
   showTypeSelector: boolean;
+  selectedProfile: IProfile;
   handleClose: () => void;
   classes: {
     container: string;
@@ -78,14 +80,28 @@ class TypeSelector extends React.Component<Props, State> {
     };
   }
 
+  saveAndClose = () => {
+    if (this.state.selectedType) {
+      const convertedToEditingCircle = convertCreatedCircleToEditingCircle(
+        this.state.selectedType,
+        this.props.selectedProfile,
+      );
+      this.props.updateCircle(convertedToEditingCircle, true);
+      this.props.handleClose();
+    }
+  };
+
   updateSelectedType = (type: ICreatedCircle) => {
+    if (this.state.selectedType && type.id === this.state.selectedType.id) {
+      this.saveAndClose();
+    }
     this.setState({
       selectedType: type,
     });
   };
 
   render() {
-    const { updateType, classes, showTypeSelector, handleClose } = this.props;
+    const { classes, showTypeSelector, handleClose } = this.props;
     const { selectedType, types } = this.state;
 
     return (
@@ -156,7 +172,7 @@ class TypeSelector extends React.Component<Props, State> {
             variant="contained"
             color="primary"
             disabled={selectedType === null}
-            onClick={() => (selectedType ? updateType(selectedType) : {})}
+            onClick={() => (selectedType ? this.saveAndClose() : {})}
           >
             <Icon className={classes.btnIcon}>check</Icon>Select
           </Button>

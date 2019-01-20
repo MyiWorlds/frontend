@@ -3,11 +3,7 @@ import AppMenuController from './components/AppMenuController';
 import Navigation from './components/Navigation';
 import Routes from '../../routes';
 import withWidth from '@material-ui/core/withWidth';
-// import CreateCircle from './containers/Circle/mutations/CreateCircle';
-// import CreateProfile from './containers/Profile/mutations/CreateProfile';
-// import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
-// import GetCirclesByIds from './containers/queries/GetCirclesByIds';
-// import Home from './components/Home';
+import { Consumer } from '../ReactContext';
 
 interface Props {
   handleToggleThemeDark: () => void;
@@ -15,7 +11,7 @@ interface Props {
   handleLogin: () => void;
   changeSelectedProfile: () => void;
   user: any;
-  selectedProfile: ISelectedProfile;
+  selectedProfile: IProfile;
   width: string;
   handleLogout: () => void;
   handleToggleAddToHistory: () => void;
@@ -89,10 +85,15 @@ class App extends React.Component<Props, State> {
             overflow: 'auto',
           }}
         >
-          <Routes
-            selectedProfile={selectedProfile}
-            changeSelectedProfile={changeSelectedProfile}
-          />
+          <Consumer>
+            {(store: ProviderStore) => (
+              <Routes
+                store={store}
+                selectedProfile={selectedProfile}
+                changeSelectedProfile={changeSelectedProfile}
+              />
+            )}
+          </Consumer>
         </div>
       </>
     );

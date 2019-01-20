@@ -13,6 +13,7 @@ interface Props {
   };
   size: number;
   hideBackground: boolean;
+  color?: 'primary' | 'secondary' | 'inherit' | undefined;
 }
 
 interface State {
@@ -44,13 +45,16 @@ class Progress extends React.Component<Props, State> {
   }
 
   render() {
-    const { classes, size, hideBackground } = this.props;
+    const { classes, size, hideBackground, color } = this.props;
     const { zoom } = this.state;
+
+    const progressColor = color ? color : 'primary';
 
     const progressSize = size || 35;
 
     const progressCircle = (
       <CircularProgress
+        color={progressColor}
         style={{
           position: 'absolute',
           top: progressSize / size ? 4 : 8,

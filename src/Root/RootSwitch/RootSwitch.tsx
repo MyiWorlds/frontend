@@ -1,18 +1,23 @@
 import * as React from 'react';
-import Circle1 from '../Circle';
-import Profile1 from '../Profile';
+import CircleViewerSwitch from '../Circle/CircleViewerSwitch';
+import Profile from '../Profile';
 
 interface Props {
-  selectedProfile: ISelectedProfile;
-  document: ICircle;
+  document: ICreatedCircle;
+  selectedProfile: IProfile;
 }
 
-const RootSwitch: React.SFC<Props> = ({ selectedProfile, document }) => {
+const RootSwitch: React.SFC<Props> = ({ document, selectedProfile }) => {
   switch (document.type) {
     case 'profiles':
-      return <Profile1 selectedProfile={selectedProfile} circle={document} />;
+      return <Profile selectedProfile={selectedProfile} circle={document} />;
     case 'circles':
-      return <Circle1 selectedProfile={selectedProfile} circle={document} />;
+      return (
+        <CircleViewerSwitch
+          selectedProfile={selectedProfile}
+          circle={document}
+        />
+      );
     default:
       return null;
   }

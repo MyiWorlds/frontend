@@ -68,9 +68,9 @@ interface IImage {
   };
 }
 
-interface ICircle {
-  id?: string | null;
-  type: string;
+interface IEditingCircle {
+  id?: string;
+  type?: string | null;
   cached?: boolean;
   cache?: any;
   collection?: string | null;
@@ -95,8 +95,8 @@ interface ICircle {
   icon?: string | null;
   creator?: string | null;
   owner?: string | null;
-  viewers?: Array<string> | null;
-  editors?: Array<string> | null;
+  viewers?: string[] | null;
+  editors?: string[];
   dateCreated?: any | null;
   dateUpdated?: any | null;
   string?: string | null;
@@ -107,9 +107,50 @@ interface ICircle {
   date?: any | null;
   geoPoint?: any | null;
   line?: string | null;
-  lines?: string[] | null;
+  lines?: string[];
 }
 
-interface ICreatedCircle extends ICircle {
+interface ICreatedCircle extends IEditingCircle {
   id: string;
+  type: string;
+  cached?: boolean;
+  cache?: any;
+  pii?: boolean;
+  parent: ICreatedCircle | null;
+  slug?: string | null;
+  public?: boolean | null;
+  passwordRequired?: boolean | null;
+  settings?:
+    | any
+    | null
+    | IGetDocumentsByFilters
+    | IGetDocumentById
+    | IGetDocumentsByIds;
+  styles?: any | null;
+  rating?: string | null;
+  tags?: string[] | null;
+  title?: string | null;
+  subtitle?: string | null;
+  description?: string | null;
+  media?: ICreatedCircle | null;
+  icon?: string | null;
+  creator?: IProfile;
+  owner?: IProfile;
+  viewers?: IProfile[];
+  editors?: IProfile[];
+  dateCreated?: any | null;
+  dateUpdated?: any | null;
+  string?: string | null;
+  data?: any | null;
+  number?: number | null;
+  bigNumber?: any | null;
+  boolean?: boolean | null;
+  date?: any | null;
+  geoPoint?: any | null;
+  line?: ICreatedCircle | null;
+  lines?: ICreatedCircle[] | null;
+}
+
+interface ICircleType extends IEditingCircle {
+  type: string;
 }

@@ -1,5 +1,6 @@
 import * as React from 'react';
-import Circle from '../../../Circle';
+import CircleEditor from '../../mutations/CircleEditor';
+import CircleViewerSwitch from '../../../CircleViewerSwitch/CircleViewerSwitch';
 import Error from '../../../../../Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
@@ -9,15 +10,14 @@ import { Query } from 'react-apollo';
 
 interface Props {
   id: string;
+  selectedProfile: IProfile;
   location?: Location;
-  selectedProfile: ISelectedProfile;
+  returnCircleEditor?: boolean;
 }
 
 const GET_CIRCLE_BY_ID = gql`
   query getCircleById($id: String!) {
     getCircleById(id: $id) {
-      id
-      title
       ...FullCircle
     }
   }
@@ -49,11 +49,22 @@ class GetCircleById extends React.Component<Props> {
             );
           }
           if (error) return <Error error={error} />;
-          const circle = data.getCircleById;
-          const { selectedProfile } = this.props;
+          const circle: ICreatedCircle = data.getCircleById;
+          const { selectedProfile, returnCircleEditor } = this.props;
           if (!circle) return null;
 
-          return <Circle circle={circle} selectedProfile={selectedProfile} />;
+          if (returnCircleEditor) {
+            return (
+              <CircleEditor circle={circle} selectedProfile={selectedProfile} />
+            );
+          }
+
+          return (
+            <CircleViewerSwitch
+              circle={circle}
+              selectedProfile={selectedProfile}
+            />
+          );
         }}
       </Query>
     );

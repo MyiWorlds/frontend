@@ -2,7 +2,6 @@ import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../../apolloClient';
 import CREATE_USER from './containers/mutations/createUser';
-import fire from '../../services/firebase';
 import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById';
 import GET_USER from './containers/queries/getUserQuery';
 import guestProfile from '../Profile/constants/guestProfile';
@@ -11,6 +10,7 @@ import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
 import SelectProfile from '../Profile/components/SelectProfile';
 import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
+import { fire } from '../../services/firebase';
 import { Query } from 'react-apollo';
 import {
   createStyles,
@@ -34,7 +34,7 @@ interface Props {
 interface State {
   errorMessage?: string;
   authenticating: boolean;
-  selectedProfile: ISelectedProfile;
+  selectedProfile: IProfile;
   showProfileUpdatedSnackbar: boolean;
   profileUpdatedSnackbarMessage: string;
 }
@@ -345,7 +345,7 @@ class User extends React.Component<Props, State> {
   };
 
   changeSelectedProfile = async (id: string | null) => {
-    if (id && id !== 'null') {
+    if (id && id !== 'null' && id !== 'guest') {
       const optimisticSelectedProfile = Object.assign(
         {},
         this.state.selectedProfile,
@@ -411,7 +411,7 @@ class User extends React.Component<Props, State> {
           if (user.id) {
             if (
               user.profiles.length > 1 &&
-              (selectedProfile && !selectedProfile.id)
+              (selectedProfile && selectedProfile.id === 'guest')
             ) {
               return (
                 <SelectProfile
