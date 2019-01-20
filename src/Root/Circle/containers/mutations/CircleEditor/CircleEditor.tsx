@@ -1,3 +1,4 @@
+import * as deepmerge from 'deepmerge';
 import * as React from 'react';
 import client from '../../../../../apolloClient';
 import ConfirmCancelCircleEditor from './components/ConfirmCancelCircleEditor';
@@ -91,6 +92,7 @@ interface State {
 interface Props {
   selectedProfile: IProfile;
   circle?: ICreatedCircle;
+  currentPath: string;
   classes: {
     container: string;
     appBar: string;
@@ -252,12 +254,7 @@ class CircleEditor extends React.Component<Props, State> {
     const overrides = {
       id: this.state.circle.id,
     };
-    const circle = Object.assign(
-      {},
-      this.state.circle,
-      updatedCircle,
-      overrides,
-    );
+    const circle = deepmerge.all([this.state.circle, updatedCircle, overrides]);
 
     this.setState({ circle, saving: true }, () => {
       if (this.saveTimeout) {
@@ -283,7 +280,7 @@ class CircleEditor extends React.Component<Props, State> {
       showConfirmCancelCircleEditor,
       saving,
     } = this.state;
-    const { classes, selectedProfile } = this.props;
+    const { classes, currentPath, selectedProfile } = this.props;
 
     if (shouldNavigateTo) {
       return <Redirect to={navigateTo} />;
@@ -298,7 +295,10 @@ class CircleEditor extends React.Component<Props, State> {
                 <IconButton
                   color="default"
                   onClick={() => {
-                    this.goBack(store.state.sessionBrowserHistory[0]);
+                    const sessionBrowserHistorys = store.state.sessionBrowserHistory.filter(
+                      path => path !== currentPath,
+                    );
+                    this.goBack(sessionBrowserHistorys[0]);
                   }}
                   aria-label="Close"
                 >

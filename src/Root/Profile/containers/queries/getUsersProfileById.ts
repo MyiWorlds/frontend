@@ -16,6 +16,12 @@ export default gql`
         type
         data
       }
+      home {
+        id
+      }
+      homePublic {
+        id
+      }
     }
   }
 `;

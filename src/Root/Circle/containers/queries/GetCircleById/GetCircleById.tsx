@@ -13,6 +13,7 @@ interface Props {
   selectedProfile: IProfile;
   location?: Location;
   returnCircleEditor?: boolean;
+  currentPath?: string;
 }
 
 const GET_CIRCLE_BY_ID = gql`
@@ -50,12 +51,20 @@ class GetCircleById extends React.Component<Props> {
           }
           if (error) return <Error error={error} />;
           const circle: ICreatedCircle = data.getCircleById;
-          const { selectedProfile, returnCircleEditor } = this.props;
+          const {
+            selectedProfile,
+            returnCircleEditor,
+            currentPath,
+          } = this.props;
           if (!circle) return null;
 
           if (returnCircleEditor) {
             return (
-              <CircleEditor circle={circle} selectedProfile={selectedProfile} />
+              <CircleEditor
+                currentPath={currentPath || ''}
+                circle={circle}
+                selectedProfile={selectedProfile}
+              />
             );
           }
 

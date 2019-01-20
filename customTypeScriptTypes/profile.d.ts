@@ -26,4 +26,10 @@ interface IProfile {
     id: string;
     data: any;
   } | null;
+  home: {
+    id: string;
+  } | null;
+  homePublic: {
+    id: string;
+  } | null;
 }

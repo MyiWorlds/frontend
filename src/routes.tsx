@@ -23,7 +23,14 @@ class Routes extends React.Component<Props> {
           path="/"
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
-              <CircleEditor selectedProfile={selectedProfile} />
+              {selectedProfile.home ? (
+                <GetCircleById
+                  id={selectedProfile.home.id}
+                  selectedProfile={selectedProfile}
+                />
+              ) : (
+                <h1>Public Guest Home Page</h1>
+              )}
             </SessionBrowserHistory>
           )}
         />
@@ -53,7 +60,10 @@ class Routes extends React.Component<Props> {
           path="/create"
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
-              <CircleEditor selectedProfile={selectedProfile} />
+              <CircleEditor
+                currentPath={props.history.location.pathname}
+                selectedProfile={selectedProfile}
+              />
             </SessionBrowserHistory>
           )}
         />
@@ -65,6 +75,7 @@ class Routes extends React.Component<Props> {
               <GetCircleById
                 returnCircleEditor={true}
                 id={props.match.params.id}
+                currentPath={props.history.location.pathname}
                 selectedProfile={selectedProfile}
               />
             </SessionBrowserHistory>
