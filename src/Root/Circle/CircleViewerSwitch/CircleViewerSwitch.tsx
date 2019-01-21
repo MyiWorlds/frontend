@@ -2,6 +2,8 @@ import * as React from 'react';
 import FlexGrow from '../../components/FlexGrow';
 import GetCirclesByFilters from '../containers/queries/GetCirclesByFilters';
 import Image from '../components/Image';
+import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
 import { ListViewer } from '../components/List';
 import { TextViewer } from '../components/Text';

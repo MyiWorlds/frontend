@@ -1,5 +1,5 @@
 import * as React from 'react';
-import FlexGrow from 'src/Root/components/FlexGrow';
+import FlexGrow from '../../../components/FlexGrow';
 import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
 import { Link } from 'react-router-dom';
 import {
@@ -15,6 +15,7 @@ import {
   Menu,
   MenuItem,
   Switch,
+  Theme,
   Toolbar,
   Typography,
   withStyles,
@@ -53,7 +54,9 @@ interface Props {
       data: any | null;
     };
   };
-  user: any;
+  user: {
+    id: string;
+  };
   showNavigation: boolean;
   handleNavigationToggle: () => void;
   handleToggleThemeDark: () => void;
@@ -64,7 +67,7 @@ interface Props {
   handleToggleAddToHistory: () => void;
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     appBar: {
       height: 48,

@@ -2,7 +2,13 @@ import * as React from 'react';
 import injectSheet from 'react-jss';
 import Spacer from '../../../../../components/Spacer';
 import ThemeDemo from './components/ThemeDemo';
-import { InputAdornment, TextField, Typography } from '@material-ui/core';
+import { IProfile } from '../../../../../../../customTypeScriptTypes/profile';
+import {
+  InputAdornment,
+  TextField,
+  Typography,
+  Theme,
+} from '@material-ui/core';
 
 interface Props {
   classes: {
@@ -11,9 +17,7 @@ interface Props {
     themeColorRepresentation: string;
     themeDemo: string;
   };
-  selectedProfile: {
-    myTheme: IMyTheme;
-  };
+  selectedProfile: IProfile;
 }
 
 interface State {
@@ -21,7 +25,7 @@ interface State {
   secondaryColor: string;
 }
 
-const styles = theme => ({
+const styles = (theme: Theme) => ({
   container: {
     marging: theme.spacing.unit,
     display: 'flex',
@@ -76,7 +80,9 @@ class ThemeColorPicker extends React.Component<Props, State> {
     });
   };
 
-  handleChange = name => event => {
+  handleChange = (name: string) => (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     this.setState({
       [name]: event.target.value,
     } as any);

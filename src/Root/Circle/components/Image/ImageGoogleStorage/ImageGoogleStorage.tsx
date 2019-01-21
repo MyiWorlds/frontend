@@ -48,7 +48,7 @@ class ImageGoogleStorage extends React.Component<Props, State> {
       url: '',
     };
   }
-  handleTextFieldChange = url => {
+  handleTextFieldChange = (url: string) => {
     this.setState({
       url,
     });

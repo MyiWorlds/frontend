@@ -10,6 +10,7 @@ import {
   Toolbar,
   Typography,
   withStyles,
+  Theme,
 } from '@material-ui/core';
 
 interface Props {
@@ -17,12 +18,11 @@ interface Props {
   secondaryColor: string;
   classes: {
     container: string;
-    appFrame: string;
     fab: string;
   };
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     container: {
       position: 'relative',

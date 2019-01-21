@@ -5,6 +5,8 @@ import {
   Typography,
   withStyles
   } from '@material-ui/core';
+import { IEditingCircle } from '../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../customTypeScriptTypes/profile';
 import { ListEditor } from '../components/List';
 import { TextEditor } from '../components/Text';
 

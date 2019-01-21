@@ -1,6 +1,8 @@
 import * as React from 'react';
 import CircleViewerSwitch from '../Circle/CircleViewerSwitch';
 import Profile from '../Profile';
+import { ICreatedCircle } from '../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../customTypeScriptTypes/profile';
 
 interface Props {
   document: ICreatedCircle;

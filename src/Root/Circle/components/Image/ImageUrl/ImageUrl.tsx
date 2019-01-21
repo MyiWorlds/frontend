@@ -27,7 +27,7 @@ interface State {
   url: string;
 }
 
-const styles = props => createStyles({});
+const styles = (props: any) => createStyles({});
 
 class ImageUrl extends React.Component<Props, State> {
   constructor(props: any) {
@@ -36,7 +36,7 @@ class ImageUrl extends React.Component<Props, State> {
       url: '',
     };
   }
-  handleTextFieldChange = url => {
+  handleTextFieldChange = (url: string) => {
     this.setState({
       url,
     });

@@ -24,7 +24,11 @@ const selectedProfile = {
   resolvers: {
     Query: {},
     Mutation: {
-      updateSelectedProfile: (_: null, { selectedProfile }, { cache }) => {
+      updateSelectedProfile: (
+        _: null,
+        { selectedProfile }: any,
+        { cache }: any,
+      ) => {
         const data = {
           __typename: 'Profile',
           selectedProfile,

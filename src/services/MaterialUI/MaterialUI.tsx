@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { createGenerateClassName } from '@material-ui/core/styles';
+import { createGenerateClassName, Theme } from '@material-ui/core/styles';
+import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { JssProvider } from 'react-jss';
 import { SheetsRegistry } from 'jss';
 import {
@@ -16,16 +17,12 @@ interface Props {
     app: string;
     root: string;
   };
-  selectedProfile: {
-    isDarkTheme: boolean;
-    isMyTheme: boolean;
-    myTheme: any | null;
-  };
+  selectedProfile: IProfile;
 }
 
-const theme = theme => createMuiTheme(theme);
+const theme = (theme: Theme) => createMuiTheme(theme);
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     app: {
       position: 'fixed',

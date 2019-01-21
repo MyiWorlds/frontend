@@ -1,13 +1,13 @@
 import * as React from 'react';
-import FlexGrow from 'src/Root/components/FlexGrow';
+import FlexGrow from '../../../components/FlexGrow';
 import GET_PROFILE_BY_USERNAME from '../../containers/queries/getProfileByUsername';
 import GET_USER from '../../../User/containers/queries/getUserQuery';
 import GET_USER_AND_PROFILE from '../../../User/components/UserSettings/getUserAndProfile';
 import gql from 'graphql-tag';
 import Progress from '../../../components/Progress';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
-import Spacer from 'src/Root/components/Spacer';
-import { Mutation, Query } from 'react-apollo';
+import Spacer from '../../../components/Spacer';
+import { Mutation, Query, RefetchQueriesProviderFn } from 'react-apollo';
 import {
   Button,
   Collapse,
@@ -130,11 +130,11 @@ class ProfileUsernameEditor extends React.Component<
     clearTimeout(this.timeout);
   }
 
-  updateState = object => {
+  updateState = (object: any) => {
     this.setState(object);
   };
 
-  handleInputChange = (key, value, refetch) => {
+  handleInputChange = (key: string, value: any, refetch: any) => {
     this.setState({
       checkUsername: false,
       usernameAvailable: false,
@@ -149,7 +149,7 @@ class ProfileUsernameEditor extends React.Component<
     this.timeout = setTimeout(async () => {
       this.setState({ checkUsername: true });
 
-      await refetch().then(res => {
+      await refetch().then((res: any) => {
         const response = res.data.getProfileByUsername;
         const usernameAvailable = response && response.usernameAvailable;
         const usernameInvalid =
@@ -167,7 +167,11 @@ class ProfileUsernameEditor extends React.Component<
     this.setState({ [key]: value } as any);
   };
 
-  submitForm = async (event, createProfile, usernameInvalid) => {
+  submitForm = async (
+    event: any,
+    createProfile: any,
+    usernameInvalid: boolean,
+  ) => {
     event.preventDefault();
 
     if (usernameInvalid) {
@@ -212,7 +216,7 @@ class ProfileUsernameEditor extends React.Component<
     }
   };
 
-  handleCancel = propsUsername => {
+  handleCancel = (propsUsername: string | undefined) => {
     this.updateState({
       username: propsUsername || '',
       checkUsername: false,

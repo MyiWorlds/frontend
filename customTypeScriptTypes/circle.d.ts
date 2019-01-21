@@ -1,5 +1,7 @@
+import { IProfile } from './profile.d';
+
 //Todo rename all these to have I at the start to prevent naming conflicts
-interface IFilter {
+export interface IFilter {
   property: string;
   condition: '==' | '<' | '>' | '<=' | '>=' | 'array-contains';
   value: string | number | boolean | Date | null;
@@ -110,13 +112,13 @@ interface IEditingCircle {
   lines?: string[];
 }
 
-interface ICreatedCircle extends IEditingCircle {
+export interface ICreatedCircle extends IEditingCircle {
   id: string;
   type: string;
   cached?: boolean;
   cache?: any;
   pii?: boolean;
-  parent: ICreatedCircle | null;
+  parent?: ICreatedCircle | null;
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;
@@ -149,8 +151,4 @@ interface ICreatedCircle extends IEditingCircle {
   geoPoint?: any | null;
   line?: ICreatedCircle | null;
   lines?: ICreatedCircle[] | null;
-}
-
-interface ICircleType extends IEditingCircle {
-  type: string;
 }

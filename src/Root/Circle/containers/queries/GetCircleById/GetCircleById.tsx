@@ -3,8 +3,10 @@ import CircleEditor from '../../mutations/CircleEditor';
 import CircleViewerSwitch from '../../../CircleViewerSwitch/CircleViewerSwitch';
 import Error from '../../../../../Root/components/Error';
 import gql from 'graphql-tag';
-import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import ProgressWithMessage from '../../../../components/ProgressWithMessage';
 import { FullCircleFragment } from '../FullCircleFragment';
+import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { Location } from 'history';
 import { Query } from 'react-apollo';
 

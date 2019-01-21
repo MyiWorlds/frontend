@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Error from 'src/Root/components/Error';
+import Error from '../../../../components/Error';
 import gql from 'graphql-tag';
-import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import ProgressWithMessage from '../../../../components/ProgressWithMessage';
 import { Query } from 'react-apollo';
 import { Typography } from '@material-ui/core';
 
