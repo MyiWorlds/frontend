@@ -25,47 +25,45 @@ interface UserProps {
 class Root extends React.Component {
   render() {
     return (
-      <div>
-        <Provider>
-          <BrowserRouter>
-            <ApolloProvider client={apolloClient}>
-              {/* <Detector
+      <Provider>
+        <BrowserRouter>
+          <ApolloProvider client={apolloClient}>
+            {/* <Detector
                 polling={{ interval: 10000 }}
                 render={({ online }: { online: boolean }) => ( */}
-              <NetworkUpdater isConnected={true}>
-                <User
-                  isConnected={true}
-                  render={({
-                    selectedProfile,
-                    user,
-                    handleToggleThemeDark,
-                    handleToggleStyleEnabled,
-                    handleLogin,
-                    handleLogout,
-                    changeSelectedProfile,
-                    handleToggleAddToHistory,
-                  }: UserProps) => (
-                    <MaterialUI selectedProfile={selectedProfile}>
-                      <App
-                        user={user}
-                        selectedProfile={selectedProfile}
-                        handleToggleThemeDark={handleToggleThemeDark}
-                        handleToggleStyleEnabled={handleToggleStyleEnabled}
-                        handleLogin={handleLogin}
-                        handleLogout={handleLogout}
-                        changeSelectedProfile={changeSelectedProfile}
-                        handleToggleAddToHistory={handleToggleAddToHistory}
-                      />
-                    </MaterialUI>
-                  )}
-                />
-              </NetworkUpdater>
-              {/* )}
+            <NetworkUpdater isConnected={true}>
+              <User
+                isConnected={true}
+                render={({
+                  selectedProfile,
+                  user,
+                  handleToggleThemeDark,
+                  handleToggleStyleEnabled,
+                  handleLogin,
+                  handleLogout,
+                  changeSelectedProfile,
+                  handleToggleAddToHistory,
+                }: UserProps) => (
+                  <MaterialUI selectedProfile={selectedProfile}>
+                    <App
+                      user={user}
+                      selectedProfile={selectedProfile}
+                      handleToggleThemeDark={handleToggleThemeDark}
+                      handleToggleStyleEnabled={handleToggleStyleEnabled}
+                      handleLogin={handleLogin}
+                      handleLogout={handleLogout}
+                      changeSelectedProfile={changeSelectedProfile}
+                      handleToggleAddToHistory={handleToggleAddToHistory}
+                    />
+                  </MaterialUI>
+                )}
+              />
+            </NetworkUpdater>
+            {/* )}
               /> */}
-            </ApolloProvider>
-          </BrowserRouter>
-        </Provider>
-      </div>
+          </ApolloProvider>
+        </BrowserRouter>
+      </Provider>
     );
   }
 }

@@ -1,10 +1,9 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import { createStyles, withStyles } from '@material-ui/core/styles';
+import injectSheet from 'react-jss';
+import { createStyles } from '@material-ui/core/styles';
 import { IProfile } from '../../../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
-import { Theme } from '@material-ui/core/styles/createMuiTheme';
-// import injectSheet from 'react-jss';
 
 import {
   Divider,
@@ -18,28 +17,23 @@ import {
 
 const drawerWidth = 240;
 
-const styles = (theme: Theme) =>
+const styles = (theme: any) =>
   createStyles({
     navigation: {
       overflow: 'hidden',
       width: '0px',
       transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.easeInOut,
         duration: theme.transitions.duration.enteringScreen,
       }),
+      [`@media screen and (min-width: ${theme.breakpoints.values.md}px)`]: {
+        minWidth: (props: any) => (props.showNavigation ? drawerWidth : '64px'),
+      },
+
+      [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
+        minWidth: (props: any) => (props.showNavigation ? drawerWidth : '64px'),
+      },
     },
-
-    // [`@media screen and (min-width: ${theme.breakpoints.values.md}px)`]: {
-    //   navigation: {
-    //     minWidth: (props: any) => (props.showNavigation ? '240px' : '64px'),
-    //   },
-    // },
-
-    // [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
-    //   navigation: {
-    //     minWidth: (props: any) => (props.showNavigation ? '240px' : '64px'),
-    //   },
-    // },
 
     drawerPaper: {
       background: theme.palette.background.default,
@@ -287,4 +281,4 @@ class Navigation extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(Navigation);
+export default injectSheet(styles)(Navigation);
