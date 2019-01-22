@@ -16,7 +16,7 @@ A frontend boilerplate is made with:
 
 The frontend will be running on Firebase hosting, and the backend will be on Google Cloud Platform App Engine (Standard Node8 environment).
 
-The backend to this application should be setup before using this frontend. You can find it and it's setup instructions here: BACKEND_WEBSITE_URL_HERE
+The backend to this application should be setup before using this frontend. You can find it and it's setup instructions here: https://github.com/MyiWorlds/backend
 
 If your app is already setup your normal development workflow will be just running
 
