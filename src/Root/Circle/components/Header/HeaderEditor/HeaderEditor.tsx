@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import HeaderViewer from '../../Header/HeaderViewer';
+import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
 
 interface Props {
   circle: ICreatedCircle;

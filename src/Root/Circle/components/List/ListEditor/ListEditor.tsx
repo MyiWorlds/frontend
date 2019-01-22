@@ -1,6 +1,8 @@
 import * as React from 'react';
+import CircleEditorSwitch from '../../../CircleEditorSwitch';
 import { Button, Theme, withStyles } from '@material-ui/core';
-import { CircleEditorSwitch } from 'src/Root/Circle';
+import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 
 interface Props {
   circle: IEditingCircle;

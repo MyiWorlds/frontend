@@ -1,7 +1,8 @@
-import * as moment from 'moment';
 import * as React from 'react';
 import DeleteProfile from './DeleteProfile';
+import moment from 'moment';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
+import { IProfile } from '../../../../../customTypeScriptTypes/profile';
 import {
   Button,
   CardActions,
@@ -10,6 +11,7 @@ import {
   ExpansionPanelDetails,
   ExpansionPanelSummary,
   Icon,
+  Theme,
   Typography,
   withStyles,
 } from '@material-ui/core';
@@ -30,7 +32,7 @@ interface State {
   showCreateProfileDialog: boolean;
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -58,7 +60,10 @@ class ProfileSettings extends React.Component<Props, State> {
     showCreateProfileDialog: false,
   };
 
-  handleExpansionChange = panel => (event, expanded) => {
+  handleExpansionChange = (panel: string) => (
+    event: any,
+    expanded: boolean,
+  ) => {
     this.setState({
       expanded: expanded ? panel : '',
     });
@@ -85,7 +90,7 @@ class ProfileSettings extends React.Component<Props, State> {
           My Profiles
         </Typography>
         <br />
-        {profiles.map(profile => {
+        {profiles.map((profile: IProfile) => {
           return (
             <ExpansionPanel
               key={profile.id}
@@ -103,18 +108,22 @@ class ProfileSettings extends React.Component<Props, State> {
                   <Typography color="textPrimary">
                     <b>Date Created: </b>
                     <br />
-                    {moment(profile.dateCreated).format(
-                      'MMMM Do YYYY h:mm:ss a',
-                    )}
+                    {profile.dateCreated
+                      ? moment(profile.dateCreated).format(
+                          'MMMM Do YYYY h:mm:ss a',
+                        )
+                      : null}
                   </Typography>
                   <br />
                   <br />
                   <Typography color="textPrimary">
                     <b>Last Updated: </b>
                     <br />
-                    {moment(profile.dateUpdated).format(
-                      'MMMM Do YYYY h:mm:ss a',
-                    )}
+                    {profile.dateUpdated
+                      ? moment(profile.dateUpdated).format(
+                          'MMMM Do YYYY h:mm:ss a',
+                        )
+                      : null}
                   </Typography>
                   <DeleteProfile id={profile.id}>
                     <Button variant="contained" color="secondary">

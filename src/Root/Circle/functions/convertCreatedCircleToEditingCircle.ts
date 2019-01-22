@@ -1,3 +1,9 @@
+import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import {
+  ICreatedCircle,
+  IEditingCircle,
+} from '../../../../customTypeScriptTypes/circle';
+
 const convertCreatedCircleToEditingCircle = (
   circle: ICreatedCircle,
   selectedProfile: IProfile,

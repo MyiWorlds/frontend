@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ThemeColorPicker from './components/ThemeColorPicker';
 import { createStyles, Theme, withStyles } from '@material-ui/core';
+import { IProfile } from '../../../../../customTypeScriptTypes/profile';
 
 interface Props {
   selectedProfile: IProfile;

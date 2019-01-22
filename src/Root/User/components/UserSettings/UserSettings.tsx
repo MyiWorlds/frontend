@@ -1,10 +1,11 @@
-import * as moment from 'moment';
 import * as React from 'react';
 import GET_USER_AND_PROFILE from './getUserAndProfile';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import moment from 'moment';
 import ProfileSettings from '../../../Profile/components/ProfileSettings';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Spacer from '../../../components/Spacer';
+import { IUser } from '../../../../../customTypeScriptTypes/user';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import {
@@ -39,7 +40,7 @@ class UserSettings extends React.Component<Props> {
     const { classes, changeSelectedProfile } = this.props;
     return (
       <Query query={GET_USER_AND_PROFILE}>
-        {({ loading, error, data, refetch }) => {
+        {({ loading, error, data }) => {
           if (loading) {
             return (
               <ProgressWithMessage
@@ -49,7 +50,7 @@ class UserSettings extends React.Component<Props> {
             );
           }
           if (error) return <p>UserSettings had error {console.log(error)}</p>;
-          const user = data.user;
+          const user: IUser = data.user;
           if (!user) {
             return (
               <div>
@@ -76,15 +77,20 @@ class UserSettings extends React.Component<Props> {
                 <Typography>{user.email}</Typography>
 
                 <Spacer />
-                <Typography variant="caption">Date Created:</Typography>
-                <Typography>
-                  {moment(user.dateCreated).format('MMMM Do YYYY h:mm:ss a')}
+                <Typography color="textPrimary">
+                  <b>Date Created: </b>
+                  <br />
+                  {user.dateCreated
+                    ? moment(user.dateCreated).format('MMMM Do YYYY h:mm:ss a')
+                    : null}
                 </Typography>
-
                 <Spacer />
-                <Typography variant="caption">Last Updated:</Typography>
-                <Typography>
-                  {moment(user.dateUpdated).format('MMMM Do YYYY h:mm:ss a')}
+                <Typography color="textPrimary">
+                  <b>Last Updated: </b>
+                  <br />
+                  {user.dateUpdated
+                    ? moment(user.dateUpdated).format('MMMM Do YYYY h:mm:ss a')
+                    : null}
                 </Typography>
               </div>
               <List>

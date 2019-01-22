@@ -12,9 +12,8 @@ interface IMyTheme {
   };
 }
 
-interface IProfile {
+export interface IProfile {
   id: string;
-  username: string;
   username: string;
   isDarkTheme: boolean;
   isMyTheme: boolean;
@@ -32,4 +31,6 @@ interface IProfile {
   homePublic: {
     id: string;
   } | null;
+  dateCreated?: number;
+  dateUpdated?: number;
 }

@@ -1,3 +1,5 @@
+import { IProfile } from '../../../../customTypeScriptTypes/profile';
+
 const guestProfile: IProfile = {
   id: 'guest',
   username: 'guest',

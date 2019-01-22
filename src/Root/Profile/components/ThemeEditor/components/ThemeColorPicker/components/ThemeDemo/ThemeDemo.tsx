@@ -3,13 +3,14 @@ import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
   AppBar,
-  Button,
+  Fab,
   Card,
   createStyles,
   IconButton,
   Toolbar,
   Typography,
   withStyles,
+  Theme,
 } from '@material-ui/core';
 
 interface Props {
@@ -17,12 +18,11 @@ interface Props {
   secondaryColor: string;
   classes: {
     container: string;
-    appFrame: string;
     fab: string;
   };
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     container: {
       position: 'relative',
@@ -60,15 +60,11 @@ const ThemeDemo: React.SFC<Props> = ({
           </Typography>
         </Toolbar>
       </AppBar>
-      <Button
-        variant="fab"
-        className={classes.fab}
-        style={{ backgroundColor: secondaryColor }}
-      >
+      <Fab className={classes.fab} style={{ backgroundColor: secondaryColor }}>
         <AddIcon
         // nativeColor={secondary.contrastText}
         />
-      </Button>
+      </Fab>
     </Card>
   );
 };

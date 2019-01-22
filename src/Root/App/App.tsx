@@ -4,6 +4,7 @@ import Navigation from './components/Navigation';
 import Routes from '../../routes';
 import withWidth from '@material-ui/core/withWidth';
 import { Consumer } from '../ReactContext';
+import { IProfile } from './../../../customTypeScriptTypes/profile.d';
 
 interface Props {
   handleToggleThemeDark: () => void;
@@ -36,10 +37,6 @@ class App extends React.Component<Props, State> {
 
   handleNavigationToggle = () => {
     this.setState({ showNavigation: !this.state.showNavigation });
-  };
-
-  handleToggleBoolean = (key: string) => {
-    this.setState({ [key]: !this.state[key] } as any);
   };
 
   render() {

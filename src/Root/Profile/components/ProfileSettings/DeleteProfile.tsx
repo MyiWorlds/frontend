@@ -1,8 +1,8 @@
 import * as React from 'react';
 import apolloClient from '../../../../apolloClient';
-import Error from 'src/Root/components/Error';
+import Error from '../../../components/Error';
 import gql from 'graphql-tag';
-import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import { Mutation } from 'react-apollo';
 
 interface Props {
@@ -29,7 +29,7 @@ const DELETE_USER = gql`
 `;
 
 class DeleteProfile extends React.Component<Props> {
-  delete = async deleteProfile => {
+  delete = async (deleteProfile: any) => {
     await deleteProfile({
       variables: {
         id: this.props.id,

@@ -6,19 +6,18 @@ import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById
 import GET_USER from './containers/queries/getUserQuery';
 import guestProfile from '../Profile/constants/guestProfile';
 import guestUser from './constants/guestUser';
+import Paper from '@material-ui/core/Paper';
 import ProfileUsernameEditor from '../Profile/components/ProfileUsernameEditor';
 import ProgressWithMessage from '../components/ProgressWithMessage';
 import SelectProfile from '../Profile/components/SelectProfile';
+import Slide from '@material-ui/core/Slide';
+import Snackbar from '@material-ui/core/Snackbar';
 import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
+import { createStyles, withStyles } from '@material-ui/core/styles';
 import { fire } from '../../services/firebase';
+import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { Query } from 'react-apollo';
-import {
-  createStyles,
-  Paper,
-  Slide,
-  Snackbar,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 require('firebase/auth');
 
@@ -54,7 +53,7 @@ function TransitionUp(props: any) {
   return <Slide {...props} direction="up" />;
 }
 
-const styles = theme =>
+const styles = (theme: Theme) =>
   createStyles({
     card: {
       ...theme.mixins.gutters(),
@@ -327,7 +326,7 @@ class User extends React.Component<Props, State> {
       });
   };
 
-  handleLogout = async refetch => {
+  handleLogout = async (refetch: () => void) => {
     await fire
       .auth()
       .signOut()
@@ -390,7 +389,12 @@ class User extends React.Component<Props, State> {
     const { render, classes } = this.props;
 
     if (authenticating) {
-      return <h1>Authenticating your account...</h1>;
+      return (
+        <ProgressWithMessage
+          message="Authenticating Account"
+          hideBackground={true}
+        />
+      );
     }
 
     return (

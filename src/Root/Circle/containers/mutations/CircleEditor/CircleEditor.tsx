@@ -1,18 +1,19 @@
-import * as deepmerge from 'deepmerge';
 import * as React from 'react';
 import client from '../../../../../apolloClient';
 import ConfirmCancelCircleEditor from './components/ConfirmCancelCircleEditor';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
+import deepmerge from 'deepmerge';
 import emptyCircle from '../../../functions/emptyCircle';
-import FlexGrow from 'src/Root/components/FlexGrow';
+import FlexGrow from '../../../../components/FlexGrow';
 import gql from 'graphql-tag';
 import history from '../../../../../history';
-import makeTypeHumanReadable from 'src/Root/Circle/functions/makeTypeHumanReadable';
+import makeTypeHumanReadable from '../../../../Circle/functions/makeTypeHumanReadable';
 import TypeSelector from './components/TypeSelector';
-import { CircleEditorSwitch } from 'src/Root/Circle';
-import { Consumer } from 'src/Root/ReactContext';
+import { CircleEditorSwitch } from '../../../../Circle';
+import { Consumer } from '../../../../ReactContext';
 import { FullCircleFragment } from '../../queries/FullCircleFragment';
-import { HeaderEditor } from 'src/Root/Circle/components/Header';
+import { HeaderEditor } from '../../../../Circle/components/Header';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { Redirect } from 'react-router-dom';
 import {
   AppBar,
@@ -28,6 +29,10 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
+import {
+  ICreatedCircle,
+  IEditingCircle,
+} from '../../../../../../customTypeScriptTypes/circle';
 
 function Transition(props: CircleEditor) {
   return <Slide direction="up" {...props} />;

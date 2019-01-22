@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { Typography } from '@material-ui/core';
 
 interface Props {

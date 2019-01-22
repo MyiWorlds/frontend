@@ -1,11 +1,16 @@
 import * as React from 'react';
 import client from '../../../../../apolloClient';
-import Error from 'src/Root/components/Error';
+import Error from '../../../../components/Error';
 import gql from 'graphql-tag';
-import ProgressWithMessage from 'src/Root/components/ProgressWithMessage';
+import ProgressWithMessage from '../../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
 import { ApolloError } from 'apollo-client';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
+import {
+  ICreatedCircle,
+  IFilter,
+} from '../../../../../../customTypeScriptTypes/circle';
 import {
   AppBar,
   Card,

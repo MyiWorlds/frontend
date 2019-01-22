@@ -1,6 +1,11 @@
 import * as React from 'react';
 import convertCreatedCircleToEditingCircle from '../../../../../functions/convertCreatedCircleToEditingCircle';
 import types from './defaultTypes';
+import { IProfile } from '../../../../../../../../customTypeScriptTypes/profile';
+import {
+  IEditingCircle,
+  ICreatedCircle,
+} from '../../../../../../../../customTypeScriptTypes/circle';
 import {
   Button,
   Card,
@@ -25,7 +30,7 @@ function Transition(props: TypeSelector) {
 }
 
 interface Props {
-  updateCircle: (type: IEditingCircle | null, noDelay: boolean) => void;
+  updateCircle: (type: IEditingCircle, noDelay: boolean) => void;
   showTypeSelector: boolean;
   selectedProfile: IProfile;
   handleClose: () => void;

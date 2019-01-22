@@ -1,6 +1,7 @@
 import * as React from 'react';
 import FlexGrow from '../../../components/FlexGrow';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
+import { IProfile } from '../../../../../customTypeScriptTypes/profile';
 import {
   Button,
   Card,

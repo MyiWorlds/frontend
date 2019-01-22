@@ -27,7 +27,7 @@ class NetworkUpdater extends React.Component<Props> {
   }
 
   render() {
-    return <div>{this.props.children}</div>;
+    return <>{this.props.children}</>;
   }
 }
 

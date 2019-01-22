@@ -1,3 +1,5 @@
+import { ICreatedCircle } from '../../../../../../../../customTypeScriptTypes/circle.d';
+
 const types: ICreatedCircle[] = [
   {
     id: 'type1',

@@ -7,7 +7,11 @@ const networkStatus = {
   },
   resolvers: {
     Mutation: {
-      updateNetworkStatus: (_: null, { isConnected }, { cache }) => {
+      updateNetworkStatus: (
+        _: null,
+        { isConnected }: { isConnected: any },
+        { cache }: { cache: any },
+      ) => {
         const data = {
           networkStatus: {
             __typename: 'NetworkStatus',
