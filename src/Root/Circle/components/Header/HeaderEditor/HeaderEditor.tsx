@@ -7,12 +7,17 @@ interface Props {
   updateCircle: (circle: IEditingCircle) => void;
   classes: {
     textField: string;
+    title: string;
   };
 }
 
 const styles = (theme: Theme) => ({
   textField: {
     margin: theme.spacing.unit,
+  },
+  title: {
+    ...theme.typography.h1,
+    paddingBottom: theme.spacing.unit * 2, // For showing bottoms of letters hanging below
   },
 });
 
@@ -30,7 +35,12 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
         id="title"
         label="Title"
         value={circle.title || ''}
-        className={classes.textField}
+        inputProps={{
+          className: classes.title,
+        }}
+        multiline
+        rows="2"
+        fullWidth
         onChange={event =>
           updateCircle({ ...circle, title: event.target.value })
         }
