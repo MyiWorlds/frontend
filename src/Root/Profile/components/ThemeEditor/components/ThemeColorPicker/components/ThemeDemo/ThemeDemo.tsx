@@ -3,7 +3,7 @@ import AddIcon from '@material-ui/icons/Add';
 import MenuIcon from '@material-ui/icons/Menu';
 import {
   AppBar,
-  Button,
+  Fab,
   Card,
   createStyles,
   IconButton,
@@ -60,15 +60,11 @@ const ThemeDemo: React.SFC<Props> = ({
           </Typography>
         </Toolbar>
       </AppBar>
-      <Button
-        variant="fab"
-        className={classes.fab}
-        style={{ backgroundColor: secondaryColor }}
-      >
+      <Fab className={classes.fab} style={{ backgroundColor: secondaryColor }}>
         <AddIcon
         // nativeColor={secondary.contrastText}
         />
-      </Button>
+      </Fab>
     </Card>
   );
 };
