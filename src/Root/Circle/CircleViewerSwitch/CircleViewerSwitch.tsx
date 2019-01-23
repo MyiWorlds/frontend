@@ -2,6 +2,7 @@ import * as React from 'react';
 import FlexGrow from '../../components/FlexGrow';
 import GetCirclesByFilters from '../containers/queries/GetCirclesByFilters';
 import Image from '../components/Image';
+import { AllFieldsViewer } from '../components/AllFields';
 import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
 import { IProfile } from '../../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
@@ -71,6 +72,9 @@ class Circle extends React.Component<Props> {
             circle={circle}
           />
         );
+        break;
+      case 'ALL_FIELDS':
+        content = <AllFieldsViewer circle={circle} />;
         break;
       case 'TEXT':
         content = <TextViewer circle={circle} />;

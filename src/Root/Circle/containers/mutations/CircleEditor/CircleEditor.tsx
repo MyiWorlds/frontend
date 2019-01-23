@@ -360,7 +360,6 @@ class CircleEditor extends React.Component<Props, State> {
           selectedProfile={selectedProfile}
           circle={circle}
         />
-
         <TypeSelector
           selectedProfile={selectedProfile}
           showTypeSelector={showTypeSelector}

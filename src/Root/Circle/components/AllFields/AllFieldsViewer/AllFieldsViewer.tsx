@@ -6,7 +6,7 @@ interface Props {
   circle: ICreatedCircle;
 }
 
-const TextViewer: React.SFC<Props> = ({ circle }) => {
+const AllFieldsViewer: React.SFC<Props> = ({ circle }) => {
   const value = circle.string || '';
   return (
     <div>
@@ -15,4 +15,4 @@ const TextViewer: React.SFC<Props> = ({ circle }) => {
   );
 };
 
-export default TextViewer;
+export default AllFieldsViewer;

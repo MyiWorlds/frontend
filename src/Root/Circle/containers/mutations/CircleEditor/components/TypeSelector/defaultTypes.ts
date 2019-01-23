@@ -2,6 +2,14 @@ import { ICreatedCircle } from '../../../../../../../../customTypeScriptTypes/ci
 
 const types: ICreatedCircle[] = [
   {
+    id: 'all-fields',
+    icon: 'group_work',
+    title: 'All Fields',
+    parent: null,
+    type: 'ALL_FIELDS',
+    description: 'All content types on a circle',
+  },
+  {
     id: 'type1',
     icon: 'short_text',
     title: 'Simple Text',

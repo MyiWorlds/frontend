@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AllFieldsEditor } from '../components/AllFields';
 import {
   createStyles,
   Theme,
@@ -46,6 +47,11 @@ class CircleEditorSwitch extends React.Component<Props> {
     let content: any = null;
 
     switch (type) {
+      case 'ALL_FIELDS':
+        content = (
+          <AllFieldsEditor updateCircle={updateCircle} circle={circle} />
+        );
+        break;
       case 'TEXT':
         content = <TextEditor updateCircle={updateCircle} circle={circle} />;
         break;
