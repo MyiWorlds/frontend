@@ -1,16 +1,22 @@
 import * as React from 'react';
+import { CircleEditorSwitch } from '../../..';
 import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import { NumberEditor } from '../../Number';
+import { TextEditor } from '../../Text';
 import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
   circle: IEditingCircle;
   updateCircle: (circle: IEditingCircle) => void;
   classes: {
+    container: string;
     textField: string;
   };
 }
 
 const styles = (theme: Theme) => ({
+  container: {},
   textField: {
     margin: theme.spacing.unit,
   },
@@ -21,19 +27,13 @@ const AllFieldsEditor: React.SFC<Props> = ({
   circle,
   updateCircle,
 }) => {
-  const value = circle.string || '';
   return (
-    <div>
-      <TextField
-        id="textField"
-        label="Text"
-        value={value}
-        className={classes.textField}
-        onChange={event =>
-          updateCircle({ ...circle, string: event.target.value })
-        }
-        margin="normal"
-        variant="outlined"
+    <div className={classes.container}>
+      <TextEditor updateCircle={updateCircle} circle={circle} />
+      <NumberEditor
+        updateCircle={updateCircle}
+        circle={circle}
+        updateCircleField="dateUpdated"
       />
     </div>
   );

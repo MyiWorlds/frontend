@@ -2,16 +2,16 @@ import * as React from 'react';
 import client from '../../../../../apolloClient';
 import ConfirmCancelCircleEditor from './components/ConfirmCancelCircleEditor';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
+import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
 import emptyCircle from '../../../functions/emptyCircle';
 import FlexGrow from '../../../../components/FlexGrow';
-import gql from 'graphql-tag';
 import history from '../../../../../history';
 import makeTypeHumanReadable from '../../../../Circle/functions/makeTypeHumanReadable';
 import TypeSelector from './components/TypeSelector';
+import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import { CircleEditorSwitch } from '../../../../Circle';
 import { Consumer } from '../../../../ReactContext';
-import { FullCircleFragment } from '../../queries/FullCircleFragment';
 import { HeaderEditor } from '../../../../Circle/components/Header';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { Redirect } from 'react-router-dom';
@@ -37,53 +37,6 @@ import {
 function Transition(props: CircleEditor) {
   return <Slide direction="up" {...props} />;
 }
-
-// Replace all these variables like this with how I did on updatecircle
-const CREATE_CIRCLE = gql`
-  mutation createCircle(
-    $id: String
-    $collection: String!
-    $title: String
-    $subtitle: String
-    $description: String
-    $type: String!
-    $creator: String!
-    $data: JSON
-    $string: String
-  ) {
-    createCircle(
-      id: $id
-      collection: $collection
-      title: $title
-      subtitle: $subtitle
-      description: $description
-      type: $type
-      creator: $creator
-      string: $string
-      data: $data
-    ) {
-      status
-      message
-      createdCircle {
-        ...FullCircle
-      }
-    }
-  }
-  ${FullCircleFragment}
-`;
-
-const UPDATE_CIRCLE = gql`
-  mutation updateCircle($circle: JSON!, $merge: Boolean!) {
-    updateCircle(circle: $circle, merge: $merge) {
-      status
-      message
-      updatedCircle {
-        ...FullCircle
-      }
-    }
-  }
-  ${FullCircleFragment}
-`;
 
 interface State {
   shouldNavigateTo: boolean;

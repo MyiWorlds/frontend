@@ -4,6 +4,7 @@ import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
   circle: IEditingCircle;
+  updateCircleField?: 'number' | 'dateCreated' | 'dateUpdated';
   updateCircle: (circle: IEditingCircle) => void;
   classes: {
     textField: string;
@@ -16,16 +17,25 @@ const styles = (theme: Theme) => ({
   },
 });
 
-const NumberEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
-  const value = circle.number || 0;
+const NumberEditor: React.SFC<Props> = ({
+  classes,
+  circle,
+  updateCircle,
+  updateCircleField,
+}) => {
+  const circleFieldToUpdate = updateCircleField || 'number';
+  // const value = circleFieldToUpdate ? Number(circle[circleFieldToUpdate]) : 0;
   return (
     <div>
       <TextField
         id="standard-number"
         label="Number"
-        value={value}
+        value={circle[circleFieldToUpdate]}
         onChange={event =>
-          updateCircle({ ...circle, number: Number(event.target.value) })
+          updateCircle({
+            ...circle,
+            [circleFieldToUpdate]: Number(event.target.value),
+          })
         }
         type="number"
         className={classes.textField}
