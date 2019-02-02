@@ -2,11 +2,14 @@ import * as React from 'react';
 import client from '../../../../../apolloClient';
 import Error from '../../../../components/Error';
 import gql from 'graphql-tag';
+import ListItemC from './ListItem/ListItemC';
+import makeTypeHumanReadable from '../../../functions/makeTypeHumanReadable';
 import ProgressWithMessage from '../../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
+import Spacer from '../../../../components/Spacer';
 import { ApolloError } from 'apollo-client';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
-import { Link } from 'react-router-dom';
+import { Query } from 'react-apollo';
 import {
   ICreatedCircle,
   IFilter,
@@ -15,27 +18,23 @@ import {
   AppBar,
   Card,
   Collapse,
-  Divider,
   FormControlLabel,
   Grid,
   Icon,
   IconButton,
+  withStyles,
   List,
-  ListItem,
-  ListItemText,
   Switch,
   TextField,
   Theme,
   Toolbar,
   Typography,
-  withStyles,
 } from '@material-ui/core';
 
 interface Props {
   selectedProfile: IProfile;
   circle: ICreatedCircle;
   classes: {
-    spacer: string;
     slider: string;
     sliderTextField: string;
     sliderTextContainer: string;
@@ -58,7 +57,7 @@ interface State {
   };
 }
 
-interface GetCirclesByFilters {
+interface GetInterfacedCirclesByFilters {
   searchTimeout: any;
 }
 
@@ -82,23 +81,32 @@ const GET_CIRCLES_BY_FILTERS = gql`
       settings
       lines {
         id
+        settings
         title
         type
-        settings
-        creator {
-          id
-          username
-        }
       }
+    }
+  }
+`;
+
+const GET_INTERFACED_CIRCLE = gql`
+  query getCircleById($id: String!) {
+    getCircleById(id: $id) {
+      title
+    }
+  }
+`;
+
+const GET_INTERFACED_PROFILE = gql`
+  query getProfileById($id: String!) {
+    getProfileById(id: $id) {
+      username
     }
   }
 `;
 
 const styles = (theme: Theme) => ({
   avatar: {},
-  spacer: {
-    flexGrow: 1,
-  },
   gridContainer: {
     maxWidth: '100%',
     margin: 0,
@@ -122,7 +130,7 @@ const styles = (theme: Theme) => ({
 
 const maxAllowableNumberOfResults = 99;
 
-class GetCirclesByFilters extends React.Component<Props, State> {
+class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     const {
@@ -163,17 +171,17 @@ class GetCirclesByFilters extends React.Component<Props, State> {
       },
       async () => {
         const { settings } = this.props.circle;
-        const { filters, selectFields, orderBy, numberOfResults } = this.state;
+        const state = this.state;
 
         try {
           const query: any = await client.query({
             query: GET_CIRCLES_BY_FILTERS,
             fetchPolicy: 'no-cache',
             variables: {
-              filters,
-              selectFields,
-              orderBy,
-              numberOfResults,
+              filters: state.filters,
+              selectFields: state.selectFields,
+              orderBy: state.orderBy,
+              numberOfResults: state.numberOfResults,
               cursor: settings.cursor,
             },
           });
@@ -189,7 +197,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
     );
   };
 
-  timedGetCirclesByFilters = () => {
+  timedGetInterfacedCirclesByFilters = () => {
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
@@ -210,7 +218,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
         numberOfResults,
       },
       () => {
-        this.timedGetCirclesByFilters();
+        this.timedGetInterfacedCirclesByFilters();
       },
     );
   };
@@ -225,7 +233,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
         orderBy,
       },
       () => {
-        this.timedGetCirclesByFilters();
+        this.timedGetInterfacedCirclesByFilters();
       },
     );
   };
@@ -256,19 +264,79 @@ class GetCirclesByFilters extends React.Component<Props, State> {
       results = (
         <List>
           {lines.map((circle: any) => {
-            return (
-              <div key={circle.id}>
-                <ListItem
-                  button
-                  component={(props: any) => (
-                    <Link {...props} to={`/id/${circle.id}`} />
-                  )}
-                >
-                  <ListItemText inset primary={circle.type} />
-                </ListItem>
-                <Divider />
-              </div>
-            );
+            switch (circle.type) {
+              case 'UPDATED':
+              case 'CREATED':
+              case 'VIEWED': {
+                let circleTitle = 'Untitled';
+                if (circle.settings.collection === 'circles') {
+                  return (
+                    <Query
+                      key={circle.id}
+                      query={GET_INTERFACED_CIRCLE}
+                      variables={{
+                        id: circle.settings.id,
+                      }}
+                    >
+                      {({ loading, error, data }) => {
+                        if (loading) {
+                          return null;
+                        }
+                        if (error) return <Error error={error} />;
+                        circleTitle = data.getCircleById.title;
+                        const interfacedCircle = data.getCircleById;
+
+                        return (
+                          <ListItemC
+                            key={circle.id}
+                            linkUrl={`/id/${circle.settings.id}`}
+                            primary={interfacedCircle.title}
+                            secondary={makeTypeHumanReadable(circle.type)}
+                          />
+                        );
+                      }}
+                    </Query>
+                  );
+                } else if (circle.settings.collection === 'profiles') {
+                  return (
+                    <Query
+                      key={circle.id}
+                      query={GET_INTERFACED_PROFILE}
+                      variables={{
+                        id: circle.settings.id,
+                      }}
+                    >
+                      {({ loading, error, data }) => {
+                        if (loading) {
+                          return null;
+                        }
+                        if (error) return <Error error={error} />;
+                        circleTitle = data.getProfileById.title;
+                        const interfacedProfile = data.getProfileById;
+
+                        return (
+                          <ListItemC
+                            key={circle.id}
+                            linkUrl={`/id/${interfacedProfile.id}`}
+                            primary={interfacedProfile.username}
+                            secondary={makeTypeHumanReadable(circle.type)}
+                          />
+                        );
+                      }}
+                    </Query>
+                  );
+                }
+              }
+              case 'VIEWED_BY_IDS':
+                return (
+                  <ListItemC
+                    key={circle.id}
+                    linkUrl={`/id/${circle.id}`}
+                    primary={`List of ${circle.settings.collection}`}
+                    secondary={makeTypeHumanReadable(circle.type)}
+                  />
+                );
+            }
           })}
         </List>
       );
@@ -281,7 +349,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
         <AppBar position="static" color="inherit">
           <Toolbar>
             <Typography variant="h5">{listTitle}</Typography>
-            <div className={classes.spacer} />
+            <Spacer />
             <IconButton
               aria-label="Refetch"
               onClick={() => this.getCirclesByFilters()}
@@ -353,4 +421,4 @@ class GetCirclesByFilters extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(GetCirclesByFilters);
+export default withStyles(styles)(GetInterfacedCirclesByFilters);

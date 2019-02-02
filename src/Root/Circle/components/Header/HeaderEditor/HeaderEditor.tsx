@@ -1,6 +1,7 @@
 import * as React from 'react';
 import materialUiIcons from '../../../../constants/materialUiIcons';
 import moment from 'moment';
+import Profile from './components/Profile';
 import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import {
   Switch,
@@ -10,10 +11,7 @@ import {
   FormControlLabel,
   Icon,
   InputAdornment,
-  Card,
   Typography,
-  InputLabel,
-  FormControl,
   Select,
   MenuItem,
 } from '@material-ui/core';
@@ -155,8 +153,8 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
         margin={headerSettings.margin}
         variant={headerSettings.variant}
         InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
+          endAdornment: (
+            <InputAdornment position="end">
               <Select
                 value={circle.icon || ''}
                 onChange={event =>
@@ -178,17 +176,27 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
         }}
       />
 
-      {/* <Card className={classes.authorCard}>
-      <Avatar alt={circle.creator.} src="/static/images/avatar/1.jpg" className={classes.avatar} />
-      </Card> */}
-      {/* owner */}
-      {/* viewers */}
-      {/* editors */}
+      <Typography variant="h6">Creator:</Typography>
+      {circle.creator && <Profile id={circle.creator} />}
+
+      <Typography variant="h6">Owner:</Typography>
+      {circle.owner && <Profile id={circle.owner} />}
+
+      <Typography variant="h6">Viewers:</Typography>
+      {circle.viewers
+        ? circle.viewers.map((viewer: string) => <Profile id={viewer} />)
+        : null}
+
+      <Typography variant="h6">Editors:</Typography>
+      {circle.editors
+        ? circle.editors.map((editor: string) => <Profile id={editor} />)
+        : null}
+
       <Typography variant="body1">
-        {moment(circle.dateCreated).format('MMMM Do YYYY h:mm:ss a')}
+        {moment(circle.dateCreated).format('MMMM Do YYYY h:mm a')}
       </Typography>
       <Typography variant="body1">
-        {moment(circle.dateUpdated).format('MMMM Do YYYY h:mm:ss a')}
+        {moment(circle.dateUpdated).format('MMMM Do YYYY h:mm a')}
       </Typography>
     </div>
   );

@@ -15,6 +15,7 @@ import { TextEditor } from '../components/Text';
 interface Props {
   selectedProfile: IProfile;
   circle: IEditingCircle;
+  circleFieldToUpdate?: keyof IEditingCircle;
   updateCircle: (circle: IEditingCircle) => void;
   classes: {
     appBar: string;
@@ -38,7 +39,12 @@ const styles = (theme: Theme) =>
 
 class CircleEditorSwitch extends React.Component<Props> {
   render() {
-    const { selectedProfile, circle, updateCircle } = this.props;
+    const {
+      selectedProfile,
+      circle,
+      updateCircle,
+      circleFieldToUpdate,
+    } = this.props;
     const type = !circle.type
       ? ''
       : circle.type.includes('-')
@@ -54,7 +60,13 @@ class CircleEditorSwitch extends React.Component<Props> {
         );
         break;
       case 'TEXT':
-        content = <TextEditor updateCircle={updateCircle} circle={circle} />;
+        content = (
+          <TextEditor
+            updateCircle={updateCircle}
+            circle={circle}
+            circleFieldToUpdate={'string'}
+          />
+        );
         break;
       case 'NUMBER':
         content = <NumberEditor updateCircle={updateCircle} circle={circle} />;

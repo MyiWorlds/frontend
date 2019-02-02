@@ -110,7 +110,7 @@ class ProfileSettings extends React.Component<Props, State> {
                     <br />
                     {profile.dateCreated
                       ? moment(profile.dateCreated).format(
-                          'MMMM Do YYYY h:mm:ss a',
+                          'MMMM Do YYYY h:mm a',
                         )
                       : null}
                   </Typography>
@@ -121,7 +121,7 @@ class ProfileSettings extends React.Component<Props, State> {
                     <br />
                     {profile.dateUpdated
                       ? moment(profile.dateUpdated).format(
-                          'MMMM Do YYYY h:mm:ss a',
+                          'MMMM Do YYYY h:mm a',
                         )
                       : null}
                   </Typography>

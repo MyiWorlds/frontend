@@ -8,6 +8,7 @@ import emptyCircle from '../../../functions/emptyCircle';
 import FlexGrow from '../../../../components/FlexGrow';
 import history from '../../../../../history';
 import makeTypeHumanReadable from '../../../../Circle/functions/makeTypeHumanReadable';
+import Progress from '../../../../components/Progress';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import { CircleEditorSwitch } from '../../../../Circle';
@@ -57,6 +58,7 @@ interface Props {
     btnIcon: string;
     btnBarBtn: string;
     textField: string;
+    progressIcon: string;
   };
 }
 
@@ -80,7 +82,12 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing.unit,
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing.unit * 2,
+    },
+    progressIcon: {
+      marginRight: theme.spacing.unit * 1.5,
+      marginLeft: theme.spacing.unit * 1.5,
+      position: 'relative',
     },
   });
 
@@ -274,13 +281,13 @@ class CircleEditor extends React.Component<Props, State> {
                 </Typography>
                 {circle.type === '' ? null : (
                   <div className={classes.btnBarBtn}>
-                    <Typography
-                      variant="body1"
-                      color="inherit"
-                      className={classes.btnBarBtn}
-                    >
-                      {saving ? 'Saving...' : 'Saved'}
-                    </Typography>
+                    {saving ? (
+                      <div className={classes.progressIcon}>
+                        <Progress hideBackground size={24} color={'inherit'} />
+                      </div>
+                    ) : (
+                      <Icon>cloud_done</Icon>
+                    )}
                   </div>
                 )}
                 <FlexGrow />

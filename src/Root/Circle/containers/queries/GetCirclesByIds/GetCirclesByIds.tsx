@@ -1,8 +1,21 @@
 import * as React from 'react';
+import Error from '../../../../components/Error';
 import gql from 'graphql-tag';
+import ProgressWithMessage from '../../../../components/ProgressWithMessage';
+import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
+import {
+  Button,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+} from '@material-ui/core';
 
-interface Props {}
+interface Props {
+  ids: string[];
+}
 
 const GET_CIRCLES_BY_IDS = gql`
   query getCirclesByIds($ids: [String]!) {
@@ -16,49 +29,61 @@ const GET_CIRCLES_BY_IDS = gql`
 
 class GetCirclesByIds extends React.Component<Props> {
   render() {
+    const { ids } = this.props;
     return (
       <div
         style={{
-          border: '1px solid lightgrey',
-          borderRadius: 8,
-          margin: 8,
           padding: 8,
         }}
       >
+        <Typography variant="h5">Get Circles By Ids</Typography>
         <Query
           query={GET_CIRCLES_BY_IDS}
           variables={{
-            ids: [
-              'alksdjf',
-              'fe53b0f0-bafd-11e8-a0c3-fd25557dc74a',
-              'fe6b7eb0-bafd-11e8-a0c3-fd25557dc74a',
-              'fe876b20-bafd-11e8-a0c3-fd25557dc74a',
-              '129324b0-ba3b-11e8-b981-bd1b33f64b64',
-              'f5d50cd0-ba3a-11e8-b981-bd1b33f64b64',
-            ],
+            ids,
           }}
         >
           {({ loading, error, data, refetch }) => {
-            if (loading) return <p>loading...</p>;
-            if (error)
-              return <p>GetCircleById had error {console.log(error)}</p>;
-            const documents = data.getCirclesByIds;
+            if (loading) {
+              return (
+                <ProgressWithMessage
+                  message="Getting Circles by Ids"
+                  hideBackground={true}
+                />
+              );
+            }
+            if (error) return <Error error={error} />;
+            const lines = data.getCirclesByIds;
             return (
-              <div>
-                <h1>Get Circles by Ids</h1>
-                <br />
-                <ul>
-                  {documents.map((doc: any) => {
+              <>
+                <List>
+                  {lines.map((circle: any) => {
                     return (
-                      <li key={doc.id}>
-                        <h3>{doc.title}</h3>
-                        <p>{doc.type}</p>
-                      </li>
+                      <div key={circle.id}>
+                        <ListItem
+                          button
+                          component={(props: any) => (
+                            <Link {...props} to={`/id/${circle.id}`} />
+                          )}
+                        >
+                          <ListItemText inset primary={circle.type} />
+                        </ListItem>
+                        <Divider />
+                      </div>
                     );
                   })}
-                </ul>
-                <button onClick={() => refetch()}>Refetch</button>
-              </div>
+                </List>
+
+                <div style={{ textAlign: 'center' }}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => refetch()}
+                  >
+                    Refetch
+                  </Button>
+                </div>
+              </>
             );
           }}
         </Query>

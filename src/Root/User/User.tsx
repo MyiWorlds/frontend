@@ -2,7 +2,7 @@ import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../../apolloClient';
 import CREATE_USER from './containers/mutations/createUser';
-import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById';
+import GET_PROFILE_BY_ID from '../Profile/containers/queries/getProfileById';
 import GET_USER from './containers/queries/getUserQuery';
 import guestProfile from '../Profile/constants/guestProfile';
 import guestUser from './constants/guestUser';
@@ -363,7 +363,7 @@ class User extends React.Component<Props, State> {
           id,
         },
       });
-      const selectedProfile = query.data.getUsersProfileById || guestProfile;
+      const selectedProfile = query.data.getProfileById || guestProfile;
 
       this.setProfileHistoryIdLS(
         selectedProfile.history ? selectedProfile.history.id : null,

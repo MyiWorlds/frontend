@@ -81,7 +81,7 @@ class UserSettings extends React.Component<Props> {
                   <b>Date Created: </b>
                   <br />
                   {user.dateCreated
-                    ? moment(user.dateCreated).format('MMMM Do YYYY h:mm:ss a')
+                    ? moment(user.dateCreated).format('MMMM Do YYYY h:mm a')
                     : null}
                 </Typography>
                 <Spacer />
@@ -89,7 +89,7 @@ class UserSettings extends React.Component<Props> {
                   <b>Last Updated: </b>
                   <br />
                   {user.dateUpdated
-                    ? moment(user.dateUpdated).format('MMMM Do YYYY h:mm:ss a')
+                    ? moment(user.dateUpdated).format('MMMM Do YYYY h:mm a')
                     : null}
                 </Typography>
               </div>

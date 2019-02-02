@@ -29,7 +29,11 @@ const AllFieldsEditor: React.SFC<Props> = ({
 }) => {
   return (
     <div className={classes.container}>
-      <TextEditor updateCircle={updateCircle} circle={circle} />
+      <TextEditor
+        updateCircle={updateCircle}
+        circle={circle}
+        circleFieldToUpdate="string"
+      />
       <NumberEditor
         updateCircle={updateCircle}
         circle={circle}

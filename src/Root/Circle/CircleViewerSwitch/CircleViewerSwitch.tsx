@@ -1,6 +1,9 @@
 import * as React from 'react';
 import FlexGrow from '../../components/FlexGrow';
+import GetCircleById from '../containers/queries/GetCircleById';
 import GetCirclesByFilters from '../containers/queries/GetCirclesByFilters';
+import GetCirclesByIds from '../containers/queries/GetCirclesByIds';
+import GetInterfacedCirclesByFilters from '../containers/queries/GetInterfacedCirclesByFilters';
 import Image from '../components/Image';
 import { AllFieldsViewer } from '../components/AllFields';
 import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
@@ -73,6 +76,26 @@ class Circle extends React.Component<Props> {
           />
         );
         break;
+      case 'GET_INTERFACED_CIRCLES_BY_FILTERS':
+        content = (
+          <GetInterfacedCirclesByFilters
+            selectedProfile={selectedProfile}
+            circle={circle}
+          />
+        );
+        break;
+      case 'UPDATED':
+      case 'CREATED':
+      case 'VIEWED':
+        if (circle.settings.collection === 'circles') {
+          content = (
+            <GetCircleById
+              selectedProfile={selectedProfile}
+              id={circle.settings.id}
+            />
+          );
+        }
+        break;
       case 'ALL_FIELDS':
         content = <AllFieldsViewer circle={circle} />;
         break;
@@ -87,6 +110,22 @@ class Circle extends React.Component<Props> {
         break;
       case 'LIST':
         content = <ListViewer circle={circle} />;
+        break;
+      case 'VIEWED_BY_IDS':
+        switch (circle.settings.collection) {
+          case 'circles':
+            content = <GetCirclesByIds ids={circle.settings.ids} />;
+            break;
+          case 'circles-clones':
+            content = <div>VIEWED_BY_IDS circles clones</div>;
+            break;
+          case 'profiles':
+            content = <div>VIEWED_BY_IDS profiles</div>;
+            break;
+          case 'profiles-clones':
+            content = <div>VIEWED_BY_IDS profiles clones</div>;
+            break;
+        }
         break;
       default:
         content = (
