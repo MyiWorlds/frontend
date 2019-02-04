@@ -6,6 +6,28 @@ const types: ICreatedCircle[] = [
     icon: 'group_work',
     title: 'All Fields',
     parent: null,
+    settings: {
+      data: {
+        lines: [
+          {
+            id: '1',
+            type: 'TEXT',
+            editor: {
+              data: {},
+            },
+            data: {
+              property: 'title',
+              variant: 'body1',
+              defaultValue: 'Some String',
+              styles: {
+                background: 'red',
+              },
+            },
+          },
+        ],
+      },
+      lines: ['1'],
+    },
     type: 'ALL_FIELDS',
     description: 'All content types on a circle',
   },

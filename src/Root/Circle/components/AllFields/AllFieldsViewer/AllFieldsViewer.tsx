@@ -7,10 +7,14 @@ interface Props {
 }
 
 const AllFieldsViewer: React.SFC<Props> = ({ circle }) => {
-  const value = circle.string || '';
   return (
     <div>
-      <Typography variant="body1">{value}</Typography>
+      {circle.string && (
+        <Typography variant="body1">{circle.string}</Typography>
+      )}
+      {circle.number && (
+        <Typography variant="body1">{circle.number}</Typography>
+      )}
     </div>
   );
 };

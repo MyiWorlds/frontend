@@ -9,7 +9,6 @@ import {
 import { IEditingCircle } from '../../../../customTypeScriptTypes/circle';
 import { IProfile } from '../../../../customTypeScriptTypes/profile';
 import { ListEditor } from '../components/List';
-import { NumberEditor } from '../components/Number';
 import { TextEditor } from '../components/Text';
 
 interface Props {
@@ -59,18 +58,15 @@ class CircleEditorSwitch extends React.Component<Props> {
           <AllFieldsEditor updateCircle={updateCircle} circle={circle} />
         );
         break;
-      case 'TEXT':
-        content = (
-          <TextEditor
-            updateCircle={updateCircle}
-            circle={circle}
-            circleFieldToUpdate={'string'}
-          />
-        );
-        break;
-      case 'NUMBER':
-        content = <NumberEditor updateCircle={updateCircle} circle={circle} />;
-        break;
+      // case 'TEXT':
+      //   content = (
+      //     <TextEditor
+      //       updateCircle={updateCircle}
+      //       circle={circle}
+      //       circleFieldToUpdate={'string'}
+      //     />
+      //   );
+      //   break;
       case 'LIST':
         content = (
           <ListEditor

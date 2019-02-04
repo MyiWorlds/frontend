@@ -3,8 +3,8 @@ import convertCreatedCircleToEditingCircle from '../../../../../functions/conver
 import types from './defaultTypes';
 import { IProfile } from '../../../../../../../../customTypeScriptTypes/profile';
 import {
-  IEditingCircle,
   ICreatedCircle,
+  IEditingCircle,
 } from '../../../../../../../../customTypeScriptTypes/circle';
 import {
   Button,
@@ -112,7 +112,6 @@ class TypeSelector extends React.Component<Props, State> {
     return (
       <Dialog
         fullWidth
-        disableBackdropClick
         maxWidth="lg"
         open={showTypeSelector}
         onClose={handleClose}

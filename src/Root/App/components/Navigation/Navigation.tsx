@@ -92,36 +92,24 @@ class Navigation extends React.Component<Props, State> {
     const navItems = [
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'add',
         title: 'Create',
         slug: `/create`,
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'search',
         title: 'Search',
         slug: `/search`,
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'search',
         title: 'Search2',
         slug: `/search2`,
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'home',
         title: 'Home',
         slug: `/private/home`,
@@ -129,9 +117,6 @@ class Navigation extends React.Component<Props, State> {
       selectedProfile.id
         ? {
             type: 'BUTTON',
-            settings: {
-              primary: true,
-            },
             icon: 'public',
             title: 'Public Profile',
             slug: `/${selectedProfile.username}`,
@@ -144,18 +129,12 @@ class Navigation extends React.Component<Props, State> {
           },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'inbox',
         title: 'Inbox',
         slug: '/inbox',
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'query_builder',
         title: 'History',
         slug: '/history',
@@ -163,9 +142,6 @@ class Navigation extends React.Component<Props, State> {
 
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'color_lens',
         title: 'Theme Color Picker',
         slug: '/theme-color-picker',

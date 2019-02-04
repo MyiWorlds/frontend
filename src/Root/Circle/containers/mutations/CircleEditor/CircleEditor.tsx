@@ -4,92 +4,40 @@ import ConfirmCancelCircleEditor from './components/ConfirmCancelCircleEditor';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
 import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
+import EditorControls from './components/EditorControls/EditorControls';
 import emptyCircle from '../../../functions/emptyCircle';
-import FlexGrow from '../../../../components/FlexGrow';
 import history from '../../../../../history';
-import makeTypeHumanReadable from '../../../../Circle/functions/makeTypeHumanReadable';
 import Progress from '../../../../components/Progress';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import { CircleEditorSwitch } from '../../../../Circle';
-import { Consumer } from '../../../../ReactContext';
+import { Dialog, Divider, Slide } from '@material-ui/core';
 import { HeaderEditor } from '../../../../Circle/components/Header';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { Redirect } from 'react-router-dom';
-import {
-  AppBar,
-  Button,
-  createStyles,
-  Dialog,
-  Divider,
-  Icon,
-  IconButton,
-  Slide,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
 import {
   ICreatedCircle,
   IEditingCircle,
 } from '../../../../../../customTypeScriptTypes/circle';
 
-function Transition(props: CircleEditor) {
+function Transition(props: any) {
   return <Slide direction="up" {...props} />;
-}
-
-interface State {
-  shouldNavigateTo: boolean;
-  navigateTo: string;
-  showTypeSelector: boolean;
-  showConfirmCancelCircleEditor: boolean;
-  saving: boolean;
-  circle: IEditingCircle;
 }
 
 interface Props {
   selectedProfile: IProfile;
   circle?: ICreatedCircle;
   currentPath: string;
-  classes: {
-    container: string;
-    appBar: string;
-    btnIcon: string;
-    btnBarBtn: string;
-    textField: string;
-    progressIcon: string;
-  };
+}
+interface State {
+  saving: boolean;
+  circle: IEditingCircle;
+  showTypeSelector: boolean;
 }
 
 interface CircleEditor {
   saveTimeout: any;
 }
-
-const styles = (theme: Theme) =>
-  createStyles({
-    container: {
-      margin: theme.spacing.unit * 2,
-    },
-    textField: {
-      marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit,
-    },
-    appBar: {
-      position: 'relative',
-    },
-    btnIcon: {
-      marginRight: theme.spacing.unit,
-    },
-    btnBarBtn: {
-      marginRight: theme.spacing.unit * 2,
-    },
-    progressIcon: {
-      marginRight: theme.spacing.unit * 1.5,
-      marginLeft: theme.spacing.unit * 1.5,
-      position: 'relative',
-    },
-  });
 
 class CircleEditor extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -102,21 +50,12 @@ class CircleEditor extends React.Component<Props, State> {
       : emptyCircle(this.props.selectedProfile);
 
     this.state = {
-      shouldNavigateTo: false,
       saving: false,
-      showTypeSelector: false,
-      navigateTo: '',
-      showConfirmCancelCircleEditor: false,
+      showTypeSelector: circle.type ? false : true,
       // take whatever you have and apply those ontop of whatever theme you select, unless if it is null/newly created then take all
       circle,
     };
     this.saveTimeout = 0;
-  }
-
-  componentDidMount() {
-    if (this.state.circle.type === '') {
-      this.showTypeSelector();
-    }
   }
 
   componentWillUnmount() {
@@ -166,55 +105,6 @@ class CircleEditor extends React.Component<Props, State> {
     }
   };
 
-  navigateToCircle = async () => {
-    if (this.state.saving) {
-      await this.saveCircle();
-    }
-
-    this.setState({
-      shouldNavigateTo: true,
-      navigateTo: `/id/${this.state.circle.id}`,
-    });
-  };
-
-  showConfirmCancelCircleEditor = () => {
-    this.setState({
-      showConfirmCancelCircleEditor: true,
-    });
-  };
-
-  hideConfirmCancelCircleEditor = () => {
-    this.setState({
-      showConfirmCancelCircleEditor: false,
-    });
-  };
-
-  cancelCreation = () => {
-    this.setState({
-      shouldNavigateTo: true,
-      navigateTo: '',
-    });
-  };
-
-  showTypeSelector = () => {
-    this.setState({
-      showTypeSelector: true,
-    });
-  };
-
-  hideTypeSelector = () => {
-    this.setState({
-      showTypeSelector: false,
-    });
-  };
-
-  goBack = (sessionBrowserHistory: string) => {
-    this.setState({
-      shouldNavigateTo: true,
-      navigateTo: sessionBrowserHistory,
-    });
-  };
-
   updateCircle = (updatedCircle: IEditingCircle, noDelay: boolean = false) => {
     const overrides = {
       id: this.state.circle.id,
@@ -236,104 +126,48 @@ class CircleEditor extends React.Component<Props, State> {
     });
   };
 
-  render() {
-    const {
-      circle,
-      shouldNavigateTo,
-      navigateTo,
-      showTypeSelector,
-      showConfirmCancelCircleEditor,
-      saving,
-    } = this.state;
-    const { classes, currentPath, selectedProfile } = this.props;
+  showTypeSelector = () => {
+    this.setState({
+      showTypeSelector: true,
+    });
+  };
 
-    if (shouldNavigateTo) {
-      return <Redirect to={navigateTo} />;
-    }
+  hideTypeSelector = () => {
+    this.setState({
+      showTypeSelector: false,
+    });
+  };
+
+  render() {
+    const { circle, saving, showTypeSelector } = this.state;
+    const { currentPath, selectedProfile } = this.props;
 
     return (
       <Dialog fullScreen open={true} TransitionComponent={Transition}>
-        <Consumer>
-          {(store: ProviderStore) => (
-            <AppBar className={classes.appBar}>
-              <Toolbar>
-                <IconButton
-                  color="default"
-                  onClick={() => {
-                    const sessionBrowserHistorys = store.state.sessionBrowserHistory.filter(
-                      path => path !== currentPath,
-                    );
-                    this.goBack(sessionBrowserHistorys[0]);
-                  }}
-                  aria-label="Close"
-                >
-                  <Icon>arrow_back</Icon>
-                </IconButton>
-                <Typography
-                  variant="h6"
-                  color="inherit"
-                  className={classes.btnBarBtn}
-                >
-                  Create{' '}
-                  {circle.type && circle.type !== ''
-                    ? makeTypeHumanReadable(circle.type)
-                    : 'Circle'}
-                </Typography>
-                {circle.type === '' ? null : (
-                  <div className={classes.btnBarBtn}>
-                    {saving ? (
-                      <div className={classes.progressIcon}>
-                        <Progress hideBackground size={24} color={'inherit'} />
-                      </div>
-                    ) : (
-                      <Icon>cloud_done</Icon>
-                    )}
-                  </div>
-                )}
-                <FlexGrow />
-                <Button
-                  variant="outlined"
-                  onClick={() => this.showTypeSelector()}
-                  className={classes.btnBarBtn}
-                >
-                  <Icon className={classes.btnIcon}>tune</Icon>Change Content
-                  Type
-                </Button>
-                <Button
-                  variant="outlined"
-                  disabled={!circle.type}
-                  onClick={() => this.navigateToCircle()}
-                >
-                  <Icon className={classes.btnIcon}>remove_red_eye</Icon>View
-                </Button>
-              </Toolbar>
-            </AppBar>
-          )}
-        </Consumer>
+        <EditorControls
+          currentPath={currentPath}
+          circle={circle}
+          saving={saving}
+          saveCircle={this.saveCircle}
+          showTypeSelector={this.showTypeSelector}
+        />
 
         <HeaderEditor circle={circle} updateCircle={this.updateCircle} />
-
-        <Divider />
-
         <CircleEditorSwitch
           updateCircle={this.updateCircle}
           selectedProfile={selectedProfile}
           circle={circle}
         />
+
         <TypeSelector
           selectedProfile={selectedProfile}
           showTypeSelector={showTypeSelector}
           updateCircle={this.updateCircle}
           handleClose={this.hideTypeSelector}
         />
-        <ConfirmCancelCircleEditor
-          open={showConfirmCancelCircleEditor}
-          handleClose={this.hideConfirmCancelCircleEditor}
-          cancelCreation={this.cancelCreation}
-        />
       </Dialog>
     );
   }
 }
 
-export default withStyles(styles)(CircleEditor);
+export default CircleEditor;

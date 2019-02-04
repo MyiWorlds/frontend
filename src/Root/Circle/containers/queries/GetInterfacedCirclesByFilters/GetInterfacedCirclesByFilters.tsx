@@ -22,13 +22,13 @@ import {
   Grid,
   Icon,
   IconButton,
-  withStyles,
   List,
   Switch,
   TextField,
   Theme,
   Toolbar,
   Typography,
+  withStyles,
 } from '@material-ui/core';
 
 interface Props {
@@ -40,6 +40,7 @@ interface Props {
     sliderTextContainer: string;
     gridContainer: string;
     centerOption: string;
+    listTitle: string;
   };
 }
 
@@ -125,6 +126,9 @@ const styles = (theme: Theme) => ({
   },
   centerOption: {
     marginTop: theme.spacing.unit * 2,
+  },
+  listTitle: {
+    width: '100%',
   },
 });
 
@@ -267,66 +271,68 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
             switch (circle.type) {
               case 'UPDATED':
               case 'CREATED':
-              case 'VIEWED': {
-                let circleTitle = 'Untitled';
-                if (circle.settings.collection === 'circles') {
-                  return (
-                    <Query
-                      key={circle.id}
-                      query={GET_INTERFACED_CIRCLE}
-                      variables={{
-                        id: circle.settings.id,
-                      }}
-                    >
-                      {({ loading, error, data }) => {
-                        if (loading) {
-                          return null;
-                        }
-                        if (error) return <Error error={error} />;
-                        circleTitle = data.getCircleById.title;
-                        const interfacedCircle = data.getCircleById;
+              case 'VIEWED':
+                {
+                  let circleTitle = 'Untitled';
+                  if (circle.settings.collection === 'circles') {
+                    return (
+                      <Query
+                        key={circle.id}
+                        query={GET_INTERFACED_CIRCLE}
+                        variables={{
+                          id: circle.settings.id,
+                        }}
+                      >
+                        {({ loading, error, data }) => {
+                          if (loading) {
+                            return null;
+                          }
+                          if (error) return <Error error={error} />;
+                          circleTitle = data.getCircleById.title;
+                          const interfacedCircle = data.getCircleById;
 
-                        return (
-                          <ListItemC
-                            key={circle.id}
-                            linkUrl={`/id/${circle.settings.id}`}
-                            primary={interfacedCircle.title}
-                            secondary={makeTypeHumanReadable(circle.type)}
-                          />
-                        );
-                      }}
-                    </Query>
-                  );
-                } else if (circle.settings.collection === 'profiles') {
-                  return (
-                    <Query
-                      key={circle.id}
-                      query={GET_INTERFACED_PROFILE}
-                      variables={{
-                        id: circle.settings.id,
-                      }}
-                    >
-                      {({ loading, error, data }) => {
-                        if (loading) {
-                          return null;
-                        }
-                        if (error) return <Error error={error} />;
-                        circleTitle = data.getProfileById.title;
-                        const interfacedProfile = data.getProfileById;
+                          return (
+                            <ListItemC
+                              key={circle.id}
+                              linkUrl={`/id/${circle.settings.id}`}
+                              primary={interfacedCircle.title}
+                              secondary={makeTypeHumanReadable(circle.type)}
+                            />
+                          );
+                        }}
+                      </Query>
+                    );
+                  } else if (circle.settings.collection === 'profiles') {
+                    return (
+                      <Query
+                        key={circle.id}
+                        query={GET_INTERFACED_PROFILE}
+                        variables={{
+                          id: circle.settings.id,
+                        }}
+                      >
+                        {({ loading, error, data }) => {
+                          if (loading) {
+                            return null;
+                          }
+                          if (error) return <Error error={error} />;
+                          circleTitle = data.getProfileById.title;
+                          const interfacedProfile = data.getProfileById;
 
-                        return (
-                          <ListItemC
-                            key={circle.id}
-                            linkUrl={`/id/${interfacedProfile.id}`}
-                            primary={interfacedProfile.username}
-                            secondary={makeTypeHumanReadable(circle.type)}
-                          />
-                        );
-                      }}
-                    </Query>
-                  );
+                          return (
+                            <ListItemC
+                              key={circle.id}
+                              linkUrl={`/id/${interfacedProfile.id}`}
+                              primary={interfacedProfile.username}
+                              secondary={makeTypeHumanReadable(circle.type)}
+                            />
+                          );
+                        }}
+                      </Query>
+                    );
+                  }
                 }
-              }
+                break;
               case 'VIEWED_BY_IDS':
                 return (
                   <ListItemC
@@ -336,6 +342,9 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                     secondary={makeTypeHumanReadable(circle.type)}
                   />
                 );
+                break;
+              default:
+                return null;
             }
           })}
         </List>
@@ -348,7 +357,9 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
       <Card>
         <AppBar position="static" color="inherit">
           <Toolbar>
-            <Typography variant="h5">{listTitle}</Typography>
+            <Typography variant="h5" className={classes.listTitle}>
+              {listTitle}
+            </Typography>
             <Spacer />
             <IconButton
               aria-label="Refetch"

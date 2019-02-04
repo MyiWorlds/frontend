@@ -3,17 +3,9 @@ import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
-  circle: IEditingCircle;
-  updateCircle: (circle: IEditingCircle) => void;
-  circleFieldToUpdate:
-    | 'collection'
-    | 'slug'
-    | 'type'
-    | 'title'
-    | 'subtitle'
-    | 'description'
-    | 'icon'
-    | 'string';
+  property: string;
+  value: string;
+  updater: (property: string, value: string) => void;
   classes: {
     textField: string;
   };
@@ -27,11 +19,10 @@ const styles = (theme: Theme) => ({
 
 const TextEditor: React.SFC<Props> = ({
   classes,
-  circle,
-  updateCircle,
-  circleFieldToUpdate,
+  property,
+  value,
+  updater,
 }) => {
-  const value = circle[circleFieldToUpdate] || '';
   return (
     <div>
       <TextField
@@ -39,9 +30,7 @@ const TextEditor: React.SFC<Props> = ({
         label="Text"
         value={value}
         className={classes.textField}
-        onChange={event =>
-          updateCircle({ ...circle, [circleFieldToUpdate]: event.target.value })
-        }
+        onChange={event => updater(property, event.target.value)}
         margin="normal"
         variant="outlined"
       />
