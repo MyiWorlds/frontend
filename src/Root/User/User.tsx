@@ -97,8 +97,8 @@ class User extends React.Component<Props, State> {
     clearTimeout(this.timeoutFirebaseAuthToken);
   }
 
-  createUserIfNewUser = () => {
-    fire
+  createUserIfNewUser = async () => {
+    await fire
       .auth()
       .getRedirectResult()
       .then(async (result: any) => {

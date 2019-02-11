@@ -130,7 +130,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
       selectFields,
       numberOfResults,
       orderBy,
-    } = this.props.circle.settings;
+    } = this.props.circle.data;
 
     this.state = {
       filters,

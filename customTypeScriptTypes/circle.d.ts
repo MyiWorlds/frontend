@@ -33,7 +33,7 @@ interface IGetDocumentById {
 interface IGetCirclesByFilters {
   id: string;
   type: string;
-  settings: {
+  data: {
     cursor: string | null;
     numberOfResults: number;
     orderBy: {
@@ -46,25 +46,6 @@ interface IGetCirclesByFilters {
 interface IImage {
   id: string;
   type: string;
-  styles: {
-    id: string;
-    data: {
-      container: {
-        margin: 8;
-      };
-      mediaContainer: {
-        width: string;
-        maxHeight: string;
-        textAlign: string;
-      }; // textAlign causes errors
-      media: {
-        maxHeight: string;
-        margin: string;
-        width: string;
-      };
-      url: any;
-    };
-  };
   data: {
     url: string;
   };
@@ -81,13 +62,7 @@ interface IEditingCircle {
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;
-  settings?:
-    | any
-    | null
-    | IGetDocumentsByFilters
-    | IGetDocumentById
-    | IGetDocumentsByIds;
-  styles?: any | null;
+  settings?: string | null;
   rating?: string | null;
   tags?: string[] | null;
   title?: string | null;
@@ -102,7 +77,12 @@ interface IEditingCircle {
   dateCreated?: any | null;
   dateUpdated?: any | null;
   string?: string | null;
-  data?: any | null;
+  data?:
+    | any
+    | null
+    | IGetDocumentsByFilters
+    | IGetDocumentById
+    | IGetDocumentsByIds;
   number?: number | null;
   bigNumber?: any | null;
   boolean?: boolean | null;

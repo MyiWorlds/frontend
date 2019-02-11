@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Error from '../../../components/Error';
 import FlexGrow from '../../../components/FlexGrow';
 import GET_PROFILE_BY_USERNAME from '../../containers/queries/getProfileByUsername';
 import GET_USER from '../../../User/containers/queries/getUserQuery';
@@ -269,7 +270,9 @@ class ProfileUsernameEditor extends React.Component<
         </DialogTitle>
         <Query query={GET_USER}>
           {({ loading, error, data }) => {
-            if (error) return <p>`Error :( ${console.log(error)}`</p>;
+            if (error) {
+              return <Error error={error} />;
+            }
             if (loading) {
               return (
                 <ProgressWithMessage
@@ -285,7 +288,7 @@ class ProfileUsernameEditor extends React.Component<
                   <Query
                     query={GET_PROFILE_BY_USERNAME}
                     variables={{
-                      username: username,
+                      username,
                     }}
                     fetchPolicy="no-cache"
                     skip={!checkUsername}
@@ -413,16 +416,26 @@ class ProfileUsernameEditor extends React.Component<
                             <Collapse in={showUsernameRequirements}>
                               <Spacer />
                               <Paper className={classes.infoPaper}>
-                                <Typography>
+                                <Typography variant="body1">
                                   A valid username must follow the following
                                   guidelines:
                                 </Typography>
                                 <ul className={classes.restrictionsList}>
-                                  <li>Must not be in use by anyone else</li>
-                                  <li>Must be 4 or more characters</li>
                                   <li>
-                                    Can only contain characters A-Z, 0-9, -, or
-                                    _
+                                    <Typography variant="body1">
+                                      Must not be in use by anyone else
+                                    </Typography>
+                                  </li>
+                                  <li>
+                                    <Typography variant="body1">
+                                      Must be 4 or more characters
+                                    </Typography>
+                                  </li>
+                                  <li>
+                                    <Typography variant="body1">
+                                      Can only contain characters A-Z, 0-9, -,
+                                      or _
+                                    </Typography>
                                   </li>
                                 </ul>
                               </Paper>

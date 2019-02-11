@@ -1,20 +1,17 @@
 import * as React from 'react';
 import client from '../../../../../apolloClient';
-import ConfirmCancelCircleEditor from './components/ConfirmCancelCircleEditor';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
 import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
 import EditorControls from './components/EditorControls/EditorControls';
 import emptyCircle from '../../../functions/emptyCircle';
 import history from '../../../../../history';
-import Progress from '../../../../components/Progress';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import { CircleEditorSwitch } from '../../../../Circle';
-import { Dialog, Divider, Slide } from '@material-ui/core';
+import { Dialog, Slide } from '@material-ui/core';
 import { HeaderEditor } from '../../../../Circle/components/Header';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
-import { Redirect } from 'react-router-dom';
 import {
   ICreatedCircle,
   IEditingCircle,
@@ -58,6 +55,19 @@ class CircleEditor extends React.Component<Props, State> {
     this.saveTimeout = 0;
   }
 
+  componentDidMount() {
+    const lsSavedCircle = localStorage.getItem('circle-editing');
+    if (lsSavedCircle) {
+      const circle = {
+        ...JSON.parse(lsSavedCircle),
+        creator: this.props.selectedProfile.id,
+      };
+      this.setState({
+        circle,
+      });
+    }
+  }
+
   componentWillUnmount() {
     clearTimeout(this.saveTimeout);
   }
@@ -65,6 +75,15 @@ class CircleEditor extends React.Component<Props, State> {
   saveCircle = async () => {
     const circleData = this.state.circle;
 
+    if (this.props.selectedProfile.id === 'guest') {
+      localStorage.setItem('circle-editing', JSON.stringify(circleData));
+
+      this.setState({
+        saving: false,
+      });
+
+      return;
+    }
     const isNewCircle = !this.props.circle;
     const circle = {
       ...circleData,
@@ -150,6 +169,7 @@ class CircleEditor extends React.Component<Props, State> {
           saving={saving}
           saveCircle={this.saveCircle}
           showTypeSelector={this.showTypeSelector}
+          selectedProfile={selectedProfile}
         />
 
         <HeaderEditor circle={circle} updateCircle={this.updateCircle} />

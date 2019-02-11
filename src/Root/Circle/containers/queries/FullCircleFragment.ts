@@ -12,8 +12,7 @@ export const FullCircleFragment = gql`
     public
     passwordRequired
     type
-    settings
-    styles {
+    settings {
       id
     }
     rating {

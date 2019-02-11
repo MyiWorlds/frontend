@@ -11,8 +11,7 @@ export default gql`
     $public: Boolean
     $passwordRequired: Boolean
     $type: String!
-    $settings: JSON
-    $styles: String
+    $settings: String
     $rating: String
     $tags: [String]
     $title: String
@@ -45,7 +44,6 @@ export default gql`
       passwordRequired: $passwordRequired
       type: $type
       settings: $settings
-      styles: $styles
       rating: $rating
       tags: $tags
       title: $title

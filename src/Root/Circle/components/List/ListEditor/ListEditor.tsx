@@ -83,12 +83,12 @@ class ListEditor extends React.Component<Props, State> {
 
     const styles = {
       ...defaultStyles,
-      ...circle.styles.data,
+      // ...circle.styles.data,
     };
 
     const settings = {
       ...defaultSettings,
-      ...circle.settings,
+      ...circle.data.data,
     };
 
     console.log(settings);

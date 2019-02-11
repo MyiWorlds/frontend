@@ -13,10 +13,6 @@ interface Props {
   classes: {};
   circle: {
     type: string;
-    styles: {
-      id: string;
-      data: any;
-    };
     data: {
       url: string;
     };
@@ -45,14 +41,13 @@ class ImageUrl extends React.Component<Props, State> {
   render() {
     const { circle } = this.props;
     const { url } = this.state;
-    const styles = circle.styles.data;
 
     return (
-      <Card style={styles.container}>
+      <Card>
         <CardHeader title="Add Image By Url" />
         <Divider />
-        <div style={styles.mediaContainer}>
-          <img style={styles.media} src={circle.data.url} title="Paella dish" />
+        <div>
+          <img src={circle.data.url} title="Paella dish" />
         </div>
         <br />
         <br />
@@ -60,7 +55,6 @@ class ImageUrl extends React.Component<Props, State> {
           <TextField
             id="image-url"
             label="Image URL"
-            style={styles.url}
             value={url}
             onChange={event => this.handleTextFieldChange(event.target.value)}
             margin="normal"

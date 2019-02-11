@@ -18,7 +18,15 @@ const styles = (theme: Theme) => ({
   },
 });
 
-const TextEditor: React.SFC<Props> = ({ classes, id }) => {
+const Profile: React.SFC<Props> = ({ classes, id }) => {
+  if (id === 'guest') {
+    return (
+      <div className={classes.container}>
+        <Typography variant="body1">Guest</Typography>
+      </div>
+    );
+  }
+
   return (
     <Query
       query={GET_PROFILE_BY_ID}
@@ -36,11 +44,10 @@ const TextEditor: React.SFC<Props> = ({ classes, id }) => {
           );
         }
         if (error) return <Error error={error} />;
+        const profile = data.getProfileById;
         return (
           <div className={classes.container}>
-            <Typography variant="body1">
-              {data.getProfileById.username}
-            </Typography>
+            <Typography variant="body1">{profile.username}</Typography>
           </div>
         );
       }}
@@ -48,4 +55,4 @@ const TextEditor: React.SFC<Props> = ({ classes, id }) => {
   );
 };
 
-export default withStyles(styles)(TextEditor);
+export default withStyles(styles)(Profile);

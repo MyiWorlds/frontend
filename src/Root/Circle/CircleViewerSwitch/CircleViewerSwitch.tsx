@@ -87,11 +87,11 @@ class Circle extends React.Component<Props> {
       case 'UPDATED':
       case 'CREATED':
       case 'VIEWED':
-        if (circle.settings.collection === 'circles') {
+        if (circle.data.collection === 'circles') {
           content = (
             <GetCircleById
               selectedProfile={selectedProfile}
-              id={circle.settings.id}
+              id={circle.data.id}
             />
           );
         }
@@ -112,9 +112,9 @@ class Circle extends React.Component<Props> {
         content = <ListViewer circle={circle} />;
         break;
       case 'VIEWED_BY_IDS':
-        switch (circle.settings.collection) {
+        switch (circle.data.collection) {
           case 'circles':
-            content = <GetCirclesByIds ids={circle.settings.ids} />;
+            content = <GetCirclesByIds ids={circle.data.ids} />;
             break;
           case 'circles-clones':
             content = <div>VIEWED_BY_IDS circles clones</div>;
@@ -124,6 +124,8 @@ class Circle extends React.Component<Props> {
             break;
           case 'profiles-clones':
             content = <div>VIEWED_BY_IDS profiles clones</div>;
+            break;
+          default:
             break;
         }
         break;

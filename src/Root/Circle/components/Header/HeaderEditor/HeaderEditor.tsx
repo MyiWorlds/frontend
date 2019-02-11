@@ -4,16 +4,16 @@ import moment from 'moment';
 import Profile from './components/Profile';
 import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import {
-  Switch,
-  TextField,
-  Theme,
-  withStyles,
   FormControlLabel,
   Icon,
   InputAdornment,
-  Typography,
-  Select,
   MenuItem,
+  Select,
+  Switch,
+  TextField,
+  Theme,
+  Typography,
+  withStyles,
 } from '@material-ui/core';
 
 interface Props {
@@ -39,13 +39,16 @@ const styles = (theme: Theme) => ({
   },
 });
 
+interface HeaderSettings {
+  margin: 'normal' | 'none' | 'dense' | undefined;
+  variant: 'outlined';
+}
+
 const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
-  const headerSettings = circle.settings
-    ? circle.settings
-    : {
-        margin: 'normal',
-        variant: 'outlined',
-      };
+  const headerSettings: HeaderSettings = {
+    margin: 'normal',
+    variant: 'outlined',
+  };
 
   return (
     <div className={classes.container}>

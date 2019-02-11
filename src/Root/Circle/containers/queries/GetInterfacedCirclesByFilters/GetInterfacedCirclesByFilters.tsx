@@ -79,10 +79,10 @@ const GET_CIRCLES_BY_FILTERS = gql`
     ) {
       id
       title
-      settings
+      data
       lines {
         id
-        settings
+        data
         title
         type
       }
@@ -142,7 +142,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
       selectFields,
       numberOfResults,
       orderBy,
-    } = this.props.circle.settings;
+    } = this.props.circle.data;
 
     this.state = {
       filters,
@@ -174,7 +174,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
         loading: true,
       },
       async () => {
-        const { settings } = this.props.circle;
+        const { data } = this.props.circle;
         const state = this.state;
 
         try {
@@ -186,7 +186,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
               selectFields: state.selectFields,
               orderBy: state.orderBy,
               numberOfResults: state.numberOfResults,
-              cursor: settings.cursor,
+              cursor: data.cursor,
             },
           });
 
@@ -274,13 +274,13 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
               case 'VIEWED':
                 {
                   let circleTitle = 'Untitled';
-                  if (circle.settings.collection === 'circles') {
+                  if (circle.data.collection === 'circles') {
                     return (
                       <Query
                         key={circle.id}
                         query={GET_INTERFACED_CIRCLE}
                         variables={{
-                          id: circle.settings.id,
+                          id: circle.data.id,
                         }}
                       >
                         {({ loading, error, data }) => {
@@ -294,7 +294,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                           return (
                             <ListItemC
                               key={circle.id}
-                              linkUrl={`/id/${circle.settings.id}`}
+                              linkUrl={`/id/${circle.data.id}`}
                               primary={interfacedCircle.title}
                               secondary={makeTypeHumanReadable(circle.type)}
                             />
@@ -302,13 +302,13 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                         }}
                       </Query>
                     );
-                  } else if (circle.settings.collection === 'profiles') {
+                  } else if (circle.data.collection === 'profiles') {
                     return (
                       <Query
                         key={circle.id}
                         query={GET_INTERFACED_PROFILE}
                         variables={{
-                          id: circle.settings.id,
+                          id: circle.data.id,
                         }}
                       >
                         {({ loading, error, data }) => {
@@ -338,7 +338,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                   <ListItemC
                     key={circle.id}
                     linkUrl={`/id/${circle.id}`}
-                    primary={`List of ${circle.settings.collection}`}
+                    primary={`List of ${circle.data.collection}`}
                     secondary={makeTypeHumanReadable(circle.type)}
                   />
                 );

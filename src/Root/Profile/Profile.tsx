@@ -7,6 +7,7 @@ interface Props {
   circle: ICreatedCircle;
 }
 
+// NOT IMPLEMENTED YET
 const Profile: React.SFC<Props> = ({ selectedProfile, circle }) => {
   const type = circle.type.includes('-')
     ? circle.type.substring(0, circle.type.indexOf('-'))

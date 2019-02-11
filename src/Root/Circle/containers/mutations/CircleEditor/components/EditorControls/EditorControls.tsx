@@ -5,6 +5,7 @@ import makeTypeHumanReadable from '../../../../../functions/makeTypeHumanReadabl
 import Progress from '../../../../../../components/Progress';
 import { Consumer } from '../../../../../../ReactContext';
 import { IEditingCircle } from '../../../../../../../../customTypeScriptTypes/circle';
+import { IProfile } from '../../../../../../../../customTypeScriptTypes/profile';
 import { Redirect } from 'react-router-dom';
 import {
   AppBar,
@@ -14,6 +15,7 @@ import {
   IconButton,
   Theme,
   Toolbar,
+  Tooltip,
   Typography,
   withStyles,
 } from '@material-ui/core';
@@ -22,6 +24,7 @@ interface Props {
   circle: IEditingCircle;
   saving: boolean;
   currentPath: string;
+  selectedProfile: IProfile;
   saveCircle: () => void;
   showTypeSelector: () => void;
   classes: {
@@ -110,6 +113,7 @@ class EditorControls extends React.Component<Props, State> {
       currentPath,
       saving,
       showTypeSelector,
+      selectedProfile,
     } = this.props;
 
     const {
@@ -156,8 +160,14 @@ class EditorControls extends React.Component<Props, State> {
                       <div className={classes.progressIcon}>
                         <Progress hideBackground size={24} color={'inherit'} />
                       </div>
+                    ) : selectedProfile.id === 'guest' ? (
+                      <Tooltip title="Login to save to the Cloud. It is saved on your device currently">
+                        <Icon>cloud_off</Icon>
+                      </Tooltip>
                     ) : (
-                      <Icon>cloud_done</Icon>
+                      <Tooltip title="Saved">
+                        <Icon>cloud_done</Icon>
+                      </Tooltip>
                     )}
                   </div>
                 )}
