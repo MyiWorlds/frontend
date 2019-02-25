@@ -10,4 +10,5 @@ interface UpdateStateArg {
 interface ProviderStore {
   state: ProviderState;
   update: (arg: UpdateStateArg) => void;
+  login: () => void;
 }

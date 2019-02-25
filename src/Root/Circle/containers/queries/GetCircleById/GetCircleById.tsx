@@ -1,6 +1,6 @@
 import * as React from 'react';
+import Circle from '../../../Circle';
 import CircleEditor from '../../mutations/CircleEditor';
-import CircleViewerSwitch from '../../../CircleViewerSwitch/CircleViewerSwitch';
 import Error from '../../../../../Root/components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../../components/ProgressWithMessage';
@@ -14,7 +14,7 @@ interface Props {
   id: string;
   selectedProfile: IProfile;
   location?: Location;
-  returnCircleEditor?: boolean;
+  isEditing?: boolean;
   currentPath?: string;
 }
 
@@ -53,14 +53,10 @@ class GetCircleById extends React.Component<Props> {
           }
           if (error) return <Error error={error} />;
           const circle: ICreatedCircle = data.getCircleById;
-          const {
-            selectedProfile,
-            returnCircleEditor,
-            currentPath,
-          } = this.props;
+          const { selectedProfile, isEditing, currentPath } = this.props;
           if (!circle) return null;
 
-          if (returnCircleEditor) {
+          if (isEditing) {
             return (
               <CircleEditor
                 currentPath={currentPath || ''}
@@ -68,14 +64,9 @@ class GetCircleById extends React.Component<Props> {
                 selectedProfile={selectedProfile}
               />
             );
+          } else {
+            return <Circle circle={circle} selectedProfile={selectedProfile} />;
           }
-
-          return (
-            <CircleViewerSwitch
-              circle={circle}
-              selectedProfile={selectedProfile}
-            />
-          );
         }}
       </Query>
     );

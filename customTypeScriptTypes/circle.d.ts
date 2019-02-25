@@ -59,6 +59,7 @@ interface IEditingCircle {
   collection?: string | null;
   pii?: boolean | null;
   parent?: string | null;
+  clonedFrom?: string | null;
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;
@@ -99,6 +100,7 @@ export interface ICreatedCircle extends IEditingCircle {
   cache?: any;
   pii?: boolean;
   parent?: ICreatedCircle | null;
+  clonedFrom?: ICreatedCircle | null;
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;

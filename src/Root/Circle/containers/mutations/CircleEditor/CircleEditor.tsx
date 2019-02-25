@@ -1,17 +1,19 @@
 import * as React from 'react';
+import Circle from '../../../Circle';
 import client from '../../../../../apolloClient';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
 import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
-import EditorControls from './components/EditorControls/EditorControls';
+import EditorControls from './components/EditorControls';
 import emptyCircle from '../../../functions/emptyCircle';
 import history from '../../../../../history';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
-import { CircleEditorSwitch } from '../../../../Circle';
+import UseLocalStorageModal from './components/UseLocalStorageModal/UseLocalStorageModal';
 import { Dialog, Slide } from '@material-ui/core';
 import { HeaderEditor } from '../../../../Circle/components/Header';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import { Redirect } from 'react-router-dom';
 import {
   ICreatedCircle,
   IEditingCircle,
@@ -25,11 +27,15 @@ interface Props {
   selectedProfile: IProfile;
   circle?: ICreatedCircle;
   currentPath: string;
+  store?: ProviderStore;
 }
 interface State {
   saving: boolean;
   circle: IEditingCircle;
   showTypeSelector: boolean;
+  changeRoute: boolean;
+  navigateTo: string;
+  isLocalStorageCircle: boolean;
 }
 
 interface CircleEditor {
@@ -39,15 +45,15 @@ interface CircleEditor {
 class CircleEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    const circle = this.props.circle
-      ? convertCreatedCircleToEditingCircle(
-          this.props.circle,
-          this.props.selectedProfile,
-        )
-      : emptyCircle(this.props.selectedProfile);
+    const circle = props.circle
+      ? convertCreatedCircleToEditingCircle(props.circle, props.selectedProfile)
+      : emptyCircle(props.selectedProfile);
 
     this.state = {
+      changeRoute: false,
+      navigateTo: '',
       saving: false,
+      isLocalStorageCircle: false,
       showTypeSelector: circle.type ? false : true,
       // take whatever you have and apply those ontop of whatever theme you select, unless if it is null/newly created then take all
       circle,
@@ -58,12 +64,8 @@ class CircleEditor extends React.Component<Props, State> {
   componentDidMount() {
     const lsSavedCircle = localStorage.getItem('circle-editing');
     if (lsSavedCircle) {
-      const circle = {
-        ...JSON.parse(lsSavedCircle),
-        creator: this.props.selectedProfile.id,
-      };
       this.setState({
-        circle,
+        isLocalStorageCircle: true,
       });
     }
   }
@@ -71,6 +73,32 @@ class CircleEditor extends React.Component<Props, State> {
   componentWillUnmount() {
     clearTimeout(this.saveTimeout);
   }
+
+  startWithLocalStorage = () => {
+    const lsSavedCircle = localStorage.getItem('circle-editing');
+    if (lsSavedCircle) {
+      const circle = {
+        ...JSON.parse(lsSavedCircle),
+        creator: this.props.selectedProfile.id,
+      };
+      this.setState(
+        {
+          isLocalStorageCircle: false,
+          showTypeSelector: false,
+          circle,
+        },
+        async () => {
+          await this.saveCircle();
+          history.push(`/edit/${circle.id}`);
+          localStorage.removeItem('circle-editing');
+        },
+      );
+    }
+  };
+
+  removeCircleFromLocalStorage = () => {
+    localStorage.removeItem('circle-editing');
+  };
 
   saveCircle = async () => {
     const circleData = this.state.circle;
@@ -128,7 +156,16 @@ class CircleEditor extends React.Component<Props, State> {
     const overrides = {
       id: this.state.circle.id,
     };
-    const circle = deepmerge.all([this.state.circle, updatedCircle, overrides]);
+    const stateCircle = this.state.circle;
+    const overwriteMerge = (
+      destinationArray: any,
+      sourceArray: any,
+      options: any,
+    ) => sourceArray;
+
+    const circle = deepmerge.all([stateCircle, updatedCircle, overrides], {
+      arrayMerge: overwriteMerge,
+    });
 
     this.setState({ circle, saving: true }, () => {
       if (this.saveTimeout) {
@@ -151,6 +188,19 @@ class CircleEditor extends React.Component<Props, State> {
     });
   };
 
+  hideTypeSelectorAndNavigateBack = () => {
+    if (this.props.store) {
+      const sessionBrowserHistorys = this.props.store.state.sessionBrowserHistory.filter(
+        path => path !== this.props.currentPath,
+      );
+      this.setState({
+        changeRoute: true,
+        navigateTo: sessionBrowserHistorys[0],
+        showTypeSelector: false,
+      });
+    }
+  };
+
   hideTypeSelector = () => {
     this.setState({
       showTypeSelector: false,
@@ -158,34 +208,81 @@ class CircleEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { circle, saving, showTypeSelector } = this.state;
-    const { currentPath, selectedProfile } = this.props;
+    const {
+      circle,
+      saving,
+      showTypeSelector,
+      changeRoute,
+      navigateTo,
+      isLocalStorageCircle,
+    } = this.state;
+    const { currentPath, selectedProfile, store } = this.props;
+
+    if (changeRoute) {
+      return <Redirect to={navigateTo} />;
+    }
+
+    const typeSelector = (
+      <TypeSelector
+        selectedProfile={selectedProfile}
+        clonedFrom={circle.clonedFrom || null}
+        showTypeSelector={showTypeSelector}
+        updateCircle={this.updateCircle}
+        // Wtf is going on here
+        // handleClose={this.hideTypeSelectorAndNavigateBack}
+        handleClose={this.hideTypeSelector}
+      />
+    );
+
+    if (isLocalStorageCircle) {
+      return (
+        <UseLocalStorageModal
+          startWithLocalStorage={this.startWithLocalStorage}
+          removeCircleFromLocalStorage={this.removeCircleFromLocalStorage}
+        />
+      );
+    }
 
     return (
-      <Dialog fullScreen open={true} TransitionComponent={Transition}>
-        <EditorControls
-          currentPath={currentPath}
-          circle={circle}
-          saving={saving}
-          saveCircle={this.saveCircle}
-          showTypeSelector={this.showTypeSelector}
-          selectedProfile={selectedProfile}
-        />
-
-        <HeaderEditor circle={circle} updateCircle={this.updateCircle} />
-        <CircleEditorSwitch
-          updateCircle={this.updateCircle}
-          selectedProfile={selectedProfile}
-          circle={circle}
-        />
-
-        <TypeSelector
-          selectedProfile={selectedProfile}
-          showTypeSelector={showTypeSelector}
-          updateCircle={this.updateCircle}
-          handleClose={this.hideTypeSelector}
-        />
-      </Dialog>
+      <>
+        {circle.type ? (
+          <Dialog fullScreen open={true} TransitionComponent={Transition}>
+            <EditorControls
+              currentPath={currentPath}
+              circle={circle}
+              saving={saving}
+              saveCircle={this.saveCircle}
+              showTypeSelector={this.showTypeSelector}
+              selectedProfile={selectedProfile}
+            />
+            <div
+              style={{
+                marginTop: 48,
+                position: 'relative',
+                height: '100%',
+                width: '100%',
+                overflowY: 'scroll',
+              }}
+            >
+              <HeaderEditor circle={circle} updateCircle={this.updateCircle} />
+              <Circle
+                updateCircle={this.updateCircle}
+                selectedProfile={selectedProfile}
+                circle={circle}
+              />
+              <TypeSelector
+                selectedProfile={selectedProfile}
+                clonedFrom={circle.clonedFrom || null}
+                showTypeSelector={showTypeSelector}
+                updateCircle={this.updateCircle}
+                handleClose={this.hideTypeSelector}
+              />
+            </div>
+          </Dialog>
+        ) : (
+          typeSelector
+        )}
+      </>
     );
   }
 }

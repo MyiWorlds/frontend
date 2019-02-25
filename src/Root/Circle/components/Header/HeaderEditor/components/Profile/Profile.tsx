@@ -45,6 +45,9 @@ const Profile: React.SFC<Props> = ({ classes, id }) => {
         }
         if (error) return <Error error={error} />;
         const profile = data.getProfileById;
+        if (!profile) {
+          return;
+        }
         return (
           <div className={classes.container}>
             <Typography variant="body1">{profile.username}</Typography>

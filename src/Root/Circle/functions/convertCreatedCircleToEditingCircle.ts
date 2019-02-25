@@ -13,6 +13,8 @@ const convertCreatedCircleToEditingCircle = (
     creator: circle.creator ? circle.creator.id : selectedProfile.id,
     owner: circle.owner ? circle.owner.id : selectedProfile.id,
     parent: circle.parent && circle.parent.id ? circle.parent.id : null,
+    clonedFrom:
+      circle.clonedFrom && circle.clonedFrom.id ? circle.clonedFrom.id : null,
     viewers:
       circle.viewers && circle.viewers.length
         ? circle.viewers.map(viewer => viewer.id)

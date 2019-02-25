@@ -31,7 +31,7 @@ const styles = (theme: Theme) => ({
     // padding: theme.spacing.unit,
   },
   container: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing.unit * 4,
   },
   authorCard: {
     margin: theme.spacing.unit,
@@ -44,7 +44,7 @@ interface HeaderSettings {
   variant: 'outlined';
 }
 
-const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
+const HeaderEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
   const headerSettings: HeaderSettings = {
     margin: 'normal',
     variant: 'outlined',
@@ -80,6 +80,9 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
         id="description"
         label="Description"
         value={circle.description || ''}
+        multiline
+        rows="2"
+        rowsMax="4"
         className={classes.textField}
         fullWidth
         onChange={event =>
@@ -186,12 +189,14 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
       {circle.owner && <Profile id={circle.owner} />}
 
       <Typography variant="h6">Viewers:</Typography>
-      {circle.viewers
-        ? circle.viewers.map((viewer: string) => <Profile id={viewer} />)
-        : null}
+      {circle.public ? (
+        <Typography variant="body1">Everyone</Typography>
+      ) : circle.viewers && circle.viewers.length ? (
+        circle.viewers.map((viewer: string) => <Profile id={viewer} />)
+      ) : null}
 
       <Typography variant="h6">Editors:</Typography>
-      {circle.editors
+      {circle.editors && circle.editors.length
         ? circle.editors.map((editor: string) => <Profile id={editor} />)
         : null}
 
@@ -201,8 +206,10 @@ const TextEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
       <Typography variant="body1">
         {moment(circle.dateUpdated).format('MMMM Do YYYY h:mm a')}
       </Typography>
+
+      {/* <Lines /> */}
     </div>
   );
 };
 
-export default withStyles(styles)(TextEditor);
+export default withStyles(styles)(HeaderEditor);

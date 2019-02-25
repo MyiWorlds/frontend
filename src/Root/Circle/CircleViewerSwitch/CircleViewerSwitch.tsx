@@ -114,7 +114,7 @@ class Circle extends React.Component<Props> {
       case 'VIEWED_BY_IDS':
         switch (circle.data.collection) {
           case 'circles':
-            content = <GetCirclesByIds ids={circle.data.ids} />;
+            content = <GetCirclesByIds circle={circle} />;
             break;
           case 'circles-clones':
             content = <div>VIEWED_BY_IDS circles clones</div>;

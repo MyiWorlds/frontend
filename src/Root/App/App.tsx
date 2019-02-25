@@ -4,7 +4,7 @@ import Navigation from './components/Navigation';
 import Routes from '../../routes';
 import withWidth from '@material-ui/core/withWidth';
 import { Consumer } from '../ReactContext';
-import { IProfile } from './../../../customTypeScriptTypes/profile.d';
+import { IProfile } from '../../../customTypeScriptTypes/profile.d';
 
 interface Props {
   handleToggleThemeDark: () => void;
@@ -44,7 +44,6 @@ class App extends React.Component<Props, State> {
     const {
       handleToggleThemeDark,
       handleToggleStyleEnabled,
-      handleLogin,
       changeSelectedProfile,
       user,
       selectedProfile,
@@ -62,7 +61,6 @@ class App extends React.Component<Props, State> {
           showNavigation={showNavigation}
           handleToggleThemeDark={handleToggleThemeDark}
           handleToggleStyleEnabled={handleToggleStyleEnabled}
-          handleLogin={handleLogin}
           handleLogout={handleLogout}
           changeSelectedProfile={changeSelectedProfile}
           handleToggleAddToHistory={handleToggleAddToHistory}

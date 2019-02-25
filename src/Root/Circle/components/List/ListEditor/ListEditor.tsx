@@ -1,8 +1,11 @@
 import * as React from 'react';
-import CircleEditorSwitch from '../../../CircleEditorSwitch';
+import Circle from '../../../Circle';
 import { Button, Theme, withTheme } from '@material-ui/core';
-import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import {
+  ICreatedCircle,
+  IEditingCircle,
+} from '../../../../../../customTypeScriptTypes/circle';
 
 interface Props {
   circle: IEditingCircle;
@@ -61,11 +64,11 @@ class ListEditor extends React.Component<Props, State> {
 
     const defaultStyles = {
       container: {
-        width: '100%',
-        background: theme.palette.primary.main,
+        maxWidth: '100%',
+        position: 'relative' as 'relative',
       },
       list: {
-        width: '100%',
+        maxWidth: '100%',
         margin: '40px',
       },
     };
@@ -94,10 +97,10 @@ class ListEditor extends React.Component<Props, State> {
     console.log(settings);
     return (
       <div style={styles.container}>
-        {list.map((listItemCircle: IEditingCircle) => {
+        {list.map((listItemCircle: ICreatedCircle) => {
           return (
             <div key={listItemCircle.id} style={styles.list}>
-              <CircleEditorSwitch
+              <Circle
                 selectedProfile={selectedProfile}
                 circle={listItemCircle}
                 updateCircle={this.updateListItem}

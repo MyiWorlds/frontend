@@ -9,7 +9,7 @@ interface Props {
 const ListViewer: React.SFC<Props> = ({ circle }) => {
   return (
     <div>
-      <HeaderViewer circle={circle} />>
+      <HeaderViewer circle={circle} />
       <ul>
         {circle.data.list.length ? (
           circle.data.list.map((circ: ICreatedCircle) => (

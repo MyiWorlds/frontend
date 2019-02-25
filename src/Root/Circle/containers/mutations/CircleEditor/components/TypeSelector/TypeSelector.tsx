@@ -31,6 +31,7 @@ function Transition(props: TypeSelector) {
 
 interface Props {
   updateCircle: (type: IEditingCircle, noDelay: boolean) => void;
+  clonedFrom?: string | null;
   showTypeSelector: boolean;
   selectedProfile: IProfile;
   handleClose: () => void;
@@ -46,7 +47,7 @@ interface Props {
 }
 
 interface State {
-  selectedType: null | ICreatedCircle;
+  selectedCircleType: null | ICreatedCircle;
   types: ICreatedCircle[];
 }
 
@@ -79,16 +80,35 @@ const styles = (theme: Theme) =>
 class TypeSelector extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    // If i try and find in the list of types the selected type it is impossible,
+    // I assign the type string value to the circle
+    // But the type is not the actual selecteed type
+    // The selected type is a list if your types that you can create
+    // They all started from the base and people just moded them
+    // and then you use them
+    // const selectedCircleType = props.selectedCircleType ? props.selectedCircleType
     this.state = {
-      selectedType: null,
+      selectedCircleType: null,
       types: types || [],
     };
   }
 
+  componentDidMount() {
+    if (this.props.clonedFrom) {
+      const typeIsDisplayed = types.find(
+        circle => circle.id === this.props.clonedFrom,
+      );
+      if (typeIsDisplayed)
+        this.setState({
+          selectedCircleType: typeIsDisplayed,
+        });
+    }
+  }
+
   saveAndClose = () => {
-    if (this.state.selectedType) {
+    if (this.state.selectedCircleType) {
       const convertedToEditingCircle = convertCreatedCircleToEditingCircle(
-        this.state.selectedType,
+        this.state.selectedCircleType,
         this.props.selectedProfile,
       );
       this.props.updateCircle(convertedToEditingCircle, true);
@@ -97,17 +117,20 @@ class TypeSelector extends React.Component<Props, State> {
   };
 
   updateSelectedType = (type: ICreatedCircle) => {
-    if (this.state.selectedType && type.id === this.state.selectedType.id) {
+    if (
+      this.state.selectedCircleType &&
+      type.id === this.state.selectedCircleType.id
+    ) {
       this.saveAndClose();
     }
     this.setState({
-      selectedType: type,
+      selectedCircleType: type,
     });
   };
 
   render() {
     const { classes, showTypeSelector, handleClose } = this.props;
-    const { selectedType, types } = this.state;
+    const { selectedCircleType, types } = this.state;
 
     return (
       <Dialog
@@ -118,7 +141,7 @@ class TypeSelector extends React.Component<Props, State> {
         TransitionComponent={Transition}
         keepMounted
       >
-        <DialogTitle id="type-select-title">Select a Content Type</DialogTitle>
+        <DialogTitle id="type-select-title">Create</DialogTitle>
         <DialogContent>
           <div className={classes.container}>
             <Grid container spacing={16}>
@@ -127,7 +150,7 @@ class TypeSelector extends React.Component<Props, State> {
                   <Grid key={type.id} item xs={4}>
                     <Card
                       className={
-                        selectedType === type
+                        selectedCircleType === type
                           ? classes.selectedCard
                           : classes.card
                       }
@@ -152,7 +175,7 @@ class TypeSelector extends React.Component<Props, State> {
                           size="small"
                           color="primary"
                         >
-                          Accept
+                          Select
                         </Button>
                       </CardActions>
                     </Card>
@@ -175,8 +198,8 @@ class TypeSelector extends React.Component<Props, State> {
           <Button
             variant="contained"
             color="primary"
-            disabled={selectedType === null}
-            onClick={() => (selectedType ? this.saveAndClose() : {})}
+            disabled={selectedCircleType === null}
+            onClick={() => (selectedCircleType ? this.saveAndClose() : {})}
           >
             <Icon className={classes.btnIcon}>check</Icon>Select
           </Button>

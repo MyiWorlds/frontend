@@ -63,6 +63,7 @@ class Routes extends React.Component<Props> {
             <SessionBrowserHistory routerProps={props} store={store}>
               <CircleEditor
                 currentPath={props.history.location.pathname}
+                store={store}
                 selectedProfile={selectedProfile}
               />
             </SessionBrowserHistory>
@@ -74,7 +75,7 @@ class Routes extends React.Component<Props> {
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
               <GetCircleById
-                returnCircleEditor={true}
+                isEditing={true}
                 id={props.match.params.id}
                 currentPath={props.history.location.pathname}
                 selectedProfile={selectedProfile}

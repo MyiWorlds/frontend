@@ -1,6 +1,7 @@
 import * as React from 'react';
 import FlexGrow from '../../../components/FlexGrow';
 import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
+import { Consumer } from '../../../ReactContext';
 import { Link } from 'react-router-dom';
 import {
   AppBar,
@@ -61,7 +62,6 @@ interface Props {
   handleNavigationToggle: () => void;
   handleToggleThemeDark: () => void;
   handleToggleStyleEnabled: () => void;
-  handleLogin: () => void;
   handleLogout: () => void;
   changeSelectedProfile: (id: string | null) => void;
   handleToggleAddToHistory: () => void;
@@ -152,15 +152,22 @@ class AppMenuController extends React.Component<Props, State> {
       handleToggleStyleEnabled,
       user,
       handleLogout,
-      handleLogin,
     } = this.props;
     const open = Boolean(anchorEl);
 
     const login = (
-      <Button variant="contained" color="primary" onClick={() => handleLogin()}>
-        <Icon style={{ marginRight: 8 }}>account_circle</Icon>
-        Login / Signup
-      </Button>
+      <Consumer>
+        {(store: ProviderStore) => (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => store.login()}
+          >
+            <Icon style={{ marginRight: 8 }}>account_circle</Icon>
+            Login / Signup
+          </Button>
+        )}
+      </Consumer>
     );
 
     return (

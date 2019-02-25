@@ -44,7 +44,7 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     appBar: {
-      position: 'relative',
+      height: 48,
     },
     btnIcon: {
       marginRight: theme.spacing.unit,
@@ -131,7 +131,7 @@ class EditorControls extends React.Component<Props, State> {
         <Consumer>
           {(store: ProviderStore) => (
             <AppBar className={classes.appBar}>
-              <Toolbar>
+              <Toolbar style={{ minHeight: 48 }}>
                 <IconButton
                   color="default"
                   onClick={() => {
@@ -150,9 +150,7 @@ class EditorControls extends React.Component<Props, State> {
                   className={classes.btnBarBtn}
                 >
                   Create{' '}
-                  {circle.type && circle.type !== ''
-                    ? makeTypeHumanReadable(circle.type)
-                    : 'Circle'}
+                  {circle.type ? makeTypeHumanReadable(circle.type) : 'Circle'}
                 </Typography>
                 {circle.type === '' ? null : (
                   <div className={classes.btnBarBtn}>
@@ -180,13 +178,19 @@ class EditorControls extends React.Component<Props, State> {
                   <Icon className={classes.btnIcon}>tune</Icon>Change Content
                   Type
                 </Button>
-                <Button
-                  variant="text"
-                  disabled={!circle.type}
-                  onClick={() => this.navigateToCircle()}
-                >
-                  <Icon className={classes.btnIcon}>remove_red_eye</Icon>View
-                </Button>
+                {selectedProfile.id === 'guest' ? (
+                  <Button variant="outlined" onClick={() => store.login()}>
+                    <Icon className={classes.btnIcon}>person</Icon>Login to Save
+                  </Button>
+                ) : (
+                  <Button
+                    variant="text"
+                    disabled={!circle.type}
+                    onClick={() => this.navigateToCircle()}
+                  >
+                    <Icon className={classes.btnIcon}>remove_red_eye</Icon>View
+                  </Button>
+                )}
               </Toolbar>
             </AppBar>
           )}

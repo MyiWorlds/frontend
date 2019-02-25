@@ -25,21 +25,21 @@ const AllFieldsEditor: React.SFC<Props> = ({
   circle,
   updateCircle,
 }) => {
-  const updater = (property: string, value: any) => {
+  const updater = (keyValue: IEditingCircle) => {
     updateCircle({
       ...circle,
-      [property]: value,
+      ...keyValue,
     });
   };
   return (
     <div className={classes.container}>
       <TextEditor
-        updater={updater}
+        updateCircle={updater}
         property="string"
         value={circle.string ? circle.string : ''}
       />
       <NumberEditor
-        updater={updater}
+        updateCircle={updater}
         property="number"
         value={circle.number ? circle.number : 0}
       />

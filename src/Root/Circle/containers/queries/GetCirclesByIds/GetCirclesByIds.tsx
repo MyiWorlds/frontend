@@ -2,19 +2,20 @@ import * as React from 'react';
 import Error from '../../../../components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../../components/ProgressWithMessage';
+import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import {
   Button,
-  Typography,
+  Divider,
   List,
   ListItem,
   ListItemText,
-  Divider,
+  Typography,
 } from '@material-ui/core';
 
 interface Props {
-  ids: string[];
+  circle: ICreatedCircle;
 }
 
 const GET_CIRCLES_BY_IDS = gql`
@@ -29,7 +30,9 @@ const GET_CIRCLES_BY_IDS = gql`
 
 class GetCirclesByIds extends React.Component<Props> {
   render() {
-    const { ids } = this.props;
+    const { circle } = this.props;
+    const ids = circle.data && circle.data.ids ? circle.data.ids : [];
+
     return (
       <div
         style={{

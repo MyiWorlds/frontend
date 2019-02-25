@@ -1,5 +1,5 @@
 import * as React from 'react';
-import client from '../..//apolloClient';
+import client from '../../apolloClient';
 import gql from 'graphql-tag';
 
 interface Props {

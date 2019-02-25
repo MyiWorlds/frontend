@@ -8,6 +8,9 @@ export const FullCircleFragment = gql`
     parent {
       id
     }
+    clonedFrom {
+      id
+    }
     slug
     public
     passwordRequired

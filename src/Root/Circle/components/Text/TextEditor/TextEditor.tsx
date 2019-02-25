@@ -5,7 +5,7 @@ import { TextField, Theme, withStyles } from '@material-ui/core';
 interface Props {
   property: string;
   value: string;
-  updater: (property: string, value: string) => void;
+  updateCircle: (circle: IEditingCircle) => void;
   classes: {
     textField: string;
   };
@@ -21,7 +21,7 @@ const TextEditor: React.SFC<Props> = ({
   classes,
   property,
   value,
-  updater,
+  updateCircle,
 }) => {
   return (
     <div>
@@ -30,7 +30,7 @@ const TextEditor: React.SFC<Props> = ({
         label="Text"
         value={value}
         className={classes.textField}
-        onChange={event => updater(property, event.target.value)}
+        onChange={event => updateCircle({ [property]: event.target.value })}
         margin="normal"
         variant="outlined"
       />

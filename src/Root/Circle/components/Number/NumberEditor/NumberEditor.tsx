@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
 import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
   property: string;
   value: number;
-  updater: (property: string, value: number) => void;
+  updateCircle: (circle: IEditingCircle) => void;
   classes: {
     textField: string;
   };
@@ -20,14 +21,16 @@ const NumberEditor: React.SFC<Props> = ({
   classes,
   property,
   value,
-  updater,
+  updateCircle,
 }) => {
   return (
     <TextField
       id="standard-number"
       label="Number"
       value={value || 0}
-      onChange={event => updater(property, Number(event.target.value))}
+      onChange={event =>
+        updateCircle({ [property]: Number(event.target.value) })
+      }
       type="number"
       className={classes.textField}
       InputLabelProps={{
