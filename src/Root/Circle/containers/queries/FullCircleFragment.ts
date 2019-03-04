@@ -15,6 +15,7 @@ export const FullCircleFragment = gql`
     public
     passwordRequired
     type
+    properties
     settings {
       id
     }

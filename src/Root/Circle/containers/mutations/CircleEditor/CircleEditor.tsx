@@ -7,6 +7,7 @@ import deepmerge from 'deepmerge';
 import EditorControls from './components/EditorControls';
 import emptyCircle from '../../../functions/emptyCircle';
 import history from '../../../../../history';
+import Settings from './components/Settings';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import UseLocalStorageModal from './components/UseLocalStorageModal/UseLocalStorageModal';
@@ -33,6 +34,7 @@ interface State {
   saving: boolean;
   circle: IEditingCircle;
   showTypeSelector: boolean;
+  showSettings: boolean;
   changeRoute: boolean;
   navigateTo: string;
   isLocalStorageCircle: boolean;
@@ -54,6 +56,7 @@ class CircleEditor extends React.Component<Props, State> {
       navigateTo: '',
       saving: false,
       isLocalStorageCircle: false,
+      showSettings: false,
       showTypeSelector: circle.type ? false : true,
       // take whatever you have and apply those ontop of whatever theme you select, unless if it is null/newly created then take all
       circle,
@@ -188,6 +191,18 @@ class CircleEditor extends React.Component<Props, State> {
     });
   };
 
+  showSettings = () => {
+    this.setState({
+      showSettings: true,
+    });
+  };
+
+  hideSettings = () => {
+    this.setState({
+      showSettings: false,
+    });
+  };
+
   hideTypeSelectorAndNavigateBack = () => {
     if (this.props.store) {
       const sessionBrowserHistorys = this.props.store.state.sessionBrowserHistory.filter(
@@ -212,11 +227,12 @@ class CircleEditor extends React.Component<Props, State> {
       circle,
       saving,
       showTypeSelector,
+      showSettings,
       changeRoute,
       navigateTo,
       isLocalStorageCircle,
     } = this.state;
-    const { currentPath, selectedProfile, store } = this.props;
+    const { currentPath, selectedProfile } = this.props;
 
     if (changeRoute) {
       return <Redirect to={navigateTo} />;
@@ -253,6 +269,7 @@ class CircleEditor extends React.Component<Props, State> {
               saving={saving}
               saveCircle={this.saveCircle}
               showTypeSelector={this.showTypeSelector}
+              showSettings={this.showSettings}
               selectedProfile={selectedProfile}
             />
             <div
@@ -268,6 +285,12 @@ class CircleEditor extends React.Component<Props, State> {
               <Circle
                 updateCircle={this.updateCircle}
                 selectedProfile={selectedProfile}
+                circle={circle}
+              />
+              <Settings
+                showSettings={showSettings}
+                updateCircle={this.updateCircle}
+                handleClose={this.hideSettings}
                 circle={circle}
               />
               <TypeSelector

@@ -33,6 +33,7 @@ interface IGetDocumentById {
 interface IGetCirclesByFilters {
   id: string;
   type: string;
+  properties: string[];
   data: {
     cursor: string | null;
     numberOfResults: number;
@@ -54,6 +55,7 @@ interface IImage {
 interface IEditingCircle {
   id?: string;
   type?: string | null;
+  properties?: string[];
   cached?: boolean;
   cache?: any;
   collection?: string | null;
@@ -96,6 +98,7 @@ interface IEditingCircle {
 export interface ICreatedCircle extends IEditingCircle {
   id: string;
   type: string;
+  properties?: string[];
   cached?: boolean;
   cache?: any;
   pii?: boolean;

@@ -197,7 +197,9 @@ const HeaderEditor: React.SFC<Props> = ({ classes, circle, updateCircle }) => {
 
       <Typography variant="h6">Editors:</Typography>
       {circle.editors && circle.editors.length
-        ? circle.editors.map((editor: string) => <Profile id={editor} />)
+        ? circle.editors.map((editor: string) => (
+            <Profile key={editor} id={editor} />
+          ))
         : null}
 
       <Typography variant="body1">

@@ -27,6 +27,7 @@ interface Props {
   selectedProfile: IProfile;
   saveCircle: () => void;
   showTypeSelector: () => void;
+  showSettings: () => void;
   classes: {
     appBar: string;
     btnBarBtn: string;
@@ -114,6 +115,7 @@ class EditorControls extends React.Component<Props, State> {
       saving,
       showTypeSelector,
       selectedProfile,
+      showSettings,
     } = this.props;
 
     const {
@@ -177,6 +179,13 @@ class EditorControls extends React.Component<Props, State> {
                 >
                   <Icon className={classes.btnIcon}>tune</Icon>Change Content
                   Type
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={() => showSettings()}
+                  className={classes.btnBarBtn}
+                >
+                  <Icon className={classes.btnIcon}>settings</Icon>Settings
                 </Button>
                 {selectedProfile.id === 'guest' ? (
                   <Button variant="outlined" onClick={() => store.login()}>
