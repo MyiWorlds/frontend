@@ -1,15 +1,15 @@
 import * as React from 'react';
+import canEditCircle from './functions/canEditCircle';
 import FlexGrow from '../components/FlexGrow';
-import GetCircleById from './containers/queries/GetCircleById';
-import GetCirclesByFilters from './containers/queries/GetCirclesByFilters';
-import GetCirclesByIds from './containers/queries/GetCirclesByIds';
-import GetInterfacedCirclesByFilters from './containers/queries/GetInterfacedCirclesByFilters';
-import Image from './components/Image';
-import { AllFieldsViewer } from './components/AllFields';
+import GetCircleById from './queries/GetCircleById';
+import GetCirclesByFilters from './queries/GetCirclesByFilters';
+import GetCirclesByIds from './queries/GetCirclesByIds';
+import GetInterfacedCirclesByFilters from './queries/GetInterfacedCirclesByFilters';
+import Image from '../components/Image';
 import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
-import { ListEditor, ListViewer } from './components/List';
-import { TextEditor, TextViewer } from './components/Text';
+import { ListEditor, ListViewer } from '../components/List';
+import { StringEditor, StringViewer } from '../components/String';
 import {
   ICreatedCircle,
   IEditingCircle,
@@ -38,7 +38,6 @@ interface EditingCircle extends BaseProps {
   circle: IEditingCircle;
   updateCircle?: (circle: IEditingCircle) => void;
   selectedProfile: IProfile;
-  circleFieldToUpdate?: keyof IEditingCircle;
 }
 
 interface ViewingCircle extends BaseProps {
@@ -65,13 +64,7 @@ const styles = (theme: Theme) =>
 
 class Circle extends React.Component<Props> {
   render() {
-    const {
-      selectedProfile,
-      circle,
-      updateCircle,
-      circleFieldToUpdate,
-      classes,
-    } = this.props;
+    const { selectedProfile, circle, updateCircle, classes } = this.props;
 
     const type = !circle.type
       ? ''
@@ -81,17 +74,6 @@ class Circle extends React.Component<Props> {
 
     const isEditing = updateCircle && selectedProfile ? true : false;
     let content: any = null;
-
-    function canEdit(selectedProfileId: string, circle: ICreatedCircle) {
-      const isEditor =
-        circle.editors &&
-        circle.editors.some(editor => editor.id === selectedProfileId);
-      const isCreator =
-        circle.creator && circle.creator.id === selectedProfileId;
-      const isOwner = circle.owner && circle.owner.id === selectedProfileId;
-
-      return isEditor || isCreator || isOwner;
-    }
 
     switch (type) {
       case 'GET_CIRCLES_BY_FILTERS':
@@ -124,29 +106,6 @@ class Circle extends React.Component<Props> {
               id={circle.data.id}
             />
           );
-        }
-        break;
-      case 'ALL_FIELDS':
-        content = <AllFieldsViewer circle={circle as ICreatedCircle} />;
-        break;
-      case 'TEXT':
-        if (isEditing) {
-          const property = circleFieldToUpdate || 'string';
-          const updater = (keyValue: IEditingCircle) => {
-            updateCircle({
-              ...circle,
-              ...keyValue,
-            });
-          };
-          content = (
-            <TextEditor
-              updateCircle={updater}
-              property={property}
-              value={circle[property]}
-            />
-          );
-        } else {
-          content = <TextViewer circle={circle as ICreatedCircle} />;
         }
         break;
       case 'NOT_FOUND':
@@ -199,7 +158,7 @@ class Circle extends React.Component<Props> {
 
     let circleOptions: any = null;
 
-    if (canEdit(selectedProfile.id || '', circle) && !isEditing) {
+    if (canEditCircle(selectedProfile.id || '', circle) && !isEditing) {
       circleOptions = (
         <Button
           variant="outlined"

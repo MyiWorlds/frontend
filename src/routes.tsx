@@ -1,7 +1,7 @@
 import * as React from 'react';
-import CircleEditor from './Root/Circle/containers/mutations/CircleEditor';
-import GetCircleById from './Root/Circle/containers/queries/GetCircleById';
-import GetCircleByProfileUsername from './Root/Circle/containers/queries/GetCircleByProfileUsername';
+import CircleEditor from './Root/Circle/CircleEditor';
+import GetCircleById from './Root/Circle/queries/GetCircleById';
+import GetCircleByProfileUsername from './Root/Circle/queries/GetCircleByProfileUsername';
 import SessionBrowserHistory from './SessionBrowserHistory';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
 import UserSettings from './Root/User/components/UserSettings';

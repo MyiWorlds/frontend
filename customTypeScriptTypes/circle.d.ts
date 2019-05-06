@@ -7,6 +7,40 @@ export interface IFilter {
   value: string | number | boolean | Date | null;
 }
 
+type Property =
+  | 'cached'
+  | 'cache'
+  | 'collection'
+  | 'pii'
+  | 'parent'
+  | 'clonedFrom'
+  | 'slug'
+  | 'public'
+  | 'passwordRequired'
+  | 'settings'
+  | 'rating'
+  | 'tags'
+  | 'title'
+  | 'subtitle'
+  | 'description'
+  | 'media'
+  | 'icon'
+  | 'creator'
+  | 'owner'
+  | 'viewers'
+  | 'editors'
+  | 'dateCreated'
+  | 'dateUpdated'
+  | 'string'
+  | 'data'
+  | 'number'
+  | 'bigNumber'
+  | 'boolean'
+  | 'date'
+  | 'geoPoint'
+  | 'line'
+  | 'lines';
+
 /**
  * @param selectFields by default will return all fields
  */
@@ -33,7 +67,7 @@ interface IGetDocumentById {
 interface IGetCirclesByFilters {
   id: string;
   type: string;
-  properties: string[];
+  properties: Property[];
   data: {
     cursor: string | null;
     numberOfResults: number;
@@ -55,7 +89,7 @@ interface IImage {
 interface IEditingCircle {
   id?: string;
   type?: string | null;
-  properties?: string[];
+  properties?: Property[];
   cached?: boolean;
   cache?: any;
   collection?: string | null;
@@ -98,7 +132,7 @@ interface IEditingCircle {
 export interface ICreatedCircle extends IEditingCircle {
   id: string;
   type: string;
-  properties?: string[];
+  properties?: Property[];
   cached?: boolean;
   cache?: any;
   pii?: boolean;
@@ -107,6 +141,7 @@ export interface ICreatedCircle extends IEditingCircle {
   slug?: string | null;
   public?: boolean | null;
   passwordRequired?: boolean | null;
+  // Change all search types to be inside data??
   settings?:
     | any
     | null
@@ -134,6 +169,6 @@ export interface ICreatedCircle extends IEditingCircle {
   boolean?: boolean | null;
   date?: any | null;
   geoPoint?: any | null;
-  line?: ICreatedCircle | null;
-  lines?: ICreatedCircle[] | null;
+  line?: string | null;
+  lines?: string[] | null;
 }

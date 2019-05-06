@@ -1,16 +1,15 @@
 import * as React from 'react';
 import FlexGrow from '../../components/FlexGrow';
-import GetCircleById from '../containers/queries/GetCircleById';
-import GetCirclesByFilters from '../containers/queries/GetCirclesByFilters';
-import GetCirclesByIds from '../containers/queries/GetCirclesByIds';
-import GetInterfacedCirclesByFilters from '../containers/queries/GetInterfacedCirclesByFilters';
-import Image from '../components/Image';
-import { AllFieldsViewer } from '../components/AllFields';
+import GetCircleById from '../queries/GetCircleById';
+import GetCirclesByFilters from '../queries/GetCirclesByFilters';
+import GetCirclesByIds from '../queries/GetCirclesByIds';
+import GetInterfacedCirclesByFilters from '../queries/GetInterfacedCirclesByFilters';
+import Image from '../../components/Image';
 import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
 import { IProfile } from '../../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
-import { ListViewer } from '../components/List';
-import { TextViewer } from '../components/Text';
+import { ListViewer } from '../../components/List';
+import { StringViewer } from '../../components/String';
 import {
   AppBar,
   Button,
@@ -96,11 +95,8 @@ class Circle extends React.Component<Props> {
           );
         }
         break;
-      case 'ALL_FIELDS':
-        content = <AllFieldsViewer circle={circle} />;
-        break;
-      case 'TEXT':
-        content = <TextViewer circle={circle} />;
+      case 'STRING':
+        content = <StringViewer value={circle.string || ''} />;
         break;
       case 'NOT_FOUND':
         content = <div>NOT FOUND</div>;

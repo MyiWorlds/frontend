@@ -25,11 +25,9 @@ const convertCreatedCircleToEditingCircle = (
         : [],
     media: circle.media ? circle.media.id : null,
     icon: circle.icon ? circle.icon : null,
-    line: circle.line && circle.line.id ? circle.line.id : null,
+    line: circle.line && circle.line ? circle.line : null,
     lines:
-      circle.lines && circle.lines.length
-        ? circle.lines.map(line => line.id)
-        : [],
+      circle.lines && circle.lines.length ? circle.lines.map(line => line) : [],
   };
 };
 

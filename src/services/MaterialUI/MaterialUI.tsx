@@ -5,6 +5,7 @@ import { createGenerateClassName, Theme } from '@material-ui/core/styles';
 import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { JssProvider } from 'react-jss';
 import { SheetsRegistry } from 'jss';
+import { withTheme } from '@material-ui/core';
 import {
   Card,
   createMuiTheme,
@@ -18,9 +19,10 @@ interface Props {
     root: string;
   };
   selectedProfile: IProfile;
+  theme: Theme;
 }
 
-const theme = (theme: Theme) => createMuiTheme(theme);
+const mergeThemes = (theme: Theme) => createMuiTheme(theme);
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -44,7 +46,7 @@ const sheetsRegistry = new SheetsRegistry();
 
 class MaterialUI extends React.Component<Props> {
   render() {
-    const { classes, selectedProfile } = this.props;
+    const { classes, selectedProfile, theme } = this.props;
 
     let profileTheme =
       selectedProfile &&
@@ -80,6 +82,12 @@ class MaterialUI extends React.Component<Props> {
       typography: {
         useNextVariants: true,
       },
+      breakpoints: {
+        values: {
+          ...theme.breakpoints.values,
+          xs: 400,
+        },
+      },
     };
 
     return (
@@ -87,7 +95,7 @@ class MaterialUI extends React.Component<Props> {
         registry={sheetsRegistry}
         generateClassName={generateClassName}
       >
-        <MuiThemeProvider theme={theme(profileTheme)}>
+        <MuiThemeProvider theme={mergeThemes(profileTheme)}>
           <Card className={classes.app}>
             <div className={classes.root}>{this.props.children}</div>
           </Card>
@@ -97,4 +105,4 @@ class MaterialUI extends React.Component<Props> {
   }
 }
 
-export default withStyles(styles)(MaterialUI);
+export default withStyles(styles)(withTheme()(MaterialUI));
