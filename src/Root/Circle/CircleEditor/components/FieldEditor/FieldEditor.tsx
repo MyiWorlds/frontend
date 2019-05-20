@@ -1,5 +1,6 @@
 import * as React from 'react';
 import IconButton from '@material-ui/core/IconButton';
+import makePropertyHumanReadable from '../../../functions/makePropertyHumanReadable';
 import Slide from '@material-ui/core/Slide';
 import Tooltip from '@material-ui/core/Tooltip';
 import {
@@ -67,13 +68,12 @@ class FieldEditor extends React.Component<Props, State> {
 
   render() {
     const { classes, fieldEditing, updateFieldEditing } = this.props;
-    console.log(fieldEditing);
 
     return (
       <Slide direction="down" in={true} mountOnEnter unmountOnExit>
         <Card className={classes.container}>
           <CardHeader
-            title={`Editing Field: ${fieldEditing}`}
+            title={`Editing Field: ${makePropertyHumanReadable(fieldEditing)}`}
             action={
               <Tooltip title="Close Field Editor" placement="bottom-start">
                 <IconButton onClick={() => updateFieldEditing(null)}>

@@ -59,7 +59,7 @@ const types: ICreatedCircle[] = [
     icon: 'call_missed_outgoing',
     type: 'LINE',
     properties: ['line', 'icon', 'title'],
-    line: '',
+    line: null,
   },
   {
     id: 'object',

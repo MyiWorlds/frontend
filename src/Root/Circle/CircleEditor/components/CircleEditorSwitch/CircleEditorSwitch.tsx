@@ -1,37 +1,47 @@
 import * as React from 'react';
 import BooleanEditor from '../../../../components/Boolean/BooleanEditor';
+import GetCircleById from '../../../queries/GetCircleById';
+import makePropertyHumanReadable from './../../../functions/makePropertyHumanReadable';
 import moment from 'moment';
 import Typography from '@material-ui/core/Typography';
+import { CodeEditor } from '../../../../components/Code';
 import { FontIconEditor } from '../../../../components/FontIcon';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import { StringEditor, StringViewer } from '../../../../components/String';
 import {
   IEditingCircle,
   Property,
 } from '../../../../../../customTypeScriptTypes/circle';
-
 interface Props {
   property: Property;
   circle: IEditingCircle;
-  updateCircle: (circle: IEditingCircle) => void;
+  updateCircle: (circle: IEditingCircle, noDelay?: boolean) => void;
+  selectedProfile: IProfile;
 }
 
-const FieldEditorSwitch: React.SFC<Props> = ({
+const CircleEditorSwitch: React.SFC<Props> = ({
   property,
   circle,
   updateCircle,
+  selectedProfile,
 }) => {
+  const updateString = (newValue: string | number, noDelay?: boolean) => {
+    updateCircle({ [property]: newValue });
+  };
+
   switch (property) {
     case 'slug':
     case 'title':
     case 'subtitle':
     case 'description':
     case 'string':
+    case 'key':
       return (
         <StringEditor
           fullWidth={true}
-          property={property}
+          property={makePropertyHumanReadable(property)}
           value={circle[property] ? circle[property]! : ''}
-          updateCircle={updateCircle}
+          updateCircle={updateString}
         />
       );
     case 'bigNumber':
@@ -40,9 +50,9 @@ const FieldEditorSwitch: React.SFC<Props> = ({
         <StringEditor
           fullWidth={true}
           type="number"
-          property={property}
+          property={makePropertyHumanReadable(property)}
           value={circle[property] ? circle[property]! : 0}
-          updateCircle={updateCircle}
+          updateCircle={updateString}
         />
       );
     case 'date':
@@ -51,7 +61,7 @@ const FieldEditorSwitch: React.SFC<Props> = ({
           fullWidth={true}
           property={property}
           value={circle[property] ? circle[property]! : ''}
-          updateCircle={updateCircle}
+          updateCircle={updateString}
         />
       );
     case 'dateUpdated':
@@ -59,7 +69,7 @@ const FieldEditorSwitch: React.SFC<Props> = ({
       // Uneditable fields displayed as strings
       return (
         <StringViewer
-          property={property}
+          property={makePropertyHumanReadable(property)}
           value={moment(circle[property]).format('MMMM Do YYYY h:mm a')}
         />
       );
@@ -70,7 +80,7 @@ const FieldEditorSwitch: React.SFC<Props> = ({
     case 'boolean':
       return (
         <BooleanEditor
-          property={property}
+          property={makePropertyHumanReadable(property)}
           updateCircle={updateCircle}
           value={circle[property] || false}
         />
@@ -78,10 +88,39 @@ const FieldEditorSwitch: React.SFC<Props> = ({
     case 'icon':
       return (
         <FontIconEditor
-          property={property}
+          property={makePropertyHumanReadable(property)}
           value={circle[property] ? circle[property]! : ''}
           updateCircle={updateCircle}
         />
+      );
+    case 'data': {
+      const edgeUpdater = (newValue: any, noDelay?: boolean) => {
+        updateCircle({ [property]: newValue }, noDelay);
+      };
+      return (
+        <CodeEditor
+          property={makePropertyHumanReadable(property)}
+          value={circle[property] ? circle[property]! : ''}
+          updateCircle={edgeUpdater}
+        />
+      );
+    }
+    case 'settings':
+      return (
+        <>
+          <StringEditor
+            fullWidth={true}
+            property={makePropertyHumanReadable(property)}
+            value={circle[property] ? circle[property]! : ''}
+            updateCircle={updateString}
+          />
+          {circle && circle[property] && circle[property] && (
+            <GetCircleById
+              selectedProfile={selectedProfile}
+              id={circle[property] || ''}
+            />
+          )}
+        </>
       );
     default:
       return (
@@ -97,4 +136,4 @@ const FieldEditorSwitch: React.SFC<Props> = ({
   }
 };
 
-export default FieldEditorSwitch;
+export default CircleEditorSwitch;

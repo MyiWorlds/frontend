@@ -31,6 +31,7 @@ type Property =
   | 'editors'
   | 'dateCreated'
   | 'dateUpdated'
+  | 'key'
   | 'string'
   | 'data'
   | 'number'
@@ -113,6 +114,7 @@ interface IEditingCircle {
   editors?: string[];
   dateCreated?: any | null;
   dateUpdated?: any | null;
+  key?: string | null;
   string?: string | null;
   data?:
     | any
@@ -162,6 +164,7 @@ export interface ICreatedCircle extends IEditingCircle {
   editors?: IProfile[];
   dateCreated?: any | null;
   dateUpdated?: any | null;
+  key?: string | null;
   string?: string | null;
   data?: any | null;
   number?: number | null;
@@ -169,6 +172,6 @@ export interface ICreatedCircle extends IEditingCircle {
   boolean?: boolean | null;
   date?: any | null;
   geoPoint?: any | null;
-  line?: string | null;
-  lines?: string[] | null;
+  line?: ICreatedCircle | null;
+  lines?: ICreatedCircle[] | null;
 }

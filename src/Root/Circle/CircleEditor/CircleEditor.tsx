@@ -40,6 +40,7 @@ interface State {
   navigateTo: string;
   isLocalStorageCircle: boolean;
   fieldEditing: Property | null;
+  circlesUpdating: IEditingCircle[];
 }
 
 interface CircleEditor {
@@ -63,6 +64,7 @@ class CircleEditor extends React.Component<Props, State> {
       fieldEditing: null,
       // take whatever you have and apply those ontop of whatever theme you select, unless if it is null/newly created then take all
       circle,
+      circlesUpdating: [],
     };
     this.saveTimeout = 0;
   }
@@ -188,6 +190,28 @@ class CircleEditor extends React.Component<Props, State> {
     });
   };
 
+  // updateNestedCircle = (
+  //   circleToUpdate: IEditingCircle,
+  //   pathToUpdate: any = 'circle.settings',
+  //   noDelay: boolean,
+  // ) => {
+  //   const circlesUpdating = [...this.state.circlesUpdating, circleToUpdate];
+  //   this.setState({ circlesUpdating, saving: true }, () => {
+  //     if (this.saveTimeout) {
+  //       // Might need new timeout
+  //       clearTimeout(this.saveTimeout);
+  //     }
+
+  //     if (noDelay) {
+  //       this.saveCircle();
+  //     } else {
+  //       this.saveTimeout = setTimeout(async () => {
+  //         this.saveCircle();
+  //       }, 1000);
+  //     }
+  //   });
+  // };
+
   showTypeSelector = () => {
     this.setState({
       showTypeSelector: true,
@@ -305,6 +329,7 @@ class CircleEditor extends React.Component<Props, State> {
                 updateCircle={this.updateCircle}
                 circle={circle}
                 updateFieldEditing={this.updateFieldEditing}
+                selectedProfile={selectedProfile}
               />
               <Settings
                 showSettings={showSettings}

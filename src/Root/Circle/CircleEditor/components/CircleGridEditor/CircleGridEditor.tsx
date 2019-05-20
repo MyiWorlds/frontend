@@ -1,5 +1,6 @@
 import * as React from 'react';
 import CircleEditorSwitch from '../CircleEditorSwitch';
+import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -28,10 +29,11 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 interface Props {
   circle: IEditingCircle;
-  updateCircle: (circle: IEditingCircle) => void;
+  updateCircle: (circle: IEditingCircle, noDelay?: boolean) => void;
   onLayoutChange?: ResponsiveProps['onLayoutChange'];
   updateFieldEditing: (fieldEditing: Property | null) => void;
   theme: Theme;
+  selectedProfile: IProfile;
   classes: {
     container: string;
     dragArea: string;
@@ -51,10 +53,12 @@ const styles = (theme: Theme) =>
       position: 'relative',
       margin: '0 auto',
       maxWidth: '100%',
+      paddingBottom: theme.spacing.unit * 12,
     },
     gridItem: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
+      // padding: theme.spacing.unit * 2,
     },
     dragArea: {
       position: 'absolute',
@@ -199,9 +203,10 @@ class CircleGridEditor extends React.Component<Props, State> {
     const {
       classes,
       circle,
+      selectedProfile,
+      theme,
       updateCircle,
       updateFieldEditing,
-      theme,
     } = this.props;
     const { layouts, designSize, editMode } = this.state;
 
@@ -231,6 +236,7 @@ class CircleGridEditor extends React.Component<Props, State> {
       }
     }
 
+    // console.log('start', JSON.stringify(layouts), 'END');
     const grid = (
       <ResponsiveGridLayout
         key={width}
@@ -264,15 +270,16 @@ class CircleGridEditor extends React.Component<Props, State> {
                 >
                   <div
                     style={{
-                      margin: 4,
                       maxWidth: '100%',
                       position: 'relative',
+                      height: '100%',
                     }}
                   >
                     <CircleEditorSwitch
                       property={property}
                       circle={circle}
                       updateCircle={updateCircle}
+                      selectedProfile={selectedProfile}
                     />
                   </div>
                   <Icon

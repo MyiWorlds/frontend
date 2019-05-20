@@ -1,4 +1,5 @@
 import * as React from 'react';
+import makePropertyHumanReadable from '../../../../functions/makePropertyHumanReadable';
 import { AvailableProperties } from '../Settings';
 import { Property } from '../../../../../../../customTypeScriptTypes/circle';
 import {
@@ -37,7 +38,7 @@ class FieldsSelectSelect extends React.Component<Props> {
                     onChange={() => handleFieldChange(property)}
                   />
                 }
-                label={property.charAt(0).toUpperCase() + property.substr(1)}
+                label={makePropertyHumanReadable(property)}
               />
             );
           })}

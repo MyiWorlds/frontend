@@ -4,30 +4,45 @@ import {
   IEditingCircle,
 } from '../../../../customTypeScriptTypes/circle';
 
+interface Kind {
+  id?: string | null;
+}
+
+function convertOne(obj?: Kind | null, elseValue?: string) {
+  let newValue = null;
+  if (obj && obj.id) {
+    newValue = obj.id;
+  } else if (elseValue) {
+    newValue = elseValue;
+  }
+  return newValue;
+}
+
+function convertMany(arr?: (ICreatedCircle | IProfile)[] | null) {
+  let newValue: string[] = [];
+  if (arr && arr.length) {
+    newValue = arr.map((kind: ICreatedCircle | IProfile) => kind.id);
+  }
+
+  return newValue;
+}
+
 const convertCreatedCircleToEditingCircle = (
   circle: ICreatedCircle,
   selectedProfile: IProfile,
 ): IEditingCircle => {
   return {
     ...circle,
-    creator: circle.creator ? circle.creator.id : selectedProfile.id,
-    owner: circle.owner ? circle.owner.id : selectedProfile.id,
-    parent: circle.parent && circle.parent.id ? circle.parent.id : null,
-    clonedFrom:
-      circle.clonedFrom && circle.clonedFrom.id ? circle.clonedFrom.id : null,
-    viewers:
-      circle.viewers && circle.viewers.length
-        ? circle.viewers.map(viewer => viewer.id)
-        : [],
-    editors:
-      circle.editors && circle.editors.length
-        ? circle.editors.map(editor => editor.id)
-        : [],
-    media: circle.media ? circle.media.id : null,
-    icon: circle.icon ? circle.icon : null,
-    line: circle.line && circle.line ? circle.line : null,
-    lines:
-      circle.lines && circle.lines.length ? circle.lines.map(line => line) : [],
+    creator: convertOne(circle.creator, selectedProfile.id),
+    settings: convertOne(circle.settings),
+    owner: convertOne(circle.owner, selectedProfile.id),
+    parent: convertOne(circle.parent),
+    clonedFrom: convertOne(circle.clonedFrom),
+    viewers: convertMany(circle.viewers),
+    editors: convertMany(circle.editors),
+    media: convertOne(circle.media),
+    line: convertOne(circle.line),
+    lines: convertMany(circle.lines),
   };
 };
 

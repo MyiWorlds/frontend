@@ -75,6 +75,7 @@ class Routes extends React.Component<Props> {
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
               <GetCircleById
+                key={props.match.params.id}
                 isEditing={true}
                 id={props.match.params.id}
                 currentPath={props.history.location.pathname}

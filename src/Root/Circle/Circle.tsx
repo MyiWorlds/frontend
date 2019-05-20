@@ -9,7 +9,6 @@ import Image from '../components/Image';
 import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
 import { ListEditor, ListViewer } from '../components/List';
-import { StringEditor, StringViewer } from '../components/String';
 import {
   ICreatedCircle,
   IEditingCircle,

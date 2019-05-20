@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Typography } from '@material-ui/core';
+import { Icon, Typography } from '@material-ui/core';
 
 interface Props {
   property?: string;
@@ -7,12 +7,7 @@ interface Props {
 }
 
 const FontIcon: React.SFC<Props> = ({ property, value }) => {
-  return (
-    <div>
-      {property && <Typography variant="caption">{property}</Typography>}
-      <Typography variant="body1">{value}</Typography>
-    </div>
-  );
+  return <Icon>{value}</Icon>;
 };
 
 export default FontIcon;

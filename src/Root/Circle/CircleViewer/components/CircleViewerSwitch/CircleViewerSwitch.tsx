@@ -23,6 +23,7 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
     case 'string':
     case 'bigNumber':
     case 'number':
+    case 'key':
       return (
         <StringViewer
           property={property}
@@ -32,7 +33,6 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
     case 'date':
     case 'dateUpdated':
     case 'dateCreated':
-      // Uneditable fields displayed as strings
       return (
         <StringViewer
           property={property}
@@ -49,10 +49,7 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
       );
     case 'icon':
       return (
-        <FontIconViewer
-          property={property}
-          value={circle[property] ? circle[property]! : ''}
-        />
+        <FontIconViewer value={circle[property] ? circle[property]! : ''} />
       );
     default:
       return (
