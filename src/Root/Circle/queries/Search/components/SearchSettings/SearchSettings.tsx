@@ -98,9 +98,9 @@ const SearchSettings: React.SFC<Props> = ({
                 }
               >
                 <Checkbox
-                  color="primary"
                   checked={resultsShowSecondary}
                   value="dense"
+                  color="primary"
                 />
                 Secondary Text
               </Button>
@@ -114,7 +114,11 @@ const SearchSettings: React.SFC<Props> = ({
                   })
                 }
               >
-                <Checkbox checked={resultsDense} value="dense" />
+                <Checkbox
+                  checked={resultsDense}
+                  value="dense"
+                  color="primary"
+                />
                 Dense
               </Button>
             </FormGroup>
