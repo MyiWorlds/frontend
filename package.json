@@ -19,9 +19,6 @@
     "@material-ui/core": "^3.9.0",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "^3.0.0-alpha.28",
-    "@types/classnames": "^2.2.7",
-    "@types/react-grid-layout": "^0.16.7",
-    "@types/react-jss": "^8.6.0",
     "apollo-cache-inmemory": "^1.4.2",
     "apollo-client": "^2.4.12",
     "apollo-link": "^1.2.6",
@@ -39,6 +36,7 @@
     "jss": "^9.8.7",
     "jss-nested": "^6.0.1",
     "lodash": "^4.17.11",
+    "lunr": "^2.3.6",
     "moment": "^2.23.0",
     "prop-types": "^15.6.2",
     "react": "^16.7.0",
@@ -63,6 +61,10 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-router": "^4.4.3",
     "@types/react-router-dom": "^4.3.1",
+    "@types/classnames": "^2.2.7",
+    "@types/lunr": "^2.3.2",
+    "@types/react-grid-layout": "^0.16.7",
+    "@types/react-jss": "^8.6.0",
     "typescript": "^3.4.4"
   },
   "browserslist": [

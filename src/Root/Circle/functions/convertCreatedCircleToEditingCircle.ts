@@ -4,11 +4,11 @@ import {
   IEditingCircle,
 } from '../../../../customTypeScriptTypes/circle';
 
-interface Kind {
+interface Document {
   id?: string | null;
 }
 
-function convertOne(obj?: Kind | null, elseValue?: string) {
+function convertOne(obj?: Document | null, elseValue?: string) {
   let newValue = null;
   if (obj && obj.id) {
     newValue = obj.id;
@@ -21,7 +21,7 @@ function convertOne(obj?: Kind | null, elseValue?: string) {
 function convertMany(arr?: (ICreatedCircle | IProfile)[] | null) {
   let newValue: string[] = [];
   if (arr && arr.length) {
-    newValue = arr.map((kind: ICreatedCircle | IProfile) => kind.id);
+    newValue = arr.map((document: ICreatedCircle | IProfile) => document.id);
   }
 
   return newValue;

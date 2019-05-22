@@ -7,6 +7,7 @@ interface Props {
     container: string;
   };
   size?: number;
+  hideMessage?: boolean;
   hideBackground?: boolean;
   message?: JSX.Element | string;
   messageVariant?:
@@ -47,6 +48,7 @@ class ProgressWithMessage extends React.Component<Props> {
       hideBackground,
       message,
       messageVariant,
+      hideMessage,
     } = this.props;
 
     const progressSize = size || 42;
@@ -64,10 +66,14 @@ class ProgressWithMessage extends React.Component<Props> {
         >
           <Progress hideBackground={hideBackground} size={progressSize} />
         </div>
-        <br />
-        <div>
-          <Typography variant={variant}>{loadingMessage}</Typography>
-        </div>
+        {hideMessage ? null : (
+          <>
+            <br />
+            <div>
+              <Typography variant={variant}>{loadingMessage}</Typography>
+            </div>
+          </>
+        )}
       </div>
     );
   }

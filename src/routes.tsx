@@ -2,6 +2,7 @@ import * as React from 'react';
 import CircleEditor from './Root/Circle/CircleEditor';
 import GetCircleById from './Root/Circle/queries/GetCircleById';
 import GetCircleByProfileUsername from './Root/Circle/queries/GetCircleByProfileUsername';
+import Search from './Root/Circle/queries/Search';
 import SessionBrowserHistory from './SessionBrowserHistory';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
 import UserSettings from './Root/User/components/UserSettings';
@@ -45,6 +46,33 @@ class Routes extends React.Component<Props> {
                 selectedProfile={selectedProfile}
               />
             </SessionBrowserHistory>
+          )}
+        />
+        <Route
+          exact
+          path="/search"
+          // history={history}
+          render={props => (
+            <Search
+              {...props}
+              profile={selectedProfile}
+              history={props.history}
+              // isPrimaryContent={true}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/search/:searchString"
+          // history={history}
+          render={props => (
+            <Search
+              {...props}
+              searchString={props.match.params.searchString}
+              profile={selectedProfile}
+              history={props.history}
+              // isPrimaryContent={true}
+            />
           )}
         />
         <Route
@@ -135,20 +163,6 @@ class Routes extends React.Component<Props> {
           //   uid={props.match.params.uid}
           //   isPrimaryContent={true}
           //   {...props}
-          // />
-          )}
-        /> */}
-        {/* <Route
-        exact
-        path="/search/:searchString"
-        history={history}
-        render={props => (
-          <div>Search</div>
-          // <Search
-          //   {...props}
-          //   searchString={props.match.params.searchString}
-          //   user={user}
-          //   isPrimaryContent={true}
           // />
           )}
         /> */}
