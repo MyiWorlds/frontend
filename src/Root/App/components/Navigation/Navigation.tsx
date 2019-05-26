@@ -104,12 +104,6 @@ class Navigation extends React.Component<Props, State> {
       },
       {
         type: 'BUTTON',
-        icon: 'search',
-        title: 'Search2',
-        slug: `/search2`,
-      },
-      {
-        type: 'BUTTON',
         icon: 'home',
         title: 'Home',
         slug: `/private/home`,

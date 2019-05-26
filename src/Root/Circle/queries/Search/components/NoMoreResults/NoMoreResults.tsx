@@ -68,20 +68,20 @@ class NoMoreResults extends React.Component<Props, State> {
           <div className={classes.container}>
             <br />
             <br />
-            <Typography variant="display1">
+            <Typography variant="h1">
               I am sorry{' '}
               {profile && profile.username ? profile.username : 'Human'}, I
               can't find that for you
             </Typography>
             <br />
             <br />
-            <Typography variant="headline">
+            <Typography variant="subtitle1">
               Would you be interested in creating it?
             </Typography>
             <br />
             <br />
             <Button
-              variant="raised"
+              variant="contained"
               component={(props: any) => <Link {...props} to="/create" />}
             >
               <Icon className={classes.btnIcon}>add</Icon>

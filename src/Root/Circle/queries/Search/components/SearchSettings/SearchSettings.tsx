@@ -66,7 +66,7 @@ const SearchSettings: React.SFC<Props> = ({
       <div className={classes.primarySearchActions}>
         <Button variant="outlined" className={classes.primarySearchActionsItem}>
           <Icon className={classes.btnIcon}>view_list</Icon>
-          List Style
+          List Item Style
         </Button>
         <Button
           variant="outlined"
@@ -74,7 +74,7 @@ const SearchSettings: React.SFC<Props> = ({
           className={classes.primarySearchActionsItem}
         >
           <Icon className={classes.btnIcon}>dashboard</Icon>
-          Edit Layout
+          Category Layout
         </Button>
       </div>
       <ExpansionPanel>
@@ -137,7 +137,8 @@ const SearchSettings: React.SFC<Props> = ({
                 My Creations
               </Button>
 
-              <Button
+              {/* THESE QUERIES ARE CURRENTLY NOT POSSIBLE WITH FIRESTORE */}
+              {/* <Button
                 variant="outlined"
                 className={classes.checkButton}
                 onClick={() =>
@@ -157,7 +158,7 @@ const SearchSettings: React.SFC<Props> = ({
               >
                 <Checkbox color="primary" checked={myViewable} value="dense" />
                 My Viewable
-              </Button>
+              </Button> */}
 
               <Button
                 variant="outlined"

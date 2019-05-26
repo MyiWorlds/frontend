@@ -80,10 +80,13 @@ class SearchCategory extends React.Component<Props, State> {
     } = this.props;
     const { loading } = this.state;
 
+    const anotherQueryWithResults = circle.lines.find(
+      c => c.type === 'QUERY' && c.data && c.data.hasMoreResults,
+    );
     const cursorQueries =
       circle && circle.lines && circle.lines.length
-        ? circle.lines.find(item => item.type === 'QUERY')
-        : null;
+        ? anotherQueryWithResults
+        : false;
 
     const getLines = circle.lines.find(
       (circle: SearchCircle) => circle.type === 'LINES',

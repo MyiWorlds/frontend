@@ -76,6 +76,7 @@ interface IGetCirclesByFilters {
       property: string;
       ascending: boolean;
     };
+    hasMoreResults?: boolean;
   };
 }
 

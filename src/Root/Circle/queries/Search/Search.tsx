@@ -100,8 +100,8 @@ class Search extends React.Component<Props, State> {
       searchFieldString: '',
       lastSearchedTags: [],
       myCreations: true,
-      myViewable: true,
-      myEditable: true,
+      myViewable: false,
+      myEditable: false,
       allResults: true,
       results: null,
       gridSize: 0,
@@ -489,14 +489,20 @@ class Search extends React.Component<Props, State> {
       const { myCreations, myViewable, myEditable, allResults } = this.state;
       let passes = false;
 
-      if (myCreations) {
-        passes = result.id === 'myCreations';
-      } else if (myViewable && !passes) {
-        passes = result.id === 'myViewable';
-      } else if (myEditable && !passes) {
-        passes = result.id === 'myEditable';
-      } else if (allResults && !passes) {
-        passes = result.id === 'allResults';
+      switch (result.id) {
+        case 'myCreations':
+          passes = myCreations;
+          break;
+        case 'myViewable':
+          passes = myViewable;
+          break;
+        case 'myEditable':
+          passes = myEditable;
+          break;
+        case 'allResults':
+          passes = allResults;
+          break;
+        default:
       }
       return passes;
     });
@@ -648,8 +654,9 @@ class Search extends React.Component<Props, State> {
         if (query.lines && query.lines.length) {
           searchResults.lines = searchResults.lines.concat(query.lines);
 
-          const thisHasMoreResults =
-            query.data.cursor.moreResults === 'MORE_RESULTS_AFTER_LIMIT';
+          // const thisHasMoreResults =
+          //   query.data.cursor.moreResults === 'MORE_RESULTS_AFTER_LIMIT';
+          const thisHasMoreResults = query.data.cursor;
 
           query.lines = [];
 
