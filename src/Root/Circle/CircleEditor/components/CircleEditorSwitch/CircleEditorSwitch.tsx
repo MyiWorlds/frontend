@@ -1,8 +1,10 @@
 import * as React from 'react';
 import BooleanEditor from '../../../../components/Boolean/BooleanEditor';
+import Chip from '@material-ui/core/Chip';
 import GetCircleById from '../../../queries/GetCircleById';
 import makePropertyHumanReadable from './../../../functions/makePropertyHumanReadable';
 import moment from 'moment';
+import TagsEditor from '../TagsEditor';
 import Typography from '@material-ui/core/Typography';
 import { CodeEditor } from '../../../../components/Code';
 import { FontIconEditor } from '../../../../components/FontIcon';
@@ -12,6 +14,7 @@ import {
   IEditingCircle,
   Property,
 } from '../../../../../../customTypeScriptTypes/circle';
+
 interface Props {
   property: Property;
   circle: IEditingCircle;
@@ -90,6 +93,15 @@ const CircleEditorSwitch: React.SFC<Props> = ({
         <FontIconEditor
           property={makePropertyHumanReadable(property)}
           value={circle[property] ? circle[property]! : ''}
+          updateCircle={updateCircle}
+        />
+      );
+    case 'tags':
+      return (
+        <TagsEditor
+          label={makePropertyHumanReadable(property)}
+          property={property}
+          value={circle[property] ? circle[property]! : []}
           updateCircle={updateCircle}
         />
       );
