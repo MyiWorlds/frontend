@@ -21,3 +21,7 @@ body {
   right: 0;
   height: 100%;
 }
+
+.react-resizable-handle {
+  z-index: 9999;
+}

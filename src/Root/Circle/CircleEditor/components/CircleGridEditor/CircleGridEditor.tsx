@@ -38,13 +38,16 @@ interface Props {
     container: string;
     dragArea: string;
     gridItem: string;
+    gridItemContentCover: string;
+    gridItemPreventClickThrough: string;
+    contentWrapper: string;
   };
 }
 
 interface State {
   layouts: Layouts;
   designSize: 'xl' | 'lg' | 'md' | 'sm' | 'xs' | null;
-  editMode: boolean;
+  gridEditing: boolean;
 }
 
 const styles = (theme: Theme) =>
@@ -60,12 +63,33 @@ const styles = (theme: Theme) =>
       borderRadius: theme.shape.borderRadius,
       // padding: theme.spacing.unit * 2,
     },
+    contentWrapper: {
+      position: 'relative',
+      display: 'flex',
+      maxWidth: '100%',
+      margin: theme.spacing.unit,
+    },
+    gridItemContentCover: {
+      width: '100%',
+      height: '100%',
+      position: 'absolute',
+      background: theme.palette.primary.main,
+      opacity: 0.3,
+      zIndex: 998,
+    },
+    gridItemPreventClickThrough: {
+      pointerEvents: 'none',
+      cursor: 'default',
+      display: 'block',
+    },
     dragArea: {
       position: 'absolute',
+      display: 'block',
+      zIndex: 999,
       top: 0,
       right: 0,
-      margin: theme.spacing.unit / 2,
       opacity: 0.4,
+      margin: theme.spacing.unit / 2,
     },
   });
 
@@ -75,7 +99,7 @@ class CircleGridEditor extends React.Component<Props, State> {
     this.state = {
       layouts: { xl: [], lg: [], md: [], sm: [], xs: [] },
       designSize: null,
-      editMode: false,
+      gridEditing: false,
     };
   }
 
@@ -195,7 +219,7 @@ class CircleGridEditor extends React.Component<Props, State> {
 
   toggleEditMode = () => {
     this.setState({
-      editMode: !this.state.editMode,
+      gridEditing: !this.state.gridEditing,
     });
   };
 
@@ -208,10 +232,10 @@ class CircleGridEditor extends React.Component<Props, State> {
       updateCircle,
       updateFieldEditing,
     } = this.props;
-    const { layouts, designSize, editMode } = this.state;
+    const { layouts, designSize, gridEditing } = this.state;
 
     let width: number | '100%' = 0;
-    if (!editMode || !designSize) {
+    if (!gridEditing || !designSize) {
       width = '100%';
     } else {
       switch (designSize) {
@@ -244,8 +268,8 @@ class CircleGridEditor extends React.Component<Props, State> {
         layouts={layouts}
         // autoSize={true}
         rowHeight={theme.spacing.unit / 2}
-        isDraggable={editMode}
-        isResizable={editMode}
+        isDraggable={gridEditing}
+        isResizable={gridEditing}
         onLayoutChange={this.onLayoutChange}
         // onResize={this.onResize}
         breakpoints={{
@@ -263,17 +287,20 @@ class CircleGridEditor extends React.Component<Props, State> {
               return (
                 <div
                   key={property}
-                  className={editMode ? classes.gridItem : undefined}
+                  className={gridEditing ? classes.gridItem : undefined}
                   onClick={() => {
                     updateFieldEditing(property);
                   }}
                 >
+                  {gridEditing && (
+                    <div className={classes.gridItemContentCover} />
+                  )}
                   <div
-                    style={{
-                      maxWidth: '100%',
-                      position: 'relative',
-                      height: '100%',
-                    }}
+                    className={`${classes.contentWrapper} ${
+                      gridEditing
+                        ? classes.gridItemPreventClickThrough
+                        : undefined
+                    }`}
                   >
                     <CircleEditorSwitch
                       property={property}
@@ -282,14 +309,9 @@ class CircleGridEditor extends React.Component<Props, State> {
                       selectedProfile={selectedProfile}
                     />
                   </div>
-                  <Icon
-                    className={classes.dragArea}
-                    style={{
-                      display: editMode ? 'block' : 'none',
-                    }}
-                  >
-                    drag_indicator
-                  </Icon>
+                  {gridEditing && (
+                    <Icon className={classes.dragArea}>drag_indicator</Icon>
+                  )}
                 </div>
               );
             })
@@ -300,15 +322,15 @@ class CircleGridEditor extends React.Component<Props, State> {
     return (
       <>
         <Button onClick={this.toggleEditMode}>
-          <Icon>{editMode ? 'format_shapes' : 'format_shapes'}</Icon>
+          <Icon>{gridEditing ? 'format_shapes' : 'format_shapes'}</Icon>
         </Button>
-        {editMode && (
+        {gridEditing && (
           <Button onClick={this.toggleWidthOptions}>
             <Icon>phonelink</Icon>
             {designSize || 'Full'}
           </Button>
         )}
-        {editMode ? (
+        {gridEditing ? (
           <Card
             raised={true}
             className={classes.container}

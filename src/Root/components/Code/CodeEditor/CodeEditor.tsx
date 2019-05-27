@@ -104,7 +104,7 @@ class CodeEditor extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, value } = this.props;
+    const { classes } = this.props;
     const { initialValue, error, message } = this.state;
 
     return (

@@ -16,9 +16,7 @@ interface Props {
 }
 
 const styles = (theme: Theme) => ({
-  textField: {
-    margin: theme.spacing.unit,
-  },
+  textField: {},
 });
 
 const TagsEditor: React.SFC<Props> = ({
@@ -33,6 +31,7 @@ const TagsEditor: React.SFC<Props> = ({
     value={value}
     variant={'outlined'}
     className={classes.textField}
+    fullWidth={true}
     onAdd={chip => {
       updateCircle({ [property]: [...value, chip] });
     }}
