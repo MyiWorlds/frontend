@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 
 interface Props {
+  label?: string;
   property: string;
   value: string | number;
   updateCircle: (circle: IEditingCircle) => void;
@@ -37,6 +38,7 @@ const defaultSettings: IconFieldSettings = {
 
 const FontIcon: React.SFC<Props> = ({
   classes,
+  label,
   property,
   value,
   updateCircle,
@@ -44,7 +46,7 @@ const FontIcon: React.SFC<Props> = ({
   return (
     <TextField
       id="icon"
-      label={property}
+      label={label || property}
       value={value}
       className={classes.textField}
       onChange={event => updateCircle({ [property]: event.target.value })}

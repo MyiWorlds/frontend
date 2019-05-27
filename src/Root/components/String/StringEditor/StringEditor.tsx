@@ -2,6 +2,7 @@ import * as React from 'react';
 import { TextField, Theme, withStyles } from '@material-ui/core';
 
 interface Props {
+  label?: string;
   property: string;
   value: string | number;
   fullWidth?: boolean;
@@ -22,6 +23,7 @@ const styles = (theme: Theme) => ({
 const StringsEditor: React.SFC<Props> = ({
   classes,
   fullWidth,
+  label,
   property,
   type,
   updateCircle,
@@ -32,7 +34,7 @@ const StringsEditor: React.SFC<Props> = ({
     <TextField
       id="textField"
       type={type || 'string'}
-      label={property}
+      label={label || property}
       value={value}
       autoFocus={autoFocus || false}
       fullWidth={fullWidth || false}

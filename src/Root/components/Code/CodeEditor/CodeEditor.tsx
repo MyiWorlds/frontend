@@ -27,6 +27,7 @@ codemirror.hint.javascript = function(codemirror: any) {
 };
 
 interface Props {
+  label?: string;
   property: string;
   value: any;
   updateCircle: (newValue: any, noDelay?: boolean) => void;

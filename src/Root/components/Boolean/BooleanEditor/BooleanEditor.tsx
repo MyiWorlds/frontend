@@ -3,12 +3,18 @@ import { FormControlLabel, Switch } from '@material-ui/core';
 import { IEditingCircle } from '../../../../../customTypeScriptTypes/circle';
 
 interface Props {
+  label?: string;
   property: string;
   value: boolean;
   updateCircle: (circle: IEditingCircle) => void;
 }
 
-const BooleanEditor: React.SFC<Props> = ({ property, value, updateCircle }) => {
+const BooleanEditor: React.SFC<Props> = ({
+  label,
+  property,
+  value,
+  updateCircle,
+}) => {
   return (
     <FormControlLabel
       control={
@@ -18,7 +24,7 @@ const BooleanEditor: React.SFC<Props> = ({ property, value, updateCircle }) => {
           color="primary"
         />
       }
-      label={property}
+      label={label || property}
     />
   );
 };

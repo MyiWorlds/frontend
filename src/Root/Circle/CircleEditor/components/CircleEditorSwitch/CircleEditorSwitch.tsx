@@ -83,7 +83,8 @@ const CircleEditorSwitch: React.SFC<Props> = ({
     case 'boolean':
       return (
         <BooleanEditor
-          property={makePropertyHumanReadable(property)}
+          label={makePropertyHumanReadable(property)}
+          property={property}
           updateCircle={updateCircle}
           value={circle[property] || false}
         />
@@ -91,7 +92,8 @@ const CircleEditorSwitch: React.SFC<Props> = ({
     case 'icon':
       return (
         <FontIconEditor
-          property={makePropertyHumanReadable(property)}
+          label={makePropertyHumanReadable(property)}
+          property={property}
           value={circle[property] ? circle[property]! : ''}
           updateCircle={updateCircle}
         />
@@ -111,7 +113,8 @@ const CircleEditorSwitch: React.SFC<Props> = ({
       };
       return (
         <CodeEditor
-          property={makePropertyHumanReadable(property)}
+          label={makePropertyHumanReadable(property)}
+          property={property}
           value={circle[property] ? circle[property]! : ''}
           updateCircle={edgeUpdater}
         />
@@ -121,8 +124,9 @@ const CircleEditorSwitch: React.SFC<Props> = ({
       return (
         <>
           <StringEditor
+            label={makePropertyHumanReadable(property)}
+            property={property}
             fullWidth={true}
-            property={makePropertyHumanReadable(property)}
             value={circle[property] ? circle[property]! : ''}
             updateCircle={updateString}
           />
