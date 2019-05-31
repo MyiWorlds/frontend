@@ -42,9 +42,6 @@ type Property =
   | 'line'
   | 'lines';
 
-/**
- * @param selectFields by default will return all fields
- */
 interface IGetDocumentsByFilters {
   filters: IFilter;
   selectFields: string[];
@@ -77,6 +74,7 @@ interface IGetCirclesByFilters {
       ascending: boolean;
     };
     hasMoreResults?: boolean;
+    selectFields?: string[];
   };
 }
 
@@ -145,12 +143,7 @@ export interface ICreatedCircle extends IEditingCircle {
   public?: boolean | null;
   passwordRequired?: boolean | null;
   // Change all search types to be inside data??
-  settings?:
-    | any
-    | null
-    | IGetDocumentsByFilters
-    | IGetDocumentById
-    | IGetDocumentsByIds;
+  settings?: ICreatedCircle | null;
   styles?: any | null;
   rating?: string | null;
   tags?: string[] | null;
@@ -167,7 +160,12 @@ export interface ICreatedCircle extends IEditingCircle {
   dateUpdated?: any | null;
   key?: string | null;
   string?: string | null;
-  data?: any | null;
+  data?:
+   any
+  | null
+  | IGetDocumentsByFilters
+  | IGetDocumentById
+  | IGetDocumentsByIds;;
   number?: number | null;
   bigNumber?: any | null;
   boolean?: boolean | null;

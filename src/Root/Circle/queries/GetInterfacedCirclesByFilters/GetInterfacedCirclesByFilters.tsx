@@ -65,17 +65,17 @@ interface GetInterfacedCirclesByFilters {
 const GET_CIRCLES_BY_FILTERS = gql`
   query getCirclesByFilters(
     $filters: JSON!
-    $selectFields: [String]
     $numberOfResults: Int
     $cursor: JSON
     $orderBy: JSON!
+    $selectFields: [String]
   ) {
     getCirclesByFilters(
       filters: $filters
-      selectFields: $selectFields
       numberOfResults: $numberOfResults
       cursor: $cursor
       orderBy: $orderBy
+      selectFields: $selectFields
     ) {
       id
       title
@@ -139,9 +139,9 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
     super(props);
     const {
       filters,
-      selectFields,
       numberOfResults,
       orderBy,
+      selectFields,
     } = this.props.circle.data;
 
     this.state = {
