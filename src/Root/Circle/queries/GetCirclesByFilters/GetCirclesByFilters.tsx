@@ -153,7 +153,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
         loading: true,
       },
       async () => {
-        const { settings } = this.props.circle;
+        const { data } = this.props.circle;
         const { filters, orderBy, numberOfResults } = this.state;
 
         try {
@@ -164,7 +164,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
               filters,
               orderBy,
               numberOfResults,
-              cursor: settings.cursor,
+              cursor: data.cursor,
             },
           });
 

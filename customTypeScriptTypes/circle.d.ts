@@ -161,11 +161,11 @@ export interface ICreatedCircle extends IEditingCircle {
   key?: string | null;
   string?: string | null;
   data?:
-   any
-  | null
-  | IGetDocumentsByFilters
-  | IGetDocumentById
-  | IGetDocumentsByIds;;
+    | any
+    | null
+    | IGetDocumentsByFilters
+    | IGetDocumentById
+    | IGetDocumentsByIds;
   number?: number | null;
   bigNumber?: any | null;
   boolean?: boolean | null;
