@@ -304,7 +304,6 @@ class CircleEditor extends React.Component<Props, State> {
               circle={circle}
               saving={saving}
               saveCircle={this.saveCircle}
-              showTypeSelector={this.showTypeSelector}
               showSettings={this.showSettings}
               selectedProfile={selectedProfile}
             />
@@ -334,6 +333,7 @@ class CircleEditor extends React.Component<Props, State> {
               <Settings
                 showSettings={showSettings}
                 updateCircle={this.updateCircle}
+                showTypeSelector={this.showTypeSelector}
                 handleClose={this.hideSettings}
                 circle={circle}
               />

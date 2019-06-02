@@ -6,6 +6,7 @@ import GetCirclesByFilters from './queries/GetCirclesByFilters';
 import GetCirclesByIds from './queries/GetCirclesByIds';
 import GetInterfacedCirclesByFilters from './queries/GetInterfacedCirclesByFilters';
 import Image from '../components/Image';
+import Tooltip from '@material-ui/core/Tooltip';
 import { IProfile } from '../../../customTypeScriptTypes/profile';
 import { Link } from 'react-router-dom';
 import { ListEditor, ListViewer } from '../components/List';
@@ -159,15 +160,21 @@ class Circle extends React.Component<Props> {
 
     if (canEditCircle(selectedProfile.id || '', circle) && !isEditing) {
       circleOptions = (
-        <Button
-          variant="outlined"
-          component={(props: any) => (
-            <Link {...props} to={`/edit/${circle.id}`} />
-          )}
-          className={classes.btnBarBtn}
-        >
-          <Icon className={classes.btnIcon}>edit</Icon>Edit
-        </Button>
+        <Tooltip title="Edit">
+          <Button
+            variant="outlined"
+            component={(props: any) => (
+              <Link {...props} to={`/edit/${circle.id}`} />
+            )}
+            // className={classes.btnBarBtn}
+          >
+            <Icon
+            // className={classes.btnIcon}
+            >
+              edit
+            </Icon>
+          </Button>
+        </Tooltip>
       );
     }
 

@@ -77,7 +77,7 @@ const GET_CIRCLES_BY_FILTERS = gql`
       cursor: $cursor
       orderBy: $orderBy
     ) {
-      id1
+      id
       title
       settings
       lines {

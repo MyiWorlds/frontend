@@ -26,7 +26,6 @@ interface Props {
   currentPath: string;
   selectedProfile: IProfile;
   saveCircle: () => void;
-  showTypeSelector: () => void;
   showSettings: () => void;
   classes: {
     appBar: string;
@@ -113,7 +112,6 @@ class EditorControls extends React.Component<Props, State> {
       circle,
       currentPath,
       saving,
-      showTypeSelector,
       selectedProfile,
       showSettings,
     } = this.props;
@@ -172,33 +170,39 @@ class EditorControls extends React.Component<Props, State> {
                   </div>
                 )}
                 <FlexGrow />
-                <Button
-                  variant="text"
-                  onClick={() => showTypeSelector()}
-                  className={classes.btnBarBtn}
-                >
-                  <Icon className={classes.btnIcon}>tune</Icon>Change Content
-                  Type
-                </Button>
-                <Button
-                  variant="text"
-                  onClick={() => showSettings()}
-                  className={classes.btnBarBtn}
-                >
-                  <Icon className={classes.btnIcon}>settings</Icon>Settings
-                </Button>
+
+                <Tooltip title="Settings">
+                  <Button
+                    variant="text"
+                    onClick={() => showSettings()}
+                    // className={classes.btnBarBtn}
+                  >
+                    <Icon
+                    // className={classes.btnIcon}
+                    >
+                      settings
+                    </Icon>
+                  </Button>
+                </Tooltip>
+
                 {selectedProfile.id === 'guest' ? (
                   <Button variant="outlined" onClick={() => store.login()}>
                     <Icon className={classes.btnIcon}>person</Icon>Login to Save
                   </Button>
                 ) : (
-                  <Button
-                    variant="text"
-                    disabled={!circle.type}
-                    onClick={() => this.navigateToCircle()}
-                  >
-                    <Icon className={classes.btnIcon}>remove_red_eye</Icon>View
-                  </Button>
+                  <Tooltip title="View">
+                    <Button
+                      variant="text"
+                      disabled={!circle.type}
+                      onClick={() => this.navigateToCircle()}
+                    >
+                      <Icon
+                      // className={classes.btnIcon}
+                      >
+                        remove_red_eye
+                      </Icon>
+                    </Button>
+                  </Tooltip>
                 )}
               </Toolbar>
             </AppBar>

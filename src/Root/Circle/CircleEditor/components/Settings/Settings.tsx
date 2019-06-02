@@ -1,5 +1,6 @@
 import * as React from 'react';
 import FieldsSelect from './FieldsSelect/FieldsSelect';
+import Spacer from '../../../../components/Spacer';
 import {
   IEditingCircle,
   Property,
@@ -29,6 +30,7 @@ interface Props {
   showSettings: boolean;
   handleClose: () => void;
   updateCircle: (circle: IEditingCircle, noDelay: boolean) => void;
+  showTypeSelector: () => void;
   circle: IEditingCircle;
   classes: {
     container: string;
@@ -36,6 +38,7 @@ interface Props {
     btnIcon: string;
     root: string;
     heading: string;
+    btnBarBtn: string;
   };
 }
 
@@ -97,6 +100,9 @@ const styles = (theme: Theme) =>
     heading: {
       fontSize: theme.typography.pxToRem(15),
       fontWeight: theme.typography.fontWeightRegular,
+    },
+    btnBarBtn: {
+      marginRight: theme.spacing.unit * 2,
     },
   });
 
@@ -167,7 +173,7 @@ class Settings extends React.Component<Props, State> {
   };
 
   render() {
-    const { classes, showSettings, handleClose } = this.props;
+    const { classes, showSettings, handleClose, showTypeSelector } = this.props;
     const { availableProperties, properties } = this.state;
 
     return (
@@ -197,6 +203,16 @@ class Settings extends React.Component<Props, State> {
                   />
                 </ExpansionPanelDetails>
               </ExpansionPanel>
+
+              <Spacer />
+
+              {/* <Button
+                variant="text"
+                onClick={() => showTypeSelector()}
+                className={classes.btnBarBtn}
+              >
+                <Icon className={classes.btnIcon}>tune</Icon>Change Content Type
+              </Button> */}
             </div>
           </div>
         </DialogContent>
