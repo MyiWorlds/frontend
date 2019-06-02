@@ -1,6 +1,7 @@
 import * as React from 'react';
 import FieldsSelect from './FieldsSelect/FieldsSelect';
 import Spacer from '../../../../components/Spacer';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 import {
   IEditingCircle,
   Property,
@@ -22,7 +23,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 
-function Transition(props: Settings) {
+function Transition(props: TransitionProps) {
   return <Slide direction="down" {...props} />;
 }
 

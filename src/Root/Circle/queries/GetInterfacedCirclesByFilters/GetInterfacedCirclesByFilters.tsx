@@ -378,7 +378,7 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
             </IconButton>
           </Toolbar>
           <Collapse in={showSearchSettings}>
-            <Grid container spacing={16} className={classes.gridContainer}>
+            <Grid container spacing={8} className={classes.gridContainer}>
               <Grid item xs={6} md={4} lg={3}>
                 <Typography id="slider-image">Number of Results</Typography>
                 <div className={classes.sliderTextContainer}>

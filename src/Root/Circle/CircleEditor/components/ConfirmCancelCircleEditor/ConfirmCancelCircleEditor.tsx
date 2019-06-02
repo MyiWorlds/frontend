@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 import {
   Button,
   createStyles,
@@ -14,7 +15,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 
-function Transition(props: ConfirmCancelCircleEditor) {
+function Transition(props: TransitionProps) {
   return <Slide direction="up" {...props} />;
 }
 

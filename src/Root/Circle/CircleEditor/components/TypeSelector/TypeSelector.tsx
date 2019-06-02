@@ -2,6 +2,7 @@ import * as React from 'react';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
 import types from './defaultTypes';
 import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 import {
   ICreatedCircle,
   IEditingCircle,
@@ -25,7 +26,7 @@ import {
   withStyles,
 } from '@material-ui/core';
 
-function Transition(props: TypeSelector) {
+function Transition(props: TransitionProps) {
   return <Slide direction="up" {...props} />;
 }
 
@@ -144,7 +145,7 @@ class TypeSelector extends React.Component<Props, State> {
         <DialogTitle id="type-select-title">Create</DialogTitle>
         <DialogContent>
           <div className={classes.container}>
-            <Grid container spacing={16}>
+            <Grid container spacing={8}>
               {types.map(type => {
                 return (
                   <Grid key={type.id} item xs={4}>

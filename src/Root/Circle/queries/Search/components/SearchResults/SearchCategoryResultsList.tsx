@@ -45,7 +45,7 @@ const SearchCategoryResultList: React.SFC<Props> = ({
   if (circle && circle.lines && circle.lines.length) {
     return (
       <div className={classes.container}>
-        <Grid container spacing={16}>
+        <Grid container spacing={8}>
           {circle.lines.map((circle, index) => {
             return (
               <SearchCategory
