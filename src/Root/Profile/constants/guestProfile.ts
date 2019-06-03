@@ -1,4 +1,4 @@
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../../types/profile';
 
 const guestProfile: IProfile = {
   id: 'guest',

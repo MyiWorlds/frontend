@@ -5,7 +5,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import { ICreatedCircle } from '../../../../../../../customTypeScriptTypes/circle';
+import { ForwardButton } from '../../../../../components/ForwardButton';
+import { ICreatedCircle } from '../../../../../../../types/circle';
 import { Link } from 'react-router-dom';
 
 interface Props {
@@ -25,9 +26,8 @@ const SearchResults: React.SFC<Props> = ({
         <ListItem
           button
           key={circle.id}
-          component={(props: any) => (
-            <Link {...props} to={`/id/${circle.id}`} />
-          )}
+          component={ForwardButton}
+          to={`/id/${circle.id}`}
         >
           <ListItemAvatar>
             <Avatar>

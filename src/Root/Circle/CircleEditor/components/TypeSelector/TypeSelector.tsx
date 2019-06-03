@@ -1,30 +1,24 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import Slide from '@material-ui/core/Slide';
 import types from './defaultTypes';
-import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { ICreatedCircle, IEditingCircle } from '../../../../../../types/circle';
+import { IProfile } from '../../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
-import {
-  ICreatedCircle,
-  IEditingCircle,
-} from '../../../../../../customTypeScriptTypes/circle';
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardActions,
-  CardContent,
-  createStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  Icon,
-  Slide,
-  Theme,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
 
 function Transition(props: TransitionProps) {
   return <Slide direction="up" {...props} />;
@@ -55,7 +49,7 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      margin: theme.spacing.unit * 2,
+      margin: theme.spacing(2),
     },
     icon: {
       fontSize: 64,
@@ -74,7 +68,7 @@ const styles = (theme: Theme) =>
       flex: 1,
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
   });
 

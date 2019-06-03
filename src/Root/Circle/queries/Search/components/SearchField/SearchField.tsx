@@ -1,12 +1,9 @@
 import * as React from 'react';
+import Icon from '@material-ui/core/Icon';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Progress from '../../../../../components/Progress';
-import ProgressWithMessage from '../../../../../components/ProgressWithMessage';
-import {
-  Icon,
-  InputAdornment,
-  TextField,
-  withStyles
-  } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   handleSearchFieldChange: (event: any) => void;
@@ -52,7 +49,7 @@ const SearchField: React.SFC<Props> = ({
 
   const searchIcon = <Icon>search</Icon>;
 
-  let textfieldIcon = null;
+  let textfieldIcon: React.ReactElement | null = null;
 
   if (isSearching) {
     textfieldIcon = progress;

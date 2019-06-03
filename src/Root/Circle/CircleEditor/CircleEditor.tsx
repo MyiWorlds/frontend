@@ -4,26 +4,29 @@ import client from '../../../apolloClient';
 import convertCreatedCircleToEditingCircle from '../functions/convertCreatedCircleToEditingCircle';
 import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
+import Dialog from '@material-ui/core/Dialog';
 import EditorControls from './components/EditorControls';
 import emptyCircle from '../functions/emptyCircle';
 import FieldEditor from './components/FieldEditor';
 import history from '../../../history';
 import Settings from './components/Settings';
+import Slide from '@material-ui/core/Slide';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import UseLocalStorageModal from './components/UseLocalStorageModal/UseLocalStorageModal';
-import { Dialog, Slide } from '@material-ui/core';
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../../types/profile';
 import { Redirect } from 'react-router-dom';
 import {
   ICreatedCircle,
   IEditingCircle,
   Property,
-} from '../../../../customTypeScriptTypes/circle';
+} from '../../../../types/circle';
 
-function Transition(props: any) {
-  return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef(
+  (props: any, ref: React.Ref<HTMLAnchorElement>) => (
+    <Slide direction="up" {...props} ref={ref} />
+  ),
+);
 
 interface Props {
   selectedProfile: IProfile;
@@ -298,7 +301,11 @@ class CircleEditor extends React.Component<Props, State> {
     return (
       <>
         {circle.type ? (
-          <Dialog fullScreen open={true} TransitionComponent={Transition}>
+          <Dialog
+            fullScreen
+            open={true}
+            TransitionComponent={Transition as any} // TODO: this still errors in console
+          >
             <EditorControls
               currentPath={currentPath}
               circle={circle}

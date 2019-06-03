@@ -1,16 +1,13 @@
 import * as React from 'react';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
 import makePropertyHumanReadable from '../../../../functions/makePropertyHumanReadable';
+import Switch from '@material-ui/core/Switch';
 import { AvailableProperties } from '../Settings';
-import { Property } from '../../../../../../../customTypeScriptTypes/circle';
-import {
-  createStyles,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Switch,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { Property } from '../../../../../../../types/circle';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   handleFieldChange: (property: Property) => void;

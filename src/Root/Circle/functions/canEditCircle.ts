@@ -1,4 +1,4 @@
-import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
+import { ICreatedCircle } from '../../../../types/circle';
 
 const canEditCircle = (selectedProfileId: string, circle: ICreatedCircle) => {
   const isEditor =

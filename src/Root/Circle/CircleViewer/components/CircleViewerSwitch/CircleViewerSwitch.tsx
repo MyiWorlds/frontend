@@ -7,7 +7,7 @@ import { StringViewer } from '../../../../components/String';
 import {
   ICreatedCircle,
   Property,
-} from '../../../../../../customTypeScriptTypes/circle';
+} from '../../../../../../types/circle';
 
 interface Props {
   property: Property;

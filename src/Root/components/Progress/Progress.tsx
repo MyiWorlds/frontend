@@ -1,11 +1,8 @@
 import * as React from 'react';
-import {
-  CircularProgress,
-  createStyles,
-  Paper,
-  withStyles,
-  Zoom,
-} from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Paper from '@material-ui/core/Paper';
+import Zoom from '@material-ui/core/Zoom';
+import { createStyles, withStyles } from '@material-ui/styles';
 
 interface Props {
   classes: {

@@ -1,14 +1,12 @@
 import * as React from 'react';
 import injectSheet from 'react-jss';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Spacer from '../../../../../components/Spacer';
+import TextField from '@material-ui/core/TextField';
 import ThemeDemo from './components/ThemeDemo';
-import { IProfile } from '../../../../../../../customTypeScriptTypes/profile';
-import {
-  InputAdornment,
-  TextField,
-  Typography,
-  Theme,
-} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { IProfile } from '../../../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   classes: {
@@ -27,12 +25,12 @@ interface State {
 
 const styles = (theme: Theme) => ({
   container: {
-    marging: theme.spacing.unit,
+    marging: theme.spacing(1),
     display: 'flex',
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   themeColorRepresentation: {
     borderRadius: '50%',
@@ -41,7 +39,7 @@ const styles = (theme: Theme) => ({
     marginTop: 0,
   },
   themeDemo: {
-    margin: theme.spacing.unit * 4,
+    margin: theme.spacing(4),
   },
 });
 

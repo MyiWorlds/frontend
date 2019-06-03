@@ -13,9 +13,9 @@ import Slide from '@material-ui/core/Slide';
 import Snackbar from '@material-ui/core/Snackbar';
 import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
 import { createStyles, withStyles } from '@material-ui/core/styles';
-import { Error } from '../../../customTypeScriptTypes/error.d';
+import { Error } from '../../../types/error.d';
 import { fire } from '../../services/firebase';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../types/profile';
 import { Query } from 'react-apollo';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
@@ -52,8 +52,8 @@ const styles = (theme: Theme) =>
   createStyles({
     card: {
       ...theme.mixins.gutters(),
-      paddingTop: theme.spacing.unit * 2,
-      paddingBottom: theme.spacing.unit * 2,
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
     },
     container: {
       margin: '42px auto',
@@ -317,7 +317,7 @@ class User extends React.Component<Props, State> {
         console.log('Error happend logging out', error.code, error.message),
       );
     refetch();
-    this.changeSelectedProfile('guest')
+    this.changeSelectedProfile('guest');
   };
 
   changeSelectedProfile = async (id: string | null) => {

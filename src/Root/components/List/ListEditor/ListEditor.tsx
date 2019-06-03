@@ -1,11 +1,10 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
 import Circle from '../../../Circle/Circle';
-import { Button, Theme, withTheme } from '@material-ui/core';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
-import {
-  ICreatedCircle,
-  IEditingCircle,
-} from '../../../../../customTypeScriptTypes/circle';
+import { ICreatedCircle, IEditingCircle } from '../../../../../types/circle';
+import { IProfile } from '../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withTheme } from '@material-ui/core';
 
 interface Props {
   circle: IEditingCircle;
@@ -115,4 +114,4 @@ class ListEditor extends React.Component<Props, State> {
   }
 }
 
-export default withTheme()(ListEditor);
+export default withTheme(ListEditor);

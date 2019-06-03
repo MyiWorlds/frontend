@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ICreatedCircle } from '../../../../../customTypeScriptTypes/circle';
+import { ICreatedCircle } from '../../../../../types/circle';
 
 interface Props {
   circle: ICreatedCircle;

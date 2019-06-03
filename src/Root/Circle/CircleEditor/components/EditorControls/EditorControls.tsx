@@ -1,24 +1,21 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import ConfirmCancelCircleEditor from '../ConfirmCancelCircleEditor';
 import FlexGrow from '../../../../components/FlexGrow';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import makeTypeHumanReadable from '../../../functions/makeTypeHumanReadable';
 import Progress from '../../../../components/Progress';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import { Consumer } from '../../../../ReactContext';
-import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
-import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IEditingCircle } from '../../../../../../types/circle';
+import { IProfile } from '../../../../../../types/profile';
 import { Redirect } from 'react-router-dom';
-import {
-  AppBar,
-  Button,
-  createStyles,
-  Icon,
-  IconButton,
-  Theme,
-  Toolbar,
-  Tooltip,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   circle: IEditingCircle;
@@ -47,14 +44,14 @@ const styles = (theme: Theme) =>
       height: 48,
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit * 2,
+      marginRight: theme.spacing(2),
     },
     progressIcon: {
-      marginRight: theme.spacing.unit * 1.5,
-      marginLeft: theme.spacing.unit * 1.5,
+      marginRight: theme.spacing(1.5),
+      marginLeft: theme.spacing(1.5),
       position: 'relative',
     },
   });

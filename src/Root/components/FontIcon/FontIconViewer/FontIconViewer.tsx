@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon, Typography } from '@material-ui/core';
+import Icon from '@material-ui/core/Icon';
 
 interface Props {
   property?: string;

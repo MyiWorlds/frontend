@@ -1,5 +1,5 @@
 import { firestore } from '../../../services/firebase';
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../../types/profile';
 
 export default function emptyCircle(selectedProfile: IProfile) {
   const newCircleId = firestore.collection('circles').doc().id;

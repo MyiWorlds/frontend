@@ -2,12 +2,14 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import Divider from '@material-ui/core/Divider';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import FormGroup from '@material-ui/core/FormGroup';
 import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
-import { ExpansionPanel, Theme, withStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   allResults: boolean;

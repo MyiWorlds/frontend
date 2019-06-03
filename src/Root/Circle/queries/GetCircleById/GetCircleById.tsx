@@ -5,8 +5,8 @@ import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import { CircleViewer } from '../..';
 import { FullCircleFragment } from '../FullCircleFragment';
-import { ICreatedCircle } from '../../../../../customTypeScriptTypes/circle';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
+import { ICreatedCircle } from '../../../../../types/circle';
+import { IProfile } from '../../../../../types/profile';
 import { Location } from 'history';
 import { Query } from 'react-apollo';
 

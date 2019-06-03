@@ -1,4 +1,4 @@
-import { IProfile } from './profile.d';
+import { IProfile } from './profile';
 
 //Todo rename all these to have I at the start to prevent naming conflicts
 export interface IFilter {

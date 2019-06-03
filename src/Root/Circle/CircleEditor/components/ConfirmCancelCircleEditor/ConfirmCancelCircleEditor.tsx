@@ -1,19 +1,16 @@
 import * as React from 'react';
-import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
+import Slide from '@material-ui/core/Slide';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { ICreatedCircle } from '../../../../../../types/circle';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
-import {
-  Button,
-  createStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Icon,
-  Slide,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
 
 function Transition(props: TransitionProps) {
   return <Slide direction="up" {...props} />;
@@ -31,7 +28,7 @@ interface Props {
 const styles = (theme: Theme) =>
   createStyles({
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
   });
 

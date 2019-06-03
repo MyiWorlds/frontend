@@ -1,31 +1,28 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import Error from '../../../components/Error';
 import FlexGrow from '../../../components/FlexGrow';
 import GET_PROFILE_BY_USERNAME from '../../containers/queries/getProfileByUsername';
 import GET_USER from '../../../User/containers/queries/getUserQuery';
 import GET_USER_AND_PROFILE from '../../../User/components/UserSettings/getUserAndProfile';
 import gql from 'graphql-tag';
+import Icon from '@material-ui/core/Icon';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Paper from '@material-ui/core/Paper';
 import Progress from '../../../components/Progress';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Spacer from '../../../components/Spacer';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
 import { Mutation, Query, RefetchQueriesProviderFn } from 'react-apollo';
-import {
-  Button,
-  Collapse,
-  createStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Icon,
-  InputAdornment,
-  Paper,
-  TextField,
-  Theme,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   classes: {
@@ -74,32 +71,32 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     usernameTextField: {
-      width: `calc(100% - ${theme.spacing.unit * 2}px)`,
+      width: `calc(100% - ${theme.spacing(2)}px)`,
     },
     textfieldProgress: {
       position: 'relative',
-      width: theme.spacing.unit * 4,
-      height: theme.spacing.unit * 4,
+      width: theme.spacing(4),
+      height: theme.spacing(4),
       marginRight: 4,
       marginLeft: 6,
     },
     infoPaper: {
-      padding: theme.spacing.unit * 2,
-      margin: `0px ${theme.spacing.unit}px`,
+      padding: theme.spacing(2),
+      margin: `0px ${theme.spacing(1)}px`,
     },
     actions: {
       display: 'flex',
     },
     codeBlock: {
       background: theme.palette.background.default,
-      padding: theme.spacing.unit,
-      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
+      padding: theme.spacing(1),
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
     },
     restrictionsList: {
       color: theme.palette.text.primary,
     },
     savingProfileContainer: {
-      margin: theme.spacing.unit * 4,
+      margin: theme.spacing(4),
     },
   });
 
@@ -284,7 +281,10 @@ class ProfileUsernameEditor extends React.Component<
 
             return (
               <Mutation mutation={CREATE_PROFILE}>
-                {(createProfile, { data }) => (
+                {(
+                  createProfile,
+                  //  { data }
+                ) => (
                   <Query
                     query={GET_PROFILE_BY_USERNAME}
                     variables={{
@@ -294,7 +294,7 @@ class ProfileUsernameEditor extends React.Component<
                     skip={!checkUsername}
                   >
                     {({ loading, error, data, refetch }) => {
-                      if (error) return <p>Error :( {console.log(error)}</p>;
+                      if (error) return <Error error={error} />;
                       if (saving) {
                         return (
                           <div className={classes.savingProfileContainer}>

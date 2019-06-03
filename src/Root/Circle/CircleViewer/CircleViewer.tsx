@@ -1,4 +1,5 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import canEditCircle from '../functions/canEditCircle';
 import CircleViewerSwitch from './components/CircleViewerSwitch';
@@ -7,31 +8,24 @@ import GetCircleById from '../queries/GetCircleById';
 import GetCirclesByFilters from '../queries/GetCirclesByFilters';
 import GetCirclesByIds from '../queries/GetCirclesByIds';
 import GetInterfacedCirclesByFilters from '../queries/GetInterfacedCirclesByFilters';
+import Icon from '@material-ui/core/Icon';
 import Image from '../../components/Image';
+import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { ForwardButton } from '../../components/ForwardButton';
+import { ICreatedCircle, Property } from '../../../../types/circle';
+import { IProfile } from '../../../../types/profile';
 import { Link } from 'react-router-dom';
 import { ListViewer } from '../../components/List';
-import {
-  AppBar,
-  createStyles,
-  Icon,
-  Theme,
-  Toolbar,
-  withStyles,
-  withTheme,
-} from '@material-ui/core';
-
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withTheme } from '@material-ui/core';
 import {
   Layouts,
   Responsive,
   ResponsiveProps,
   WidthProvider,
 } from 'react-grid-layout';
-import {
-  ICreatedCircle,
-  Property,
-} from '../../../../customTypeScriptTypes/circle';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -58,10 +52,10 @@ const styles = (theme: Theme) =>
       position: 'relative',
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
   });
 
@@ -147,9 +141,8 @@ class CircleGridEditor extends React.Component<Props, State> {
       circleOptions = (
         <Tooltip title="Edit">
           <Button
-            component={(props: any) => (
-              <Link {...props} to={`/edit/${circle.id}`} />
-            )}
+            component={ForwardButton}
+            to={`/edit/${circle.id}`}
             // className={classes.btnBarBtn}
           >
             <Icon
@@ -177,7 +170,7 @@ class CircleGridEditor extends React.Component<Props, State> {
           className="layout"
           layouts={layouts}
           // autoSize={true}
-          rowHeight={theme.spacing.unit / 2}
+          rowHeight={theme.spacing(1) / 2}
           isDraggable={false}
           isResizable={false}
           breakpoints={{
@@ -210,7 +203,7 @@ class CircleGridEditor extends React.Component<Props, State> {
       </>
     );
 
-    let type = null;
+    let type = '';
     if (!circle.type) {
       type = '';
     } else if (circle.type.includes('-')) {
@@ -272,4 +265,4 @@ class CircleGridEditor extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(withTheme()(CircleGridEditor));
+export default withStyles(styles)(withTheme(CircleGridEditor));

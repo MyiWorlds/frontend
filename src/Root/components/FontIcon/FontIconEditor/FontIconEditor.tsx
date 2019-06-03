@@ -1,15 +1,13 @@
 import * as React from 'react';
+import Icon from '@material-ui/core/Icon';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import materialUiIcons from '../../../constants/materialUiIcons';
-import { IEditingCircle } from '../../../../../customTypeScriptTypes/circle';
-import {
-  Icon,
-  InputAdornment,
-  MenuItem,
-  Select,
-  TextField,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import { IEditingCircle } from '../../../../../types/circle';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/core';
 
 interface Props {
   label?: string;

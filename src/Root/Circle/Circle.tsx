@@ -1,29 +1,25 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import canEditCircle from './functions/canEditCircle';
 import FlexGrow from '../components/FlexGrow';
 import GetCircleById from './queries/GetCircleById';
 import GetCirclesByFilters from './queries/GetCirclesByFilters';
 import GetCirclesByIds from './queries/GetCirclesByIds';
 import GetInterfacedCirclesByFilters from './queries/GetInterfacedCirclesByFilters';
+import Icon from '@material-ui/core/Icon';
 import Image from '../components/Image';
+import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
+import Typography from '@material-ui/core/Typography';
+import { createStyles } from '@material-ui/styles';
+import { ForwardButton } from '../components/ForwardButton';
+import { ICreatedCircle, IEditingCircle } from '../../../types/circle';
+import { IProfile } from '../../../types/profile';
 import { Link } from 'react-router-dom';
 import { ListEditor, ListViewer } from '../components/List';
-import {
-  ICreatedCircle,
-  IEditingCircle,
-} from '../../../customTypeScriptTypes/circle';
-import {
-  AppBar,
-  Button,
-  createStyles,
-  Icon,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface BaseProps {
   classes: {
@@ -55,10 +51,10 @@ const styles = (theme: Theme) =>
       position: 'relative',
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
   });
 
@@ -163,9 +159,8 @@ class Circle extends React.Component<Props> {
         <Tooltip title="Edit">
           <Button
             variant="outlined"
-            component={(props: any) => (
-              <Link {...props} to={`/edit/${circle.id}`} />
-            )}
+            component={ForwardButton}
+            to={`/edit/${circle.id}`}
             // className={classes.btnBarBtn}
           >
             <Icon

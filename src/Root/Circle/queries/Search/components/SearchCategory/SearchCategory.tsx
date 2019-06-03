@@ -1,22 +1,19 @@
 import * as React from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import Grid, { GridProps } from '@material-ui/core/Grid';
+import Grow from '@material-ui/core/Grow';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 import ProgressWithMessage from '../../../../../components/ProgressWithMessage';
 import SearchResults from '../SearchResults/SearchResults';
-import { GridProps } from '@material-ui/core/Grid';
 import { SearchCircle } from './../../searchTypes';
-import {
-  Avatar,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  Grow,
-  Icon,
-  IconButton,
-  withStyles,
-} from '@material-ui/core';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   circle: SearchCircle;
@@ -142,7 +139,7 @@ class SearchCategory extends React.Component<Props, State> {
                 ) : null}
               </CardContent>
 
-              <CardActions className={classes.actions} disableActionSpacing>
+              <CardActions className={classes.actions} disableSpacing>
                 {cursorQueries ? (
                   <div
                     style={{ position: 'relative', flex: 1, display: 'flex' }}

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { IEditingCircle } from '../../../../../customTypeScriptTypes/circle';
-import { Theme, withStyles } from '@material-ui/core';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
+import { withStyles } from '@material-ui/styles';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/monokai.css';
 import 'codemirror/addon/hint/show-hint';

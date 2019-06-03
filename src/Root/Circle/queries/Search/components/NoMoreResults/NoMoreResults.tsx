@@ -1,15 +1,13 @@
-import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
+import Icon from '@material-ui/core/Icon';
 import React from 'react';
-import { IProfile } from '../../../../../../../customTypeScriptTypes/profile';
+import Typography from '@material-ui/core/Typography';
+import { ForwardButton } from '../../../../../components/ForwardButton';
+import { IProfile } from '../../../../../../../types/profile';
 import { Link } from 'react-router-dom';
-import {
-  Button,
-  Fade,
-  Icon,
-  Theme,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   profile: IProfile;
@@ -28,7 +26,7 @@ const styles = (theme: Theme) => ({
     textAlign: 'center' as 'center',
   },
   btnIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
   },
 });
 
@@ -82,7 +80,8 @@ class NoMoreResults extends React.Component<Props, State> {
             <br />
             <Button
               variant="contained"
-              component={(props: any) => <Link {...props} to="/create" />}
+              component={ForwardButton}
+              to={'/create'}
             >
               <Icon className={classes.btnIcon}>add</Icon>
               Create

@@ -21,7 +21,7 @@ export interface IProfile {
   history: {
     id: string;
   } | null;
-  myTheme?: {
+  myTheme: {
     id: string;
     data: any;
   } | null;

@@ -7,8 +7,8 @@ import User from './User';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 import { Detector } from 'react-detect-offline';
-import { IProfile } from '../../customTypeScriptTypes/profile.d';
-import { IUser } from '../../customTypeScriptTypes/user.d';
+import { IProfile } from '../../types/profile.d';
+import { IUser } from '../../types/user.d';
 import { Provider } from './ReactContext';
 
 interface UserProps {
@@ -18,7 +18,7 @@ interface UserProps {
   handleToggleStyleEnabled: () => void;
   handleToggleAddToHistory: () => void;
   handleLogin: () => void;
-  handleLogout: (refetch: () => void) => void;
+  handleLogout: () => void;
   changeSelectedProfile: (id: string | null) => void;
 }
 

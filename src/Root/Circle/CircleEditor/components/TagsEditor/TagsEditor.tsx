@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ChipInput from 'material-ui-chip-input';
-import { IEditingCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { IEditingCircle } from '../../../../../../types/circle';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { withStyles } from '@material-ui/core';
 

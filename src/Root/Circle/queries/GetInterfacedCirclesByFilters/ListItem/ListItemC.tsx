@@ -1,7 +1,8 @@
 import * as React from 'react';
-import makeTypeHumanReadable from '../../../functions/makeTypeHumanReadable';
-import { Divider, ListItem, ListItemText } from '@material-ui/core';
-import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { ForwardButton } from '../../../../components/ForwardButton';
 import { Link } from 'react-router-dom';
 
 interface Props {
@@ -13,10 +14,7 @@ interface Props {
 const ListItemC: React.SFC<Props> = ({ linkUrl, primary, secondary }) => {
   return (
     <div>
-      <ListItem
-        button
-        component={(props: any) => <Link {...props} to={linkUrl} />}
-      >
+      <ListItem button component={ForwardButton} to={linkUrl}>
         <ListItemText
           inset
           primary={primary || 'Untitled'}

@@ -6,7 +6,7 @@ import Search from './Root/Circle/queries/Search';
 import SessionBrowserHistory from './SessionBrowserHistory';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
 import UserSettings from './Root/User/components/UserSettings';
-import { IProfile } from '../customTypeScriptTypes/profile';
+import { IProfile } from '../types/profile';
 import { Route, Switch } from 'react-router';
 
 interface Props {

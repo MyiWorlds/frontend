@@ -2,9 +2,8 @@ import * as React from 'react';
 import Error from '../../../components/Error';
 import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
+import Typography from '@material-ui/core/Typography';
 import { Query } from 'react-apollo';
-import { Typography } from '@material-ui/core';
-
 interface Props {
   username: string;
 }

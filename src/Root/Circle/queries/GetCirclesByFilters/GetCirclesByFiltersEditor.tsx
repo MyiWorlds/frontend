@@ -1,35 +1,31 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Card from '@material-ui/core/Card';
 import client from '../../../../apolloClient';
+import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
 import Error from '../../../components/Error';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import gql from 'graphql-tag';
+import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { ApolloError } from 'apollo-client';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
+import { ForwardButton } from '../../../components/ForwardButton';
+import { ICreatedCircle, IFilter } from '../../../../../types/circle';
+import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
-import {
-  ICreatedCircle,
-  IFilter,
-} from '../../../../../customTypeScriptTypes/circle';
-import {
-  AppBar,
-  Card,
-  Collapse,
-  Divider,
-  FormControlLabel,
-  Grid,
-  Icon,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Switch,
-  TextField,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   selectedProfile: IProfile;
@@ -112,11 +108,11 @@ const styles = (theme: Theme) => ({
   },
   sliderTextField: {
     marginTop: 5,
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     width: 100,
   },
   centerOption: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -260,9 +256,8 @@ class GetCirclesByFilters extends React.Component<Props, State> {
               <div key={circle.id}>
                 <ListItem
                   button
-                  component={(props: any) => (
-                    <Link {...props} to={`/id/${circle.id}`} />
-                  )}
+                  component={ForwardButton}
+                  to={`/id/${circle.id}`}
                 >
                   <ListItemText inset primary={circle.type} />
                 </ListItem>

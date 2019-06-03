@@ -4,13 +4,13 @@ import Navigation from './components/Navigation';
 import Routes from '../../routes';
 import withWidth from '@material-ui/core/withWidth';
 import { Consumer } from '../ReactContext';
-import { IProfile } from '../../../customTypeScriptTypes/profile.d';
+import { IProfile } from '../../../types/profile.d';
 
 interface Props {
   handleToggleThemeDark: () => void;
   handleToggleStyleEnabled: () => void;
   handleLogin: () => void;
-  changeSelectedProfile: () => void;
+  changeSelectedProfile: (id: string | null) => void;
   user: any;
   selectedProfile: IProfile;
   width: string;

@@ -1,11 +1,12 @@
 import * as React from 'react';
+import Grid from '@material-ui/core/Grid';
 import NoMoreResults from '../NoMoreResults';
 import SearchCategory from '../SearchCategory';
-import { Grid, Theme } from '@material-ui/core';
 import { GridProps } from '@material-ui/core/Grid';
-import { IProfile } from './../../../../../../../customTypeScriptTypes/profile.d';
+import { IProfile } from '../../../../../../../types/profile.d';
 import { SearchCircle } from '../../searchTypes';
-import { withStyles } from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   gridSize: GridProps;

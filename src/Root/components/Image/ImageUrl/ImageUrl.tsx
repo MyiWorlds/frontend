@@ -1,22 +1,15 @@
 import * as React from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  createStyles,
-  Divider,
-  TextField,
-  withStyles,
-} from '@material-ui/core';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { ICreatedCircle } from '../../../../../types/circle';
 
 interface Props {
   classes: {};
-  circle: {
-    type: string;
-    data: {
-      url: string;
-    };
-  };
+  circle: ICreatedCircle;
 }
 
 interface State {
@@ -47,7 +40,9 @@ class ImageUrl extends React.Component<Props, State> {
         <CardHeader title="Add Image By Url" />
         <Divider />
         <div>
-          <img src={circle.data.url} title="Paella dish" />
+          {circle && circle.data && circle.data.url ? (
+            <img src={circle.data.url} title="Paella dish" />
+          ) : null}
         </div>
         <br />
         <br />

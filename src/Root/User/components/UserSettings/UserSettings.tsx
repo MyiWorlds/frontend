@@ -1,25 +1,23 @@
 import * as React from 'react';
+import Divider from '@material-ui/core/Divider';
 import GET_USER_AND_PROFILE from './getUserAndProfile';
+import Icon from '@material-ui/core/Icon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import moment from 'moment';
+import Paper from '@material-ui/core/Paper';
 import ProfileSettings from '../../../Profile/components/ProfileSettings';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Spacer from '../../../components/Spacer';
-import { IUser } from '../../../../../customTypeScriptTypes/user';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { ForwardButton } from '../../../components/ForwardButton';
+import { IUser } from '../../../../../types/user';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
-import {
-  createStyles,
-  Divider,
-  Icon,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
 
 interface Props {
   classes: {
@@ -95,9 +93,7 @@ class UserSettings extends React.Component<Props> {
               </div>
               <List>
                 <ListSubheader>Miscelanious</ListSubheader>
-                <ListItem
-                  component={(props: any) => <Link {...props} to="/" />}
-                >
+                <ListItem component={ForwardButton} to="/">
                   <ListItemIcon>
                     <Icon>report</Icon>
                   </ListItemIcon>
@@ -105,9 +101,7 @@ class UserSettings extends React.Component<Props> {
                 </ListItem>
                 <Divider />
 
-                <ListItem
-                  component={(props: any) => <Link {...props} to="/" />}
-                >
+                <ListItem component={ForwardButton} to="/">
                   <ListItemIcon>
                     <Icon>subject</Icon>
                   </ListItemIcon>

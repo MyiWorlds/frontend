@@ -8,12 +8,12 @@ import TagsEditor from '../TagsEditor';
 import Typography from '@material-ui/core/Typography';
 import { CodeEditor } from '../../../../components/Code';
 import { FontIconEditor } from '../../../../components/FontIcon';
-import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../../../../types/profile';
 import { StringEditor, StringViewer } from '../../../../components/String';
 import {
   IEditingCircle,
   Property,
-} from '../../../../../../customTypeScriptTypes/circle';
+} from '../../../../../../types/circle';
 
 interface Props {
   property: Property;

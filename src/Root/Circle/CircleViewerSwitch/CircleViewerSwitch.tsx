@@ -1,26 +1,24 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
 import FlexGrow from '../../components/FlexGrow';
 import GetCircleById from '../queries/GetCircleById';
 import GetCirclesByFilters from '../queries/GetCirclesByFilters';
 import GetCirclesByIds from '../queries/GetCirclesByIds';
 import GetInterfacedCirclesByFilters from '../queries/GetInterfacedCirclesByFilters';
+import Icon from '@material-ui/core/Icon';
 import Image from '../../components/Image';
+import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
-import { ICreatedCircle } from '../../../../customTypeScriptTypes/circle';
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/core';
+import { ForwardButton } from '../../components/ForwardButton';
+import { ICreatedCircle } from '../../../../types/circle';
+import { IProfile } from '../../../../types/profile';
 import { Link } from 'react-router-dom';
 import { ListViewer } from '../../components/List';
 import { StringViewer } from '../../components/String';
-import {
-  AppBar,
-  Button,
-  createStyles,
-  Icon,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   selectedProfile: IProfile;
@@ -48,10 +46,10 @@ const styles = (theme: Theme) =>
       position: 'relative',
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
   });
 
@@ -143,9 +141,8 @@ class Circle extends React.Component<Props> {
         <Tooltip title="Edit">
           <Button
             variant="outlined"
-            component={(props: any) => (
-              <Link {...props} to={`/edit/${circle.id}`} />
-            )}
+            component={ForwardButton}
+            to={`/edit/${circle.id}`}
             // className={classes.btnBarBtn}
           >
             <Icon

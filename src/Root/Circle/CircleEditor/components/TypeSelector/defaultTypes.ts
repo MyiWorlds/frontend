@@ -1,4 +1,4 @@
-import { ICreatedCircle } from '../../../../../../customTypeScriptTypes/circle';
+import { ICreatedCircle } from '../../../../../../types/circle';
 
 // Make it so everything gets added at time of creation
 // Do not store all that information in browsers while they are stockpiling data to send to the servers

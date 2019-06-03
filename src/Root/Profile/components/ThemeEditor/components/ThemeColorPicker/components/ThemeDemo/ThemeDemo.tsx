@@ -1,17 +1,14 @@
 import * as React from 'react';
 import AddIcon from '@material-ui/icons/Add';
+import AppBar from '@material-ui/core/AppBar';
+import Card from '@material-ui/core/Card';
+import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import {
-  AppBar,
-  Fab,
-  Card,
-  createStyles,
-  IconButton,
-  Toolbar,
-  Typography,
-  withStyles,
-  Theme,
-} from '@material-ui/core';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   primaryColor: string;
@@ -32,8 +29,8 @@ const styles = (theme: Theme) =>
     },
     fab: {
       position: 'absolute',
-      bottom: theme.spacing.unit * 2,
-      right: theme.spacing.unit * 2,
+      bottom: theme.spacing(2),
+      right: theme.spacing(2),
     },
   });
 

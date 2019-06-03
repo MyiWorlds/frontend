@@ -1,35 +1,30 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Card from '@material-ui/core/Card';
 import client from '../../../../apolloClient';
+import Collapse from '@material-ui/core/Collapse';
 import Error from '../../../components/Error';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import gql from 'graphql-tag';
+import Grid from '@material-ui/core/Grid';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
 import ListItemC from './ListItem/ListItemC';
 import makeTypeHumanReadable from '../../functions/makeTypeHumanReadable';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
 import Spacer from '../../../components/Spacer';
+import Switch from '@material-ui/core/Switch';
+import TextField from '@material-ui/core/TextField';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { ApolloError } from 'apollo-client';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
+import { ICreatedCircle, IFilter } from '../../../../../types/circle';
+import { IProfile } from '../../../../../types/profile';
 import { Query } from 'react-apollo';
-import {
-  ICreatedCircle,
-  IFilter,
-} from '../../../../../customTypeScriptTypes/circle';
-import {
-  AppBar,
-  Card,
-  Collapse,
-  FormControlLabel,
-  Grid,
-  Icon,
-  IconButton,
-  List,
-  Switch,
-  TextField,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   selectedProfile: IProfile;
@@ -121,11 +116,11 @@ const styles = (theme: Theme) => ({
   },
   sliderTextField: {
     marginTop: 5,
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     width: 100,
   },
   centerOption: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
   listTitle: {
     width: '100%',
@@ -285,9 +280,10 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                       >
                         {({ loading, error, data }) => {
                           if (loading) {
-                            return null;
+                            return <div />;
                           }
                           if (error) return <Error error={error} />;
+
                           circleTitle = data.getCircleById.title;
                           const interfacedCircle = data.getCircleById;
 
@@ -342,7 +338,6 @@ class GetInterfacedCirclesByFilters extends React.Component<Props, State> {
                     secondary={makeTypeHumanReadable(circle.type)}
                   />
                 );
-                break;
               default:
                 return null;
             }

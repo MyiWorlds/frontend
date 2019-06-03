@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { FormControlLabel, Switch } from '@material-ui/core';
-import { IEditingCircle } from '../../../../../customTypeScriptTypes/circle';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+import { IEditingCircle } from '../../../../../types/circle';
 
 interface Props {
   label?: string;

@@ -1,23 +1,17 @@
 import * as React from 'react';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
+import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import makePropertyHumanReadable from '../../../functions/makePropertyHumanReadable';
 import Slide from '@material-ui/core/Slide';
 import Tooltip from '@material-ui/core/Tooltip';
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  createStyles,
-  Divider,
-  Icon,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
-import {
-  IEditingCircle,
-  Property,
-} from '../../../../../../customTypeScriptTypes/circle';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IEditingCircle, Property } from '../../../../../../types/circle';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   fieldEditing: Property;
@@ -36,10 +30,10 @@ interface State {}
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      margin: `0px ${theme.spacing.unit}px`,
+      margin: `0px ${theme.spacing(1)}px`,
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     actions: {
       display: 'flex',

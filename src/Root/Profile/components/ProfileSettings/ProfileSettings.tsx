@@ -1,20 +1,17 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import CardActions from '@material-ui/core/CardActions';
 import DeleteProfile from './DeleteProfile';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import Icon from '@material-ui/core/Icon';
 import moment from 'moment';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
-import {
-  Button,
-  CardActions,
-  createStyles,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Icon,
-  Theme,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IProfile } from '../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   classes: {

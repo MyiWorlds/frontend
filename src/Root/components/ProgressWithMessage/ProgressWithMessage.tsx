@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Progress from '../Progress';
-import { createStyles, Typography, withStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
 
 interface Props {
   classes: {
@@ -64,7 +65,10 @@ class ProgressWithMessage extends React.Component<Props> {
             position: 'relative',
           }}
         >
-          <Progress hideBackground={hideBackground} size={progressSize} />
+          <Progress
+            hideBackground={hideBackground || false}
+            size={progressSize}
+          />
         </div>
         {hideMessage ? null : (
           <>

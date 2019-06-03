@@ -1,27 +1,21 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import FieldsSelect from './FieldsSelect/FieldsSelect';
+import Icon from '@material-ui/core/Icon';
+import Slide from '@material-ui/core/Slide';
 import Spacer from '../../../../components/Spacer';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IEditingCircle, Property } from '../../../../../../types/circle';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
-import {
-  IEditingCircle,
-  Property,
-} from '../../../../../../customTypeScriptTypes/circle';
-import {
-  Button,
-  createStyles,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
-  Icon,
-  Slide,
-  Theme,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
 
 function Transition(props: TransitionProps) {
   return <Slide direction="down" {...props} />;
@@ -87,13 +81,13 @@ interface State {
 const styles = (theme: Theme) =>
   createStyles({
     container: {
-      margin: theme.spacing.unit * 2,
+      margin: theme.spacing(2),
     },
     appBar: {
       position: 'relative',
     },
     btnIcon: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
     },
     root: {
       width: '100%',
@@ -103,7 +97,7 @@ const styles = (theme: Theme) =>
       fontWeight: theme.typography.fontWeightRegular,
     },
     btnBarBtn: {
-      marginRight: theme.spacing.unit * 2,
+      marginRight: theme.spacing(2),
     },
   });
 

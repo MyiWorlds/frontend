@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import * as React from 'react';
-import { Error } from '../../../customTypeScriptTypes/error.d';
+import { Error } from '../../../types/error.d';
 import { fire } from '../../services/firebase';
 
 const Context = React.createContext({} as ProviderStore);

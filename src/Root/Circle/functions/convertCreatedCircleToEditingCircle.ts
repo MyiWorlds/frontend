@@ -1,15 +1,12 @@
-import { IProfile } from '../../../../customTypeScriptTypes/profile';
-import {
-  ICreatedCircle,
-  IEditingCircle,
-} from '../../../../customTypeScriptTypes/circle';
+import { ICreatedCircle, IEditingCircle } from '../../../../types/circle';
+import { IProfile } from '../../../../types/profile';
 
 interface Document {
   id?: string | null;
 }
 
 function convertOne(obj?: Document | null, elseValue?: string) {
-  let newValue = null;
+  let newValue: string = '';
   if (obj && obj.id) {
     newValue = obj.id;
   } else if (elseValue) {

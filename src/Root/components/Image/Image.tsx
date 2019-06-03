@@ -1,13 +1,10 @@
 import * as React from 'react';
 import ImageGoogleStorage from './ImageGoogleStorage';
 import ImageUrl from './ImageUrl';
-
-interface Circle {
-  type: string;
-}
+import { ICreatedCircle } from '../../../../types/circle';
 
 interface Props {
-  circle: Circle;
+  circle: ICreatedCircle;
 }
 
 const Image: React.SFC<Props> = ({ circle }) => {

@@ -1,24 +1,21 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Divider from '@material-ui/core/Divider';
 import FlexGrow from '../../../components/FlexGrow';
+import Icon from '@material-ui/core/Icon';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  createStyles,
-  Divider,
-  Icon,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Radio,
-  Theme,
-  withStyles,
-} from '@material-ui/core';
+import Radio from '@material-ui/core/Radio';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IProfile } from '../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {
   profiles: IProfile[];
@@ -42,9 +39,9 @@ const styles = (theme: Theme) =>
     },
     actions: {
       display: 'flex',
-      padding: theme.spacing.unit,
+      padding: theme.spacing(1),
       '& > button': {
-        marginLeft: theme.spacing.unit,
+        marginLeft: theme.spacing(1),
       },
     },
   });
@@ -114,7 +111,7 @@ class SelectProfile extends React.Component<Props, State> {
             </List>
           </CardContent>
           <Divider />
-          <CardActions className={classes.actions} disableActionSpacing>
+          <CardActions className={classes.actions} disableSpacing>
             <FlexGrow />
             <Button
               onClick={() => this.showCreateProfileDialog()}

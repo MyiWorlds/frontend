@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { FormControlLabel, Switch } from '@material-ui/core';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 
 interface Props {
   property: string;

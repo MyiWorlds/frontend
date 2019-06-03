@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import Card from '@material-ui/core/Card';
 import client from '../../../../apolloClient';
 import SEARCH_CIRCLES_BY_TAGS from './searchCirclesByTags';
 import SearchCategoryResultsList from './components/SearchResults/SearchCategoryResultsList';
 import SearchField from './components/SearchField/SearchField';
 import SearchSettings from './components/SearchSettings';
 import sortCirclesLunr from '../../functions/sortCirclesLunr';
-import { Card } from '@material-ui/core';
 import { GridProps } from '@material-ui/core/Grid';
-import { IFilter } from '../../../../../customTypeScriptTypes/circle';
-import { IProfile } from './../../../../../customTypeScriptTypes/profile.d';
+import { IFilter } from '../../../../../types/circle';
+import { IProfile } from './../../../../../types/profile.d';
 import { SearchCircle } from './searchTypes';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -199,10 +199,10 @@ class Search extends React.Component<Props, State> {
   };
 
   createSearchTags = (searchFieldString: string) => {
-    let tags = [];
+    let tags: string[] = [];
     tags = searchFieldString.split(/[ ,]+/);
 
-    tags = tags.filter(tag => tag !== '');
+    tags = tags.filter((tag: string) => tag !== '');
 
     return tags;
   };
@@ -241,7 +241,7 @@ class Search extends React.Component<Props, State> {
 
   buildSearchQuery = (tagsToSearch: string[]) => {
     const profile = this.props.profile;
-    let allQueries = [];
+    let allQueries: SearchCircle[] = [];
 
     if (profile) {
       if (this.state.myCreations) {

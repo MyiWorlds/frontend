@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { ICreatedCircle } from '../../../customTypeScriptTypes/circle';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
+import { ICreatedCircle } from '../../../types/circle';
+import { IProfile } from '../../../types/profile';
 
 interface Props {
   selectedProfile: IProfile;

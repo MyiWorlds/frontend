@@ -5,12 +5,10 @@ import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
 import { ApolloError } from 'apollo-client';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
+import { ForwardButton } from '../../../components/ForwardButton';
+import { ICreatedCircle, IFilter } from '../../../../../types/circle';
+import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
-import {
-  ICreatedCircle,
-  IFilter,
-} from '../../../../../customTypeScriptTypes/circle';
 import {
   AppBar,
   Card,
@@ -109,11 +107,11 @@ const styles = (theme: Theme) => ({
   },
   sliderTextField: {
     marginTop: 5,
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     width: 100,
   },
   centerOption: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
   },
 });
 
@@ -250,9 +248,8 @@ class GetCirclesByFilters extends React.Component<Props, State> {
               <div key={circle.id}>
                 <ListItem
                   button
-                  component={(props: any) => (
-                    <Link {...props} to={`/id/${circle.id}`} />
-                  )}
+                  component={ForwardButton}
+                  to={`/id/${circle.id}`}
                 >
                   <ListItemText inset primary={circle.type} />
                 </ListItem>

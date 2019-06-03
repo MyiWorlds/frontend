@@ -1,13 +1,9 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import Typography from '@material-ui/core/Typography';
 import { ApolloError } from 'apollo-client';
-import { Button } from '@material-ui/core';
-import {
-  createStyles,
-  Icon,
-  Typography,
-  withStyles
-  } from '@material-ui/core';
-
+import { createStyles, withStyles } from '@material-ui/styles';
 //Send error to servers
 // Not connected? Add to cache of things to write to db
 // If Changed from offline -> online check if there is anything that need to be created

@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { TextField, Theme, withStyles } from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   label?: string;
@@ -16,7 +18,7 @@ interface Props {
 
 const styles = (theme: Theme) => ({
   textField: {
-    // margin: theme.spacing.unit,
+    // margin: theme.spacing(1),
   },
 });
 

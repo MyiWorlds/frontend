@@ -1,18 +1,15 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import CircleEditorSwitch from '../CircleEditorSwitch';
-import { IProfile } from '../../../../../../customTypeScriptTypes/profile';
+import Icon from '@material-ui/core/Icon';
+import { createStyles, withStyles } from '@material-ui/styles';
+import { IEditingCircle, Property } from '../../../../../../types/circle';
+import { IProfile } from '../../../../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withTheme } from '@material-ui/core';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-
-import {
-  Button,
-  Card,
-  createStyles,
-  Icon,
-  Theme,
-  withStyles,
-  withTheme,
-} from '@material-ui/core';
 import {
   Layout,
   Layouts,
@@ -20,10 +17,6 @@ import {
   ResponsiveProps,
   WidthProvider,
 } from 'react-grid-layout';
-import {
-  IEditingCircle,
-  Property,
-} from '../../../../../../customTypeScriptTypes/circle';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -56,18 +49,17 @@ const styles = (theme: Theme) =>
       position: 'relative',
       margin: '0 auto',
       maxWidth: '100%',
-      paddingBottom: theme.spacing.unit * 12,
+      paddingBottom: theme.spacing(12),
     },
     gridItem: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
-      // padding: theme.spacing.unit * 2,
     },
     contentWrapper: {
       position: 'relative',
       display: 'flex',
       maxWidth: '100%',
-      margin: theme.spacing.unit,
+      margin: theme.spacing(1),
     },
     gridItemContentCover: {
       width: '100%',
@@ -89,7 +81,7 @@ const styles = (theme: Theme) =>
       top: 0,
       right: 0,
       opacity: 0.4,
-      margin: theme.spacing.unit / 2,
+      margin: theme.spacing(1) / 2,
     },
   });
 
@@ -267,7 +259,7 @@ class CircleGridEditor extends React.Component<Props, State> {
         className="layout"
         layouts={layouts}
         // autoSize={true}
-        rowHeight={theme.spacing.unit / 2}
+        rowHeight={theme.spacing(1) / 2}
         isDraggable={gridEditing}
         isResizable={gridEditing}
         onLayoutChange={this.onLayoutChange}
@@ -355,4 +347,4 @@ class CircleGridEditor extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(withTheme()(CircleGridEditor));
+export default withStyles(styles)(withTheme(CircleGridEditor));

@@ -1,26 +1,26 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import createStyles from '@material-ui/styles/createStyles';
+import Divider from '@material-ui/core/Divider';
 import FlexGrow from '../../../components/FlexGrow';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
+import Switch from '@material-ui/core/Switch';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { Consumer } from '../../../ReactContext';
+import { ForwardButton } from '../../../components/ForwardButton';
+import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
-import {
-  AppBar,
-  Button,
-  Collapse,
-  createStyles,
-  Divider,
-  Icon,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Switch,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Profile {
   id: string;
@@ -44,17 +44,18 @@ interface Props {
     selectedProfile: string;
   };
   profiles: [Profile];
-  selectedProfile: {
-    id: string;
-    username: string;
-    isDarkTheme: boolean;
-    isMyTheme: boolean;
-    addToHistory: boolean;
-    myTheme: {
-      id: string | null;
-      data: any | null;
-    };
-  };
+  selectedProfile: IProfile;
+  // {
+  //   id: string;
+  //   username: string;
+  //   isDarkTheme: boolean;
+  //   isMyTheme: boolean;
+  //   addToHistory: boolean;
+  //   myTheme: {
+  //     id: string;
+  //     data: any | null;
+  //   };
+  // };
   user: {
     id: string;
   };
@@ -98,10 +99,10 @@ const styles = (theme: Theme) =>
       margin: '4px 8px 0px 0px',
     },
     nested: {
-      paddingLeft: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing(4),
     },
     selectedProfile: {
-      marginTop: -theme.spacing.unit,
+      marginTop: -theme.spacing(1),
     },
   });
 
@@ -288,7 +289,8 @@ class AppMenuController extends React.Component<Props, State> {
 
               <MenuItem
                 onClick={this.handleClose}
-                component={(props: any) => <Link {...props} to="/account" />}
+                component={ForwardButton}
+                to={'/account'}
               >
                 <ListItemIcon>
                   <Icon>settings</Icon>

@@ -1,18 +1,17 @@
 import * as React from 'react';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Error from '../../../components/Error';
 import gql from 'graphql-tag';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
-import { ICreatedCircle } from '../../../../../customTypeScriptTypes/circle';
+import Typography from '@material-ui/core/Typography';
+import { ForwardButton } from '../../../components/ForwardButton';
+import { ICreatedCircle } from '../../../../../types/circle';
 import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
-import {
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from '@material-ui/core';
 
 interface Props {
   circle: ICreatedCircle;
@@ -65,9 +64,8 @@ class GetCirclesByIds extends React.Component<Props> {
                       <div key={circle.id}>
                         <ListItem
                           button
-                          component={(props: any) => (
-                            <Link {...props} to={`/id/${circle.id}`} />
-                          )}
+                          component={ForwardButton}
+                          to={`/id/${circle.id}`}
                         >
                           <ListItemText inset primary={circle.type} />
                         </ListItem>
