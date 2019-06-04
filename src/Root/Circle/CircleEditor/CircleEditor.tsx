@@ -16,16 +16,17 @@ import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import UseLocalStorageModal from './components/UseLocalStorageModal/UseLocalStorageModal';
 import { IProfile } from '../../../../types/profile';
 import { Redirect } from 'react-router-dom';
+import { TransitionProps } from '@material-ui/core/transitions';
 import {
   ICreatedCircle,
   IEditingCircle,
   Property,
 } from '../../../../types/circle';
 
-const Transition = React.forwardRef(
-  (props: any, ref: React.Ref<HTMLAnchorElement>) => (
-    <Slide direction="up" {...props} ref={ref} />
-  ),
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props: any, ref: any) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  },
 );
 
 interface Props {
@@ -301,11 +302,7 @@ class CircleEditor extends React.Component<Props, State> {
     return (
       <>
         {circle.type ? (
-          <Dialog
-            fullScreen
-            open={true}
-            TransitionComponent={Transition as any} // TODO: this still errors in console
-          >
+          <Dialog fullScreen open={true} TransitionComponent={Transition}>
             <EditorControls
               currentPath={currentPath}
               circle={circle}

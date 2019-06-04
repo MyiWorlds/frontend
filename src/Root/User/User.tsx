@@ -18,6 +18,7 @@ import { fire } from '../../services/firebase';
 import { IProfile } from '../../../types/profile';
 import { Query } from 'react-apollo';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 
 require('firebase/auth');
 
@@ -44,9 +45,11 @@ interface User {
   email: string;
 }
 
-function TransitionUp(props: any) {
-  return <Slide {...props} direction="up" />;
-}
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props: any, ref: any) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  },
+);
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -418,6 +421,7 @@ class User extends React.Component<Props, State> {
             }
           } else {
             this.clearLS();
+            return null;
           }
 
           return (
@@ -436,7 +440,7 @@ class User extends React.Component<Props, State> {
                 open={this.state.showProfileUpdatedSnackbar}
                 onClose={this.handleCloseSnackbar}
                 autoHideDuration={2000}
-                TransitionComponent={TransitionUp}
+                TransitionComponent={Transition}
                 disableWindowBlurListener={true}
                 ClickAwayListenerProps={{
                   onClickAway: () => {

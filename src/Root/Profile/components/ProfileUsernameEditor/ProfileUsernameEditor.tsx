@@ -20,8 +20,8 @@ import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Spacer from '../../../components/Spacer';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { createStyles, withStyles } from '@material-ui/styles';
-import { Mutation, Query, RefetchQueriesProviderFn } from 'react-apollo';
+import { createStyles, withStyles } from '@material-ui/core/styles';
+import { Mutation, Query } from 'react-apollo';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 interface Props {

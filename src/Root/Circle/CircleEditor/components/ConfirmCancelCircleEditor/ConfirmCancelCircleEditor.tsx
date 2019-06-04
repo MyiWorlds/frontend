@@ -12,9 +12,11 @@ import { ICreatedCircle } from '../../../../../../types/circle';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
 
-function Transition(props: TransitionProps) {
-  return <Slide direction="up" {...props} />;
-}
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props: any, ref: any) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  },
+);
 
 interface Props {
   open: boolean;

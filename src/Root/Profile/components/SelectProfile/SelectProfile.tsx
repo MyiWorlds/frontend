@@ -13,7 +13,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ProfileUsernameEditor from '../ProfileUsernameEditor';
 import Radio from '@material-ui/core/Radio';
-import { createStyles, withStyles } from '@material-ui/styles';
+import { createStyles, withStyles } from '@material-ui/core/styles';
 import { IProfile } from '../../../../../types/profile';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import injectSheet from 'react-jss';
+import createStyles from '@material-ui/styles/createStyles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Spacer from '../../../../../components/Spacer';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +7,7 @@ import ThemeDemo from './components/ThemeDemo';
 import Typography from '@material-ui/core/Typography';
 import { IProfile } from '../../../../../../../types/profile';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Props {
   classes: {
@@ -23,25 +24,26 @@ interface State {
   secondaryColor: string;
 }
 
-const styles = (theme: Theme) => ({
-  container: {
-    marging: theme.spacing(1),
-    display: 'flex',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  themeColorRepresentation: {
-    borderRadius: '50%',
-    height: 20,
-    width: 20,
-    marginTop: 0,
-  },
-  themeDemo: {
-    margin: theme.spacing(4),
-  },
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    container: {
+      marging: theme.spacing(1),
+      display: 'flex',
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    themeColorRepresentation: {
+      borderRadius: '50%',
+      height: 20,
+      width: 20,
+      marginTop: 0,
+    },
+    themeDemo: {
+      margin: theme.spacing(4),
+    },
+  });
 
 class ThemeColorPicker extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -147,4 +149,4 @@ class ThemeColorPicker extends React.Component<Props, State> {
   }
 }
 
-export default injectSheet(styles)(ThemeColorPicker);
+export default withStyles(styles)(ThemeColorPicker);
