@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
 import * as React from 'react';
+import _ from 'lodash';
 import Card from '@material-ui/core/Card';
 import client from '../../../../apolloClient';
 import SEARCH_CIRCLES_BY_TAGS from './searchCirclesByTags';

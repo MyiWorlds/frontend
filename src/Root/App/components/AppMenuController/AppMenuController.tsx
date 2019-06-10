@@ -222,7 +222,7 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemIcon>
                   <Icon>account_circle</Icon>
                 </ListItemIcon>
-                <ListItemText inset primary={selectedProfile.username} />
+                <ListItemText primary={selectedProfile.username} />
               </MenuItem>
 
               {profiles && profiles.length
@@ -234,12 +234,10 @@ class AppMenuController extends React.Component<Props, State> {
                       <ListItemIcon>
                         <Icon>group</Icon>
                       </ListItemIcon>
-                      <ListItemText inset primary="Switch Profile" />
-                      <ListItemIcon>
-                        <Icon>
-                          {profilesOpen ? 'expand_less' : 'expand_more'}
-                        </Icon>
-                      </ListItemIcon>
+                      <ListItemText primary="Switch Profile" />
+                      <Icon>
+                        {profilesOpen ? 'expand_less' : 'expand_more'}
+                      </Icon>
                     </MenuItem>,
                     <Collapse
                       key="profilescollapser"
@@ -268,7 +266,7 @@ class AppMenuController extends React.Component<Props, State> {
                             <ListItemIcon>
                               <Icon>account_circle</Icon>
                             </ListItemIcon>
-                            <ListItemText inset primary={profile.username} />
+                            <ListItemText primary={profile.username} />
                           </MenuItem>
                         );
                       })}
@@ -282,7 +280,7 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemIcon>
                   <Icon>add</Icon>
                 </ListItemIcon>
-                <ListItemText inset primary="Create Profile" />
+                <ListItemText primary="Create Profile" />
               </MenuItem>
 
               <Divider />

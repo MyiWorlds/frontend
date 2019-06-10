@@ -18,6 +18,14 @@ export const FullCircleFragment = gql`
     properties
     settings {
       id
+      collection
+      type
+      lines {
+        id
+        type
+        collection
+        data
+      }
     }
     rating {
       id

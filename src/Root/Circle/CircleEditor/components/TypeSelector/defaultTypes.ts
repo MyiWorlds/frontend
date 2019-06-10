@@ -74,7 +74,7 @@ const types: ICreatedCircle[] = [
     title: 'Boolean',
     icon: 'toggle_on',
     type: 'BOOLEAN',
-    properties: ['number', 'icon', 'title'],
+    properties: ['boolean', 'icon', 'title'],
     boolean: false,
   },
   {

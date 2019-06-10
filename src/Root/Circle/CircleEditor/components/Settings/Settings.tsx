@@ -42,7 +42,6 @@ interface Props {
 export type AvailableProperties = [
   'cached',
   'cache',
-  'collection',
   'pii',
   'parent',
   'clonedFrom',
@@ -110,7 +109,6 @@ class Settings extends React.Component<Props, State> {
       availableProperties: [
         'cached',
         'cache',
-        'collection',
         'pii',
         'parent',
         'clonedFrom',

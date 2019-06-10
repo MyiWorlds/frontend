@@ -1,13 +1,11 @@
 import * as React from 'react';
 import moment from 'moment';
+import PublicProfileViewer from '../../../../Profile/components/PublicProfileViewer';
 import Typography from '@material-ui/core/Typography';
 import { BooleanViewer } from '../../../../components/Boolean';
 import { FontIconViewer } from '../../../../components/FontIcon';
+import { ICreatedCircle, Property } from '../../../../../../types/circle';
 import { StringViewer } from '../../../../components/String';
-import {
-  ICreatedCircle,
-  Property,
-} from '../../../../../../types/circle';
 
 interface Props {
   property: Property;
@@ -51,6 +49,13 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
       return (
         <FontIconViewer value={circle[property] ? circle[property]! : ''} />
       );
+
+    case 'creator':
+      if (circle && circle[property] && circle[property]!.id) {
+        return <PublicProfileViewer profileId={circle[property]!.id} />;
+      } else {
+        return null;
+      }
     default:
       return (
         <div>

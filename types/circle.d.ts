@@ -88,6 +88,7 @@ interface IImage {
 
 interface IEditingCircle {
   id?: string;
+  isNew?: boolean;
   type?: string | null;
   properties?: Property[];
   cached?: boolean;

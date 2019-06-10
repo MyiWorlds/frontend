@@ -1,4 +1,5 @@
 import * as React from 'react';
+import _ from 'lodash';
 import CircleGridEditor from './components/CircleGridEditor';
 import client from '../../../apolloClient';
 import convertCreatedCircleToEditingCircle from '../functions/convertCreatedCircleToEditingCircle';
@@ -8,13 +9,17 @@ import Dialog from '@material-ui/core/Dialog';
 import EditorControls from './components/EditorControls';
 import emptyCircle from '../functions/emptyCircle';
 import FieldEditor from './components/FieldEditor';
+import generateDefaultGridLayouts from '../functions/generateDefaultGridLayouts';
 import history from '../../../history';
 import Settings from './components/Settings';
 import Slide from '@material-ui/core/Slide';
 import TypeSelector from './components/TypeSelector';
 import UPDATE_CIRCLE from './mutations/UPDATE_CIRCLE';
 import UseLocalStorageModal from './components/UseLocalStorageModal/UseLocalStorageModal';
+import { defaultSettings } from '../constants/defaultSettings';
+import { firestore } from '../../../services/firebase';
 import { IProfile } from '../../../../types/profile';
+import { Layouts } from 'react-grid-layout';
 import { Redirect } from 'react-router-dom';
 import { TransitionProps } from '@material-ui/core/transitions';
 import {
@@ -44,7 +49,7 @@ interface State {
   navigateTo: string;
   isLocalStorageCircle: boolean;
   fieldEditing: Property | null;
-  circlesUpdating: IEditingCircle[];
+  settings: ICreatedCircle | null;
 }
 
 interface CircleEditor {
@@ -58,6 +63,9 @@ class CircleEditor extends React.Component<Props, State> {
       ? convertCreatedCircleToEditingCircle(props.circle, props.selectedProfile)
       : emptyCircle(props.selectedProfile);
 
+    let settings =
+      props.circle && props.circle.settings ? props.circle.settings : null;
+
     this.state = {
       changeRoute: false,
       navigateTo: '',
@@ -68,7 +76,7 @@ class CircleEditor extends React.Component<Props, State> {
       fieldEditing: null,
       // take whatever you have and apply those ontop of whatever theme you select, unless if it is null/newly created then take all
       circle,
-      circlesUpdating: [],
+      settings,
     };
     this.saveTimeout = 0;
   }
@@ -102,7 +110,7 @@ class CircleEditor extends React.Component<Props, State> {
         async () => {
           await this.saveCircle();
           history.push(`/edit/${circle.id}`);
-          localStorage.removeItem('circle-editing');
+          this.removeCircleFromLocalStorage();
         },
       );
     }
@@ -124,22 +132,19 @@ class CircleEditor extends React.Component<Props, State> {
 
       return;
     }
-    const isNewCircle = !this.props.circle;
+    const isNewCircle = circleData.isNew;
     const circle = {
       ...circleData,
       collection: 'circles',
     };
 
     if (isNewCircle) {
-      const createdCircle = await client.mutate({
-        variables: circle,
-        mutation: CREATE_CIRCLE,
-      });
+      const createdCircle = await this.createCircle(circle);
 
       if (!circleData.id) {
         const circleWithId = {
           ...circle,
-          id: createdCircle.data.createCircle.createdCircle.id,
+          id: createdCircle.id,
         };
         history.push(`/edit/${circleWithId.id}`);
         this.setState({
@@ -153,15 +158,22 @@ class CircleEditor extends React.Component<Props, State> {
         });
       }
     } else {
-      await client.mutate({
-        variables: { circle, merge: false },
-        mutation: UPDATE_CIRCLE,
-      });
+      this.putCircle(circle);
 
       this.setState({
         saving: false,
       });
     }
+  };
+
+  putCircle = async (circle: IEditingCircle) => {
+    const putCircle = await client.mutate({
+      variables: { circle, merge: false },
+      mutation: UPDATE_CIRCLE,
+    });
+
+    const updatedCircle = putCircle.data.updateCircle.createdCircle;
+    return updatedCircle;
   };
 
   updateCircle = (updatedCircle: IEditingCircle, noDelay: boolean = false) => {
@@ -194,27 +206,97 @@ class CircleEditor extends React.Component<Props, State> {
     });
   };
 
-  // updateNestedCircle = (
-  //   circleToUpdate: IEditingCircle,
-  //   pathToUpdate: any = 'circle.settings',
-  //   noDelay: boolean,
-  // ) => {
-  //   const circlesUpdating = [...this.state.circlesUpdating, circleToUpdate];
-  //   this.setState({ circlesUpdating, saving: true }, () => {
-  //     if (this.saveTimeout) {
-  //       // Might need new timeout
-  //       clearTimeout(this.saveTimeout);
-  //     }
+  mergeCircleData = async (circle: IEditingCircle) => {
+    const updatedCircle = await client.mutate({
+      variables: { circle, merge: true },
+      mutation: UPDATE_CIRCLE,
+    });
 
-  //     if (noDelay) {
-  //       this.saveCircle();
-  //     } else {
-  //       this.saveTimeout = setTimeout(async () => {
-  //         this.saveCircle();
-  //       }, 1000);
-  //     }
-  //   });
-  // };
+    return updatedCircle.data.updateCircle.updatedCircle;
+  };
+
+  // Update Settings
+  // If settings does not exist create it
+  // NOTE: This should not be created at time of circle creation as many pieces of data dont need it
+  // IF no settings display it just as the circle is laid out
+  // Store everything on the settings object for now.  If I wish to break it out further I can
+  // OR-----------
+  // Settings is an array of items
+  // Check if layout is one of them
+
+  // Should merge with saveCircle
+  createCircle = async (circle: IEditingCircle) => {
+    const createCircle = await client.mutate({
+      variables: circle,
+      mutation: CREATE_CIRCLE,
+    });
+    const { createdCircle } = createCircle.data.createCircle;
+
+    return createdCircle;
+  };
+
+  // Assumes you have correct permissions to update settings
+  // Cloned data will be pointing to old items
+  updateSettingsChild = async (circleToUpdate: IEditingCircle) => {
+    const { settings } = this.state;
+
+    if (settings) {
+      const settingsCircleToUpdateIndex =
+        settings.lines && settings.lines.length
+          ? settings.lines.findIndex(circle => circle.id === circleToUpdate.id)
+          : -1;
+
+      if (settingsCircleToUpdateIndex >= 0) {
+        const updatedSettingsChild = await this.mergeCircleData(circleToUpdate);
+        let newSettings = _.cloneDeep(settings);
+        if (newSettings.lines && newSettings.lines.length) {
+          newSettings.lines[settingsCircleToUpdateIndex] = updatedSettingsChild;
+        }
+
+        this.setState({
+          settings: newSettings,
+        });
+      } else {
+        const settingsChild = await this.createCircle(circleToUpdate);
+        let settingsToUpdate = convertCreatedCircleToEditingCircle(
+          settings,
+          this.props.selectedProfile,
+        );
+
+        if (!settingsToUpdate.lines) {
+          settingsToUpdate.lines = [settingsChild.id];
+        } else {
+          settingsToUpdate.lines.unshift(settingsChild.id);
+        }
+
+        const updatedSettings = await this.mergeCircleData(settingsToUpdate);
+
+        this.setState({
+          settings: updatedSettings,
+        });
+      }
+    } else {
+      const settingsChildToAdd = await this.createCircle(circleToUpdate);
+
+      let settingsToCreate = defaultSettings(this.props.selectedProfile);
+      settingsToCreate.lines = [settingsChildToAdd.id];
+
+      const createdSettings: ICreatedCircle = await this.createCircle(
+        settingsToCreate,
+      );
+      const { circle } = this.state;
+      let updatedCircle = _.cloneDeep(circle);
+      updatedCircle.settings = createdSettings.id;
+
+      this.setState(
+        {
+          circle: updatedCircle,
+          settings: createdSettings,
+        },
+        () => this.saveCircle(),
+      );
+    }
+  };
 
   showTypeSelector = () => {
     this.setState({
@@ -261,12 +343,51 @@ class CircleEditor extends React.Component<Props, State> {
     }
   };
 
+  newLayoutsCircle = (layouts: Layouts) => {
+    return {
+      id: firestore.collection('circles').doc().id,
+      type: 'LAYOUTS',
+      creator: this.props.selectedProfile.id,
+      owner: this.props.selectedProfile.id,
+      public: true,
+      properties: ['data'],
+      collection: 'circles',
+      data: layouts,
+    } as IEditingCircle;
+  };
+
+  onGridLayoutSave = (layouts: Layouts) => {
+    const { settings } = this.state;
+    let circle: null | IEditingCircle = null;
+    if (settings && settings.lines) {
+      let existingLayouts:
+        | IEditingCircle
+        | ICreatedCircle
+        | undefined = settings.lines.find(o => o.type === 'LAYOUTS');
+
+      if (existingLayouts) {
+        existingLayouts = convertCreatedCircleToEditingCircle(
+          existingLayouts,
+          this.props.selectedProfile,
+        );
+        existingLayouts.data = layouts;
+        circle = existingLayouts;
+      } else {
+        circle = this.newLayoutsCircle(layouts);
+      }
+    } else {
+      circle = this.newLayoutsCircle(layouts);
+    }
+    this.updateSettingsChild(circle);
+  };
+
   render() {
     const {
       circle,
       saving,
       showTypeSelector,
       showSettings,
+      settings,
       changeRoute,
       navigateTo,
       isLocalStorageCircle,
@@ -297,6 +418,14 @@ class CircleEditor extends React.Component<Props, State> {
           removeCircleFromLocalStorage={this.removeCircleFromLocalStorage}
         />
       );
+    }
+
+    let layouts = generateDefaultGridLayouts(circle.properties);
+    if (settings && settings.lines && settings.lines.length) {
+      const layout = settings.lines.find(o => o.type === 'LAYOUTS');
+      if (layout && layout.data) {
+        layouts = layout.data;
+      }
     }
 
     return (
@@ -333,6 +462,8 @@ class CircleEditor extends React.Component<Props, State> {
                 circle={circle}
                 updateFieldEditing={this.updateFieldEditing}
                 selectedProfile={selectedProfile}
+                onGridLayoutSave={this.onGridLayoutSave}
+                layouts={layouts}
               />
               <Settings
                 showSettings={showSettings}

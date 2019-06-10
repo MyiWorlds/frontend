@@ -1,4 +1,5 @@
 import { firestore } from '../../../services/firebase';
+import { IEditingCircle } from '../../../../types/circle';
 import { IProfile } from '../../../../types/profile';
 
 export default function emptyCircle(selectedProfile: IProfile) {
@@ -6,6 +7,7 @@ export default function emptyCircle(selectedProfile: IProfile) {
 
   return {
     id: newCircleId,
+    isNew: true,
     title: '',
     parent: null,
     clonedFrom: null,
@@ -13,5 +15,5 @@ export default function emptyCircle(selectedProfile: IProfile) {
     owner: selectedProfile.id,
     creator: selectedProfile.id,
     dateCreated: 0,
-  };
+  } as IEditingCircle;
 }

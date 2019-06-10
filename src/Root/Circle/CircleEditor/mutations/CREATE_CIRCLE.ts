@@ -72,6 +72,9 @@ export default gql`
       message
       createdCircle {
         ...FullCircle
+        lines {
+          ...FullCircle
+        }
       }
     }
   }

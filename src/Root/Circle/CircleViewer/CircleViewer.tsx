@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import canEditCircle from '../functions/canEditCircle';
 import CircleViewerSwitch from './components/CircleViewerSwitch';
 import FlexGrow from '../../components/FlexGrow';
+import generateDefaultGridLayouts from '../functions/generateDefaultGridLayouts';
 import GetCircleById from '../queries/GetCircleById';
 import GetCirclesByFilters from '../queries/GetCirclesByFilters';
 import GetCirclesByIds from '../queries/GetCirclesByIds';
@@ -41,9 +42,7 @@ interface Props {
   };
 }
 
-interface State {
-  layouts: Layouts;
-}
+interface State {}
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -60,80 +59,21 @@ const styles = (theme: Theme) =>
   });
 
 class CircleGridEditor extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      layouts: { xl: [], lg: [], md: [], sm: [], xs: [] },
-    };
-  }
-
-  componentDidMount() {
-    let layouts: Layouts = {
-      xl: [],
-      lg: [],
-      md: [],
-      sm: [],
-      xs: [],
-    };
-
-    if (this.props.circle.properties) {
-      this.props.circle.properties.forEach((property: string) => {
-        layouts.xl.push({
-          h: 6,
-          i: property,
-          moved: false,
-          static: false,
-          w: 6,
-          x: 6,
-          y: 0,
-        });
-        layouts.lg.push({
-          h: 6,
-          i: property,
-          moved: false,
-          static: false,
-          w: 6,
-          x: 6,
-          y: 0,
-        });
-        layouts.md.push({
-          h: 6,
-          i: property,
-          moved: false,
-          static: false,
-          w: 6,
-          x: 0,
-          y: 0,
-        });
-        layouts.sm.push({
-          h: 6,
-          i: property,
-          moved: false,
-          static: false,
-          w: 12,
-          x: 0,
-          y: 0,
-        });
-        layouts.xs.push({
-          h: 6,
-          i: property,
-          moved: false,
-          static: false,
-          w: 12,
-          x: 0,
-          y: 0,
-        });
-      });
-    }
-
-    if (layouts) {
-      this.setState({ layouts });
-    }
-  }
-
   render() {
     const { classes, circle, theme, selectedProfile } = this.props;
-    const { layouts } = this.state;
+
+    const settings = circle.settings;
+    let layouts: Layouts | null = null;
+    if (settings && settings.lines && settings.lines.length) {
+      const layout = settings.lines.find(o => o.type === 'LAYOUTS');
+      if (layout && layout.data) {
+        layouts = layout.data;
+      }
+    }
+
+    if (!layouts) {
+      layouts = generateDefaultGridLayouts(circle.properties);
+    }
 
     let circleOptions: any = null;
 

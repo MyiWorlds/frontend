@@ -8,6 +8,9 @@ export default gql`
       message
       updatedCircle {
         ...FullCircle
+        lines {
+          ...FullCircle
+        }
       }
     }
   }
