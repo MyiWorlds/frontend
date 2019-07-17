@@ -1,16 +1,18 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { createGenerateClassName, Theme } from '@material-ui/core/styles';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
-import { JssProvider } from 'react-jss';
-import { SheetsRegistry } from 'jss';
+import Card from '@material-ui/core/Card';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { IProfile } from '../../../types/profile';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withTheme } from '@material-ui/core';
 import {
-  Card,
-  createMuiTheme,
+  createGenerateClassName,
   createStyles,
-  MuiThemeProvider,
-} from '@material-ui/core';
+  StylesProvider,
+  withStyles,
+} from '@material-ui/styles';
+// import { SheetsRegistry } from 'jss';
+// import { JssProvider } from 'react-jss';
 
 interface Props {
   classes: {
@@ -18,9 +20,10 @@ interface Props {
     root: string;
   };
   selectedProfile: IProfile;
+  theme: Theme;
 }
 
-const theme = (theme: Theme) => createMuiTheme(theme);
+const mergeThemes = (theme: Theme) => createMuiTheme(theme);
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,19 +41,21 @@ const styles = (theme: Theme) =>
     },
   });
 
-const generateClassName = createGenerateClassName();
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'c',
+});
 
-const sheetsRegistry = new SheetsRegistry();
+// const sheetsRegistry = new SheetsRegistry();
 
 class MaterialUI extends React.Component<Props> {
   render() {
-    const { classes, selectedProfile } = this.props;
+    const { classes, selectedProfile, theme } = this.props;
 
     let profileTheme =
       selectedProfile &&
       selectedProfile.myTheme &&
       selectedProfile.myTheme.data &&
-      selectedProfile.isMyTheme
+      selectedProfile.overrideCircleTypes
         ? _.cloneDeep(selectedProfile.myTheme.data)
         : {
             palette: {
@@ -80,21 +85,27 @@ class MaterialUI extends React.Component<Props> {
       typography: {
         useNextVariants: true,
       },
+      breakpoints: {
+        values: {
+          ...theme.breakpoints.values,
+          xs: 400,
+        },
+      },
     };
 
     return (
-      <JssProvider
-        registry={sheetsRegistry}
+      <StylesProvider
+        // registry={sheetsRegistry}
         generateClassName={generateClassName}
       >
-        <MuiThemeProvider theme={theme(profileTheme)}>
+        <MuiThemeProvider theme={mergeThemes(profileTheme)}>
           <Card className={classes.app}>
             <div className={classes.root}>{this.props.children}</div>
           </Card>
         </MuiThemeProvider>
-      </JssProvider>
+      </StylesProvider>
     );
   }
 }
 
-export default withStyles(styles)(MaterialUI);
+export default withStyles(styles)(withTheme(MaterialUI));

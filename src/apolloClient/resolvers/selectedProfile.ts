@@ -10,7 +10,7 @@ const selectedProfile = {
       __typename: 'Profile',
       id: null,
       isDarkTheme: false,
-      isMyTheme: false,
+      overrideCircleTypes: false,
       addToHistory: false,
       myTheme: {
         __typename: 'Circle',

@@ -1,8 +1,7 @@
-import * as firebase from 'firebase/app';
 import * as React from 'react';
 import client from '../../apolloClient';
 import CREATE_USER from './containers/mutations/createUser';
-import GET_PROFILE_BY_ID from '../Profile/containers/queries/getUsersProfileById';
+import GET_PROFILE_BY_ID from '../Profile/containers/queries/getProfileById';
 import GET_USER from './containers/queries/getUserQuery';
 import guestProfile from '../Profile/constants/guestProfile';
 import guestUser from './constants/guestUser';
@@ -14,10 +13,12 @@ import Slide from '@material-ui/core/Slide';
 import Snackbar from '@material-ui/core/Snackbar';
 import UPDATE_PROFILE from '../Profile/containers/mutations/updateProfile';
 import { createStyles, withStyles } from '@material-ui/core/styles';
+import { Error } from '../../../types/error.d';
 import { fire } from '../../services/firebase';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
+import { IProfile } from '../../../types/profile';
 import { Query } from 'react-apollo';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { TransitionProps } from '@material-ui/core/transitions/transition';
 
 require('firebase/auth');
 
@@ -44,21 +45,18 @@ interface User {
   email: string;
 }
 
-interface Error {
-  code: string;
-  message: string;
-}
-
-function TransitionUp(props: any) {
-  return <Slide {...props} direction="up" />;
-}
+const Transition = React.forwardRef<unknown, TransitionProps>(
+  function Transition(props: any, ref: any) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  },
+);
 
 const styles = (theme: Theme) =>
   createStyles({
     card: {
       ...theme.mixins.gutters(),
-      paddingTop: theme.spacing.unit * 2,
-      paddingBottom: theme.spacing.unit * 2,
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
     },
     container: {
       margin: '42px auto',
@@ -97,8 +95,8 @@ class User extends React.Component<Props, State> {
     clearTimeout(this.timeoutFirebaseAuthToken);
   }
 
-  createUserIfNewUser = () => {
-    fire
+  createUserIfNewUser = async () => {
+    await fire
       .auth()
       .getRedirectResult()
       .then(async (result: any) => {
@@ -256,14 +254,14 @@ class User extends React.Component<Props, State> {
 
   handleToggleStyleEnabled = () => {
     let selectedProfile = Object.assign({}, this.state.selectedProfile);
-    selectedProfile.isMyTheme = !selectedProfile.isMyTheme;
+    selectedProfile.overrideCircleTypes = !selectedProfile.overrideCircleTypes;
 
     this.setState({ selectedProfile });
 
     this.timeoutUpdateProfile = setTimeout(async () => {
       if (selectedProfile.id) {
         const updateProfile = await this.updateProfile(selectedProfile.id, {
-          isMyTheme: selectedProfile.isMyTheme,
+          overrideCircleTypes: selectedProfile.overrideCircleTypes,
         });
 
         if (updateProfile.data) {
@@ -308,24 +306,6 @@ class User extends React.Component<Props, State> {
     return updatedProfileMutation;
   };
 
-  authWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-
-    provider.setCustomParameters({
-      prompt: 'select_account',
-    });
-
-    fire
-      .auth()
-      .signInWithRedirect(provider)
-      .catch((error: Error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        console.log(errorCode, errorMessage);
-      });
-  };
-
   handleLogout = async (refetch: () => void) => {
     await fire
       .auth()
@@ -339,8 +319,8 @@ class User extends React.Component<Props, State> {
       .catch((error: Error) =>
         console.log('Error happend logging out', error.code, error.message),
       );
-
     refetch();
+    this.changeSelectedProfile('guest');
   };
 
   changeSelectedProfile = async (id: string | null) => {
@@ -363,7 +343,7 @@ class User extends React.Component<Props, State> {
           id,
         },
       });
-      const selectedProfile = query.data.getUsersProfileById || guestProfile;
+      const selectedProfile = query.data.getProfileById || guestProfile;
 
       this.setProfileHistoryIdLS(
         selectedProfile.history ? selectedProfile.history.id : null,
@@ -412,9 +392,10 @@ class User extends React.Component<Props, State> {
 
           const user = data.user ? data.user : guestUser;
 
+          // TODO THIS IS NOT RENDERING
           if (user.id) {
             if (
-              user.profiles.length > 1 &&
+              user.profiles.length > 0 &&
               (selectedProfile && selectedProfile.id === 'guest')
             ) {
               return (
@@ -440,6 +421,7 @@ class User extends React.Component<Props, State> {
             }
           } else {
             this.clearLS();
+            return null;
           }
 
           return (
@@ -450,7 +432,6 @@ class User extends React.Component<Props, State> {
                 handleToggleThemeDark: this.handleToggleThemeDark,
                 handleToggleStyleEnabled: this.handleToggleStyleEnabled,
                 handleToggleAddToHistory: this.handleToggleAddToHistory,
-                handleLogin: this.authWithGoogle,
                 handleLogout: () => this.handleLogout(refetch),
                 changeSelectedProfile: this.changeSelectedProfile,
               })}
@@ -459,7 +440,7 @@ class User extends React.Component<Props, State> {
                 open={this.state.showProfileUpdatedSnackbar}
                 onClose={this.handleCloseSnackbar}
                 autoHideDuration={2000}
-                TransitionComponent={TransitionUp}
+                TransitionComponent={Transition}
                 disableWindowBlurListener={true}
                 ClickAwayListenerProps={{
                   onClickAway: () => {

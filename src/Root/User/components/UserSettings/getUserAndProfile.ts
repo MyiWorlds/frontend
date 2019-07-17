@@ -27,12 +27,11 @@ const GET_USER_AND_PROFILE = gql`
           data
         }
         isDarkTheme
-        isMyTypeStyles
-        myTypeStyles {
+        circleTypeOverrides {
           id
           data
         }
-        isMyTheme
+        overrideCircleTypes
         myTheme {
           id
           data

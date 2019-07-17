@@ -1,11 +1,12 @@
 import * as React from 'react';
-import CircleEditor from './Root/Circle/containers/mutations/CircleEditor';
-import GetCircleById from './Root/Circle/containers/queries/GetCircleById';
-import GetCircleByProfileUsername from './Root/Circle/containers/queries/GetCircleByProfileUsername';
+import CircleEditor from './Root/Circle/CircleEditor';
+import GetCircleById from './Root/Circle/queries/GetCircleById';
+import GetCircleByProfileUsername from './Root/Circle/queries/GetCircleByProfileUsername';
+import Search from './Root/Circle/queries/Search';
 import SessionBrowserHistory from './SessionBrowserHistory';
 import ThemeEditor from './Root/Profile/components/ThemeEditor';
 import UserSettings from './Root/User/components/UserSettings';
-import { IProfile } from '../customTypeScriptTypes/profile';
+import { IProfile } from '../types/profile';
 import { Route, Switch } from 'react-router';
 
 interface Props {
@@ -49,6 +50,33 @@ class Routes extends React.Component<Props> {
         />
         <Route
           exact
+          path="/search"
+          // history={history}
+          render={props => (
+            <Search
+              {...props}
+              profile={selectedProfile}
+              history={props.history}
+              // isPrimaryContent={true}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/search/:searchString"
+          // history={history}
+          render={props => (
+            <Search
+              {...props}
+              searchString={props.match.params.searchString}
+              profile={selectedProfile}
+              history={props.history}
+              // isPrimaryContent={true}
+            />
+          )}
+        />
+        <Route
+          exact
           path="/account"
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
@@ -63,6 +91,7 @@ class Routes extends React.Component<Props> {
             <SessionBrowserHistory routerProps={props} store={store}>
               <CircleEditor
                 currentPath={props.history.location.pathname}
+                store={store}
                 selectedProfile={selectedProfile}
               />
             </SessionBrowserHistory>
@@ -74,7 +103,8 @@ class Routes extends React.Component<Props> {
           render={(props: any) => (
             <SessionBrowserHistory routerProps={props} store={store}>
               <GetCircleById
-                returnCircleEditor={true}
+                key={props.match.params.id}
+                isEditing={true}
                 id={props.match.params.id}
                 currentPath={props.history.location.pathname}
                 selectedProfile={selectedProfile}
@@ -133,20 +163,6 @@ class Routes extends React.Component<Props> {
           //   uid={props.match.params.uid}
           //   isPrimaryContent={true}
           //   {...props}
-          // />
-          )}
-        /> */}
-        {/* <Route
-        exact
-        path="/search/:searchString"
-        history={history}
-        render={props => (
-          <div>Search</div>
-          // <Search
-          //   {...props}
-          //   searchString={props.match.params.searchString}
-          //   user={user}
-          //   isPrimaryContent={true}
           // />
           )}
         /> */}

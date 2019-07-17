@@ -1,205 +1,182 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import injectSheet from 'react-jss';
-import { createStyles } from '@material-ui/core/styles';
-import { IProfile } from '../../../../../customTypeScriptTypes/profile';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import ForwardButtonLink from '../../../components/ForwardButtonLink/ForwardButtonLink';
+import Hidden from '@material-ui/core/Hidden';
+import Icon from '@material-ui/core/Icon';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
-
-import {
-  Divider,
-  Drawer,
-  Hidden,
-  Icon,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
 const drawerWidth = 240;
 
-const styles = (theme: any) =>
-  createStyles({
-    navigation: {
-      overflow: 'hidden',
-      width: '0px',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.easeInOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      [`@media screen and (min-width: ${theme.breakpoints.values.md}px)`]: {
-        minWidth: (props: any) => (props.showNavigation ? drawerWidth : '64px'),
-      },
-
-      [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
-        minWidth: (props: any) => (props.showNavigation ? drawerWidth : '64px'),
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  navigation: (props: Props) => ({
+    overflow: 'hidden',
+    width: '0px',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.easeInOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    [`@media screen and (min-width: ${theme.breakpoints.values.md}px)`]: {
+      minWidth: props.showNavigation ? drawerWidth : '64px',
     },
 
-    drawerPaper: {
-      background: theme.palette.background.default,
-      position: 'fixed',
-      height: '100%',
-      top: '0',
-      width: drawerWidth,
-      [theme.breakpoints.up('md')]: {
-        top: 48,
-      },
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+    [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
+      minWidth: props.showNavigation ? drawerWidth : '64px',
     },
-    drawerPaperClose: {
-      overflowX: 'hidden',
-      width: 64,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
+  }),
+
+  drawerPaper: {
+    background: theme.palette.background.default,
+    position: 'fixed',
+    height: '100%',
+    top: '0',
+    width: drawerWidth,
+    [theme.breakpoints.up('md')]: {
+      top: 48,
     },
-    drawerInner: {
-      // Make the items inside not wrap when transitioning:
-      width: drawerWidth,
-    },
-    bottomNav: {
-      borderTop: '1px solid rgba(0, 0, 0, 0.12)',
-      background: theme.palette.background.default,
-      bottom: 0,
-      position: 'fixed',
-      width: '100%',
-    },
-  });
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    width: 64,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  drawerInner: {
+    // Make the items inside not wrap when transitioning:
+    width: drawerWidth,
+  },
+  bottomNav: {
+    borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+    background: theme.palette.background.default,
+    bottom: 0,
+    position: 'fixed',
+    width: '100%',
+  },
+}));
 
 interface Props {
-  classes: {
-    navigation: string;
-    drawerPaper: string;
-    drawerPaperClose: string;
-    drawerInner: string;
-    bottomNav: string;
-  };
+  // classes: {
+  //   navigation: string;
+  //   drawerPaper: string;
+  //   drawerPaperClose: string;
+  //   drawerInner: string;
+  //   bottomNav: string;
+  // };
   selectedProfile: IProfile;
   showNavigation: boolean;
   handleNavigationToggle: () => void;
 }
 
-interface State {}
-
-class Navigation extends React.Component<Props, State> {
-  state = {};
-
-  navItems = (selectedProfile: IProfile) => {
+export default function Navigation(props: Props) {
+  const { selectedProfile, showNavigation, handleNavigationToggle } = props;
+  const getNavItems = (selectedProfile: IProfile) => {
     const navItems = [
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'add',
         title: 'Create',
         slug: `/create`,
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
-        icon: 'search',
-        title: 'Search',
-        slug: `/search`,
-      },
-      {
-        type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
-        icon: 'search',
-        title: 'Search2',
-        slug: `/search2`,
-      },
-      {
-        type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'home',
         title: 'Home',
         slug: `/private/home`,
       },
-      selectedProfile.id
-        ? {
-            type: 'BUTTON',
-            settings: {
-              primary: true,
-            },
-            icon: 'public',
-            title: 'Public Profile',
-            slug: `/${selectedProfile.username}`,
-          }
-        : {
-            type: '',
-            icon: '',
-            title: '',
-            slug: '',
-          },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'inbox',
         title: 'Inbox',
         slug: '/inbox',
       },
       {
         type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
         icon: 'query_builder',
         title: 'History',
         slug: '/history',
-      },
-
-      {
-        type: 'BUTTON',
-        settings: {
-          primary: true,
-        },
-        icon: 'color_lens',
-        title: 'Theme Color Picker',
-        slug: '/theme-color-picker',
       },
     ];
 
     return navItems;
   };
 
-  render() {
-    const {
-      classes,
-      selectedProfile,
-      showNavigation,
-      handleNavigationToggle,
-    } = this.props;
-    const navItems = this.navItems(selectedProfile);
+  const classes = useStyles(props);
+  const navItems = getNavItems(selectedProfile);
 
-    return (
-      <div className={classes.navigation}>
-        <Hidden mdUp>
+  return (
+    <div className={classes.navigation}>
+      <Hidden mdUp>
+        <Drawer
+          variant="temporary"
+          onClose={() => handleNavigationToggle()}
+          classes={{
+            paper: classNames(
+              classes.drawerPaper,
+              !showNavigation && classes.drawerPaperClose,
+            ),
+          }}
+          open={showNavigation}
+        >
+          <div className={classes.drawerInner}>
+            {navItems.length
+              ? navItems.map((item, index) => {
+                  switch (item.type) {
+                    case 'BUTTON': {
+                      return (
+                        <ListItem
+                          button
+                          key={item.title + index}
+                          component={ForwardButtonLink}
+                          to={item.slug}
+                        >
+                          <ListItemIcon>
+                            <Icon>{item.icon}</Icon>
+                          </ListItemIcon>
+                          <ListItemText primary={item.title} />
+                        </ListItem>
+                      );
+                    }
+                    case 'DIVIDER': {
+                      return <Divider key={index} />;
+                    }
+
+                    default:
+                      return null;
+                  }
+                })
+              : null}
+          </div>
+        </Drawer>
+      </Hidden>
+
+      <Hidden smDown>
+        <div>
           <Drawer
-            variant="temporary"
-            onClose={() => handleNavigationToggle()}
+            variant="permanent"
             classes={{
               paper: classNames(
                 classes.drawerPaper,
                 !showNavigation && classes.drawerPaperClose,
               ),
             }}
+            onClose={() => handleNavigationToggle()}
             open={showNavigation}
           >
             <div className={classes.drawerInner}>
-              {navItems.length
+              {navItems && navItems.length
                 ? navItems.map((item, index) => {
                     switch (item.type) {
                       case 'BUTTON': {
@@ -207,9 +184,8 @@ class Navigation extends React.Component<Props, State> {
                           <ListItem
                             button
                             key={item.title + index}
-                            component={(props: any) => (
-                              <Link {...props} to={item.slug} />
-                            )}
+                            component={ForwardButtonLink}
+                            to={item.slug}
                           >
                             <ListItemIcon>
                               <Icon>{item.icon}</Icon>
@@ -221,7 +197,6 @@ class Navigation extends React.Component<Props, State> {
                       case 'DIVIDER': {
                         return <Divider key={index} />;
                       }
-
                       default:
                         return null;
                     }
@@ -229,56 +204,8 @@ class Navigation extends React.Component<Props, State> {
                 : null}
             </div>
           </Drawer>
-        </Hidden>
-
-        <Hidden smDown>
-          <div>
-            <Drawer
-              variant="permanent"
-              classes={{
-                paper: classNames(
-                  classes.drawerPaper,
-                  !showNavigation && classes.drawerPaperClose,
-                ),
-              }}
-              onClose={() => handleNavigationToggle()}
-              open={showNavigation}
-            >
-              <div className={classes.drawerInner}>
-                {navItems && navItems.length
-                  ? navItems.map((item, index) => {
-                      switch (item.type) {
-                        case 'BUTTON': {
-                          return (
-                            <ListItem
-                              button
-                              key={item.title + index}
-                              component={(props: any) => (
-                                <Link {...props} to={item.slug} />
-                              )}
-                            >
-                              <ListItemIcon>
-                                <Icon>{item.icon}</Icon>
-                              </ListItemIcon>
-                              <ListItemText primary={item.title} />
-                            </ListItem>
-                          );
-                        }
-                        case 'DIVIDER': {
-                          return <Divider key={index} />;
-                        }
-                        default:
-                          return null;
-                      }
-                    })
-                  : null}
-              </div>
-            </Drawer>
-          </div>
-        </Hidden>
-      </div>
-    );
-  }
+        </div>
+      </Hidden>
+    </div>
+  );
 }
-
-export default injectSheet(styles)(Navigation);

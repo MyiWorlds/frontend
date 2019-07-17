@@ -1,2 +1,2 @@
-export { default as CircleViewerSwitch } from './CircleViewerSwitch';
-export { default as CircleEditorSwitch } from './CircleEditorSwitch';
+export { default as CircleViewer } from './CircleViewer';
+export { default as CircleEditor } from './CircleEditor';

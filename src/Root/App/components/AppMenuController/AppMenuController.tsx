@@ -1,25 +1,26 @@
 import * as React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import createStyles from '@material-ui/styles/createStyles';
+import Divider from '@material-ui/core/Divider';
 import FlexGrow from '../../../components/FlexGrow';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import ProfileUsernameEditor from '../../../Profile/components/ProfileUsernameEditor';
+import Switch from '@material-ui/core/Switch';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { Consumer } from '../../../ReactContext';
+import { ForwardButtonLink } from '../../../components/ForwardButtonLink';
+import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
-import {
-  AppBar,
-  Button,
-  Collapse,
-  createStyles,
-  Divider,
-  Icon,
-  IconButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Switch,
-  Theme,
-  Toolbar,
-  Typography,
-  withStyles,
-} from '@material-ui/core';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import { withStyles } from '@material-ui/styles';
 
 interface Profile {
   id: string;
@@ -43,17 +44,18 @@ interface Props {
     selectedProfile: string;
   };
   profiles: [Profile];
-  selectedProfile: {
-    id: string;
-    username: string;
-    isDarkTheme: boolean;
-    isMyTheme: boolean;
-    addToHistory: boolean;
-    myTheme: {
-      id: string | null;
-      data: any | null;
-    };
-  };
+  selectedProfile: IProfile;
+  // {
+  //   id: string;
+  //   username: string;
+  //   isDarkTheme: boolean;
+  //   overrideCircleTypes: boolean;
+  //   addToHistory: boolean;
+  //   myTheme: {
+  //     id: string;
+  //     data: any | null;
+  //   };
+  // };
   user: {
     id: string;
   };
@@ -61,7 +63,6 @@ interface Props {
   handleNavigationToggle: () => void;
   handleToggleThemeDark: () => void;
   handleToggleStyleEnabled: () => void;
-  handleLogin: () => void;
   handleLogout: () => void;
   changeSelectedProfile: (id: string | null) => void;
   handleToggleAddToHistory: () => void;
@@ -98,10 +99,10 @@ const styles = (theme: Theme) =>
       margin: '4px 8px 0px 0px',
     },
     nested: {
-      paddingLeft: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing(4),
     },
     selectedProfile: {
-      marginTop: -theme.spacing.unit,
+      marginTop: -theme.spacing(1),
     },
   });
 
@@ -152,15 +153,22 @@ class AppMenuController extends React.Component<Props, State> {
       handleToggleStyleEnabled,
       user,
       handleLogout,
-      handleLogin,
     } = this.props;
     const open = Boolean(anchorEl);
 
     const login = (
-      <Button variant="contained" color="primary" onClick={() => handleLogin()}>
-        <Icon style={{ marginRight: 8 }}>account_circle</Icon>
-        Login / Signup
-      </Button>
+      <Consumer>
+        {(store: ProviderStore) => (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => store.login()}
+          >
+            <Icon style={{ marginRight: 8 }}>account_circle</Icon>
+            Login / Signup
+          </Button>
+        )}
+      </Consumer>
     );
 
     return (
@@ -189,7 +197,13 @@ class AppMenuController extends React.Component<Props, State> {
             MyiWorlds
           </Typography>
           <FlexGrow />
-
+          <IconButton
+            component={ForwardButtonLink}
+            to={`/search`}
+            color="inherit"
+          >
+            <Icon>search</Icon>
+          </IconButton>
           <div>
             {user.id ? (
               <IconButton
@@ -210,11 +224,15 @@ class AppMenuController extends React.Component<Props, State> {
               open={open}
               onClose={this.handleClose}
             >
-              <MenuItem selected className={classes.selectedProfile}>
+              <MenuItem
+                component={ForwardButtonLink}
+                to={`/${selectedProfile.username}`}
+                className={classes.selectedProfile}
+              >
                 <ListItemIcon>
                   <Icon>account_circle</Icon>
                 </ListItemIcon>
-                <ListItemText inset primary={selectedProfile.username} />
+                <ListItemText primary={selectedProfile.username} />
               </MenuItem>
 
               {profiles && profiles.length
@@ -226,12 +244,10 @@ class AppMenuController extends React.Component<Props, State> {
                       <ListItemIcon>
                         <Icon>group</Icon>
                       </ListItemIcon>
-                      <ListItemText inset primary="Switch Profile" />
-                      <ListItemIcon>
-                        <Icon>
-                          {profilesOpen ? 'expand_less' : 'expand_more'}
-                        </Icon>
-                      </ListItemIcon>
+                      <ListItemText primary="Switch Profile" />
+                      <Icon>
+                        {profilesOpen ? 'expand_less' : 'expand_more'}
+                      </Icon>
                     </MenuItem>,
                     <Collapse
                       key="profilescollapser"
@@ -260,7 +276,7 @@ class AppMenuController extends React.Component<Props, State> {
                             <ListItemIcon>
                               <Icon>account_circle</Icon>
                             </ListItemIcon>
-                            <ListItemText inset primary={profile.username} />
+                            <ListItemText primary={profile.username} />
                           </MenuItem>
                         );
                       })}
@@ -274,14 +290,15 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemIcon>
                   <Icon>add</Icon>
                 </ListItemIcon>
-                <ListItemText inset primary="Create Profile" />
+                <ListItemText primary="Create Profile" />
               </MenuItem>
 
               <Divider />
 
               <MenuItem
                 onClick={this.handleClose}
-                component={(props: any) => <Link {...props} to="/account" />}
+                component={ForwardButtonLink}
+                to={'/account'}
               >
                 <ListItemIcon>
                   <Icon>settings</Icon>
@@ -309,8 +326,19 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemIcon>
                   <Icon>color_lens</Icon>
                 </ListItemIcon>
-                <ListItemText primary="My Custom Theme" />
-                <Switch checked={selectedProfile.isMyTheme} />
+                <ListItemText primary="My Theme" />
+                <Switch checked={selectedProfile.overrideCircleTypes} />
+              </MenuItem>
+
+              <MenuItem
+                component={ForwardButtonLink}
+                disabled={selectedProfile.id === 'guest'}
+                to={'/theme-color-picker'}
+              >
+                <ListItemIcon>
+                  <Icon>color_lens</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Edit Theme" />
               </MenuItem>
 
               <Divider />

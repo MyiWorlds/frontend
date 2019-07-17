@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { ICreatedCircle } from '../../../customTypeScriptTypes/circle';
-import { IProfile } from '../../../customTypeScriptTypes/profile';
+import { ICreatedCircle } from '../../../types/circle';
+import { IProfile } from '../../../types/profile';
 
 interface Props {
   selectedProfile: IProfile;
   circle: ICreatedCircle;
 }
 
+// NOT IMPLEMENTED YET
 const Profile: React.SFC<Props> = ({ selectedProfile, circle }) => {
   const type = circle.type.includes('-')
     ? circle.type.substring(0, circle.type.indexOf('-'))

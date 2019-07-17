@@ -1,12 +1,14 @@
 import * as React from 'react';
 import Progress from '../Progress';
-import { createStyles, Typography, withStyles } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import { createStyles, withStyles } from '@material-ui/styles';
 
 interface Props {
   classes: {
     container: string;
   };
   size?: number;
+  hideMessage?: boolean;
   hideBackground?: boolean;
   message?: JSX.Element | string;
   messageVariant?:
@@ -22,12 +24,12 @@ interface Props {
     | 'caption'
     | 'button'
     | undefined;
+  containerStylesOverride?: any;
 }
 
 const styles = () =>
   createStyles({
     container: {
-      margin: '24px auto',
       textAlign: 'center',
       display: 'block',
     },
@@ -47,6 +49,8 @@ class ProgressWithMessage extends React.Component<Props> {
       hideBackground,
       message,
       messageVariant,
+      hideMessage,
+      containerStylesOverride,
     } = this.props;
 
     const progressSize = size || 42;
@@ -54,7 +58,10 @@ class ProgressWithMessage extends React.Component<Props> {
     const variant = messageVariant || 'h4';
 
     return (
-      <div className={classes.container}>
+      <div
+        className={classes.container}
+        style={containerStylesOverride ? containerStylesOverride : null}
+      >
         <div
           style={{
             height: progressSize,
@@ -62,12 +69,19 @@ class ProgressWithMessage extends React.Component<Props> {
             position: 'relative',
           }}
         >
-          <Progress hideBackground={hideBackground} size={progressSize} />
+          <Progress
+            hideBackground={hideBackground || false}
+            size={progressSize}
+          />
         </div>
-        <br />
-        <div>
-          <Typography variant={variant}>{loadingMessage}</Typography>
-        </div>
+        {hideMessage ? null : (
+          <>
+            <br />
+            <div>
+              <Typography variant={variant}>{loadingMessage}</Typography>
+            </div>
+          </>
+        )}
       </div>
     );
   }
