@@ -2,7 +2,7 @@ import * as React from 'react';
 import classNames from 'classnames';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
-import ForwardButton from '../../../components/ForwardButton/ForwardButton';
+import ForwardButtonLink from '../../../components/ForwardButtonLink/ForwardButtonLink';
 import Hidden from '@material-ui/core/Hidden';
 import Icon from '@material-ui/core/Icon';
 import ListItem from '@material-ui/core/ListItem';
@@ -92,29 +92,10 @@ export default function Navigation(props: Props) {
       },
       {
         type: 'BUTTON',
-        icon: 'search',
-        title: 'Search',
-        slug: `/search`,
-      },
-      {
-        type: 'BUTTON',
         icon: 'home',
         title: 'Home',
         slug: `/private/home`,
       },
-      selectedProfile.id
-        ? {
-            type: 'BUTTON',
-            icon: 'public',
-            title: 'Public Profile',
-            slug: `/${selectedProfile.username}`,
-          }
-        : {
-            type: '',
-            icon: '',
-            title: '',
-            slug: '',
-          },
       {
         type: 'BUTTON',
         icon: 'inbox',
@@ -126,13 +107,6 @@ export default function Navigation(props: Props) {
         icon: 'query_builder',
         title: 'History',
         slug: '/history',
-      },
-
-      {
-        type: 'BUTTON',
-        icon: 'color_lens',
-        title: 'Theme Color Picker',
-        slug: '/theme-color-picker',
       },
     ];
 
@@ -165,7 +139,7 @@ export default function Navigation(props: Props) {
                         <ListItem
                           button
                           key={item.title + index}
-                          component={ForwardButton}
+                          component={ForwardButtonLink}
                           to={item.slug}
                         >
                           <ListItemIcon>
@@ -210,7 +184,7 @@ export default function Navigation(props: Props) {
                           <ListItem
                             button
                             key={item.title + index}
-                            component={ForwardButton}
+                            component={ForwardButtonLink}
                             to={item.slug}
                           >
                             <ListItemIcon>

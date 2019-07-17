@@ -24,12 +24,12 @@ interface Props {
     | 'caption'
     | 'button'
     | undefined;
+  containerStylesOverride?: any;
 }
 
 const styles = () =>
   createStyles({
     container: {
-      margin: '24px auto',
       textAlign: 'center',
       display: 'block',
     },
@@ -50,6 +50,7 @@ class ProgressWithMessage extends React.Component<Props> {
       message,
       messageVariant,
       hideMessage,
+      containerStylesOverride,
     } = this.props;
 
     const progressSize = size || 42;
@@ -57,7 +58,10 @@ class ProgressWithMessage extends React.Component<Props> {
     const variant = messageVariant || 'h4';
 
     return (
-      <div className={classes.container}>
+      <div
+        className={classes.container}
+        style={containerStylesOverride ? containerStylesOverride : null}
+      >
         <div
           style={{
             height: progressSize,

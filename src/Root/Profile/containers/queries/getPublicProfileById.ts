@@ -5,20 +5,8 @@ export default gql`
     getProfileById(id: $id) {
       id
       username
-      isDarkTheme
-      overrideCircleTypes
-      addToHistory
-      history {
-        id
-      }
-      myTheme {
-        id
-        type
-        data
-      }
-      home {
-        id
-      }
+      dateCreated
+      dateUpdated
       homePublic {
         id
       }

@@ -4,19 +4,24 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import convertCreatedCircleToEditingCircle from '../../../functions/convertCreatedCircleToEditingCircle';
+import client from '../../../../../apolloClient';
+import cloneCircle from './../../../mutations/cloneCircle';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import gql from 'graphql-tag';
 import Grid from '@material-ui/core/Grid';
+import history from '../../../../../history';
 import Icon from '@material-ui/core/Icon';
 import Slide from '@material-ui/core/Slide';
-import types from './defaultTypes';
+import Snackbar from '@material-ui/core/Snackbar';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, withStyles } from '@material-ui/styles';
 import { ICreatedCircle, IEditingCircle } from '../../../../../../types/circle';
 import { IProfile } from '../../../../../../types/profile';
+import { Redirect } from 'react-router-dom';
+import { SnackbarContent } from '@material-ui/core';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { TransitionProps } from '@material-ui/core/transitions/transition';
 
@@ -27,10 +32,11 @@ const Transition = React.forwardRef<unknown, TransitionProps>(
 );
 
 interface Props {
-  updateCircle: (type: IEditingCircle, noDelay: boolean) => void;
-  clonedFrom?: string | null;
-  showTypeSelector: boolean;
-  selectedProfile: IProfile;
+  // types: [string];
+  updateCircle: (type: IEditingCircle, noDelay: boolean) => void; // REMOVE OR PROVE OTHERWISE
+  clonedFrom?: string | null; // REMOVE OR PROVE OTHERWISE
+  showTypeSelector: boolean; // REMOVE OR PROVE OTHERWISE
+  selectedProfile: IProfile; // REMOVE OR PROVE OTHERWISE - SHOULD BE IN PARENT
   handleClose: () => void;
   classes: {
     container: string;
@@ -40,12 +46,16 @@ interface Props {
     flex: string;
     icon: string;
     btnIcon: string;
+    errorSnackbar: string;
   };
 }
 
 interface State {
   selectedCircleType: null | ICreatedCircle;
-  types: ICreatedCircle[];
+  baseTypes: ICreatedCircle[];
+  loading: boolean;
+  errorMessage: string | null;
+  editUrl: string | null;
 }
 
 const styles = (theme: Theme) =>
@@ -72,7 +82,27 @@ const styles = (theme: Theme) =>
     btnIcon: {
       marginRight: theme.spacing(1),
     },
+    errorSnackbar: {
+      backgroundColor: theme.palette.error.dark,
+    },
   });
+
+const GET_CIRCLE_BY_ID = gql`
+  query getCircleById($id: String!) {
+    getCircleById(id: $id) {
+      id
+      title
+      lines {
+        id
+        icon
+        title
+        type
+        subtitle
+        description
+      }
+    }
+  }
+`;
 
 class TypeSelector extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -86,13 +116,17 @@ class TypeSelector extends React.Component<Props, State> {
     // const selectedCircleType = props.selectedCircleType ? props.selectedCircleType
     this.state = {
       selectedCircleType: null,
-      types: types || [],
+      baseTypes: [],
+      loading: false,
+      errorMessage: null,
+      editUrl: null,
     };
   }
 
   componentDidMount() {
+    this.getBaseTypes();
     if (this.props.clonedFrom) {
-      const typeIsDisplayed = types.find(
+      const typeIsDisplayed = this.state.baseTypes.find(
         circle => circle.id === this.props.clonedFrom,
       );
       if (typeIsDisplayed)
@@ -104,12 +138,13 @@ class TypeSelector extends React.Component<Props, State> {
 
   saveAndClose = () => {
     if (this.state.selectedCircleType) {
-      const convertedToEditingCircle = convertCreatedCircleToEditingCircle(
-        this.state.selectedCircleType,
-        this.props.selectedProfile,
-      );
-      this.props.updateCircle(convertedToEditingCircle, true);
-      this.props.handleClose();
+      this.fullyCloneCircle(this.state.selectedCircleType.id);
+      //   const convertedToEditingCircle = convertCreatedCircleToEditingCircle(
+      //     this.state.selectedCircleType,
+      //     this.props.selectedProfile,
+      //   );
+      //   this.props.updateCircle(convertedToEditingCircle, true);
+      //   this.props.handleClose();
     }
   };
 
@@ -125,83 +160,170 @@ class TypeSelector extends React.Component<Props, State> {
     });
   };
 
+  getBaseTypes = () => {
+    this.setState(
+      {
+        loading: true,
+      },
+      async () => {
+        try {
+          const query: any = await client.query({
+            query: GET_CIRCLE_BY_ID,
+            fetchPolicy: 'no-cache',
+            variables: {
+              id: 'baseTypes',
+            },
+          });
+
+          const { getCircleById } = query.data;
+
+          this.setState({
+            baseTypes:
+              getCircleById.lines && getCircleById.lines.length
+                ? getCircleById.lines
+                : [],
+            loading: false,
+          });
+        } catch (error) {
+          this.setState({ loading: false });
+        }
+      },
+    );
+  };
+
+  fullyCloneCircle = (circleToClonesId: string) => {
+    this.setState(
+      {
+        loading: true,
+        errorMessage: null,
+      },
+      async () => {
+        try {
+          const { clonedCircleId, message } = await cloneCircle(
+            circleToClonesId,
+          );
+
+          this.setState({ loading: false });
+          if (clonedCircleId) {
+            console.log(message);
+            this.setState({
+              loading: false,
+              editUrl: `/edit/${clonedCircleId}`,
+            });
+          } else {
+            this.setState({
+              errorMessage: message,
+            });
+          }
+        } catch (error) {
+          this.setState({ loading: false });
+        }
+      },
+    );
+  };
+
+  handleCloseSnackbar = () => {
+    this.setState({
+      errorMessage: null,
+    });
+  };
+
   render() {
     const { classes, showTypeSelector, handleClose } = this.props;
-    const { selectedCircleType, types } = this.state;
+    const { baseTypes, editUrl, errorMessage, selectedCircleType } = this.state;
+
+    if (editUrl) {
+      return <Redirect to={editUrl} />;
+    }
 
     return (
-      <Dialog
-        fullWidth
-        maxWidth="lg"
-        open={showTypeSelector}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-        keepMounted
-      >
-        <DialogTitle id="type-select-title">Create</DialogTitle>
-        <DialogContent>
-          <div className={classes.container}>
-            <Grid container spacing={8}>
-              {types.map(type => {
-                return (
-                  <Grid key={type.id} item xs={4}>
-                    <Card
-                      className={
-                        selectedCircleType === type
-                          ? classes.selectedCard
-                          : classes.card
-                      }
-                    >
-                      <CardActionArea
-                        onClick={() => this.updateSelectedType(type)}
+      <>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={!!errorMessage}
+          onClose={this.handleCloseSnackbar}
+          className={classes.errorSnackbar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">{errorMessage}</span>}
+        />
+        <Dialog
+          fullWidth
+          maxWidth="lg"
+          open={showTypeSelector}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          keepMounted
+        >
+          <DialogTitle id="type-select-title">Create</DialogTitle>
+          <DialogContent>
+            <div className={classes.container}>
+              <Grid container spacing={8}>
+                {baseTypes.map(type => {
+                  return (
+                    <Grid key={type.id} item xs={4}>
+                      <Card
+                        className={
+                          selectedCircleType === type
+                            ? classes.selectedCard
+                            : classes.card
+                        }
                       >
-                        <CardContent>
-                          <div style={{ textAlign: 'center' }}>
-                            <Icon className={classes.icon}>{type.icon}</Icon>
-                          </div>
-                          <Typography gutterBottom variant="h5">
-                            {type.title}
-                          </Typography>
-                          <Typography>{type.description}</Typography>
-                        </CardContent>
-                      </CardActionArea>
-                      <CardActions>
-                        <Button
-                          variant="contained"
+                        <CardActionArea
                           onClick={() => this.updateSelectedType(type)}
-                          size="small"
-                          color="primary"
                         >
-                          Select
-                        </Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                );
-              })}
-            </Grid>
-          </div>
-        </DialogContent>
+                          <CardContent>
+                            <div style={{ textAlign: 'center' }}>
+                              <Icon className={classes.icon}>{type.icon}</Icon>
+                            </div>
+                            <Typography gutterBottom variant="h5">
+                              {type.title}
+                            </Typography>
+                            <Typography>{type.description}</Typography>
+                          </CardContent>
+                        </CardActionArea>
+                        <CardActions>
+                          <Button
+                            variant="contained"
+                            onClick={() => this.updateSelectedType(type)}
+                            size="small"
+                            color="primary"
+                          >
+                            Select
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </div>
+          </DialogContent>
 
-        <DialogActions>
-          <Button
-            color="primary"
-            onClick={() => handleClose()}
-            aria-label="Close"
-          >
-            <Icon>close</Icon>
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={selectedCircleType === null}
-            onClick={() => (selectedCircleType ? this.saveAndClose() : {})}
-          >
-            <Icon className={classes.btnIcon}>check</Icon>Select
-          </Button>
-        </DialogActions>
-      </Dialog>
+          <DialogActions>
+            <Button
+              color="primary"
+              onClick={() => handleClose()}
+              aria-label="Close"
+            >
+              <Icon>close</Icon>
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={selectedCircleType === null}
+              onClick={() => (selectedCircleType ? this.saveAndClose() : {})}
+            >
+              <Icon className={classes.btnIcon}>check</Icon>Select
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </>
     );
   }
 }

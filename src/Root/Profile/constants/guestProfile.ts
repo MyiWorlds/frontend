@@ -4,7 +4,7 @@ const guestProfile: IProfile = {
   id: 'guest',
   username: 'guest',
   isDarkTheme: true,
-  isMyTheme: false,
+  overrideCircleTypes: false,
   addToHistory: false,
   myTheme: null,
   history: null,

@@ -17,6 +17,8 @@ import { IProfile } from '../../../../../../types/profile';
 import { Redirect } from 'react-router-dom';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 
+// Can I pass a callback which runs inside the child component.
+// I pass down just a function which uses save circle and passes the state held item
 interface Props {
   circle: IEditingCircle;
   saving: boolean;
@@ -24,6 +26,12 @@ interface Props {
   selectedProfile: IProfile;
   saveCircle: () => void;
   showSettings: () => void;
+  saveLayout: () => void;
+  cancelEditingGrid: () => void;
+  editGridLayout: () => void;
+  toggleWidthOptions: () => void;
+  isEditingGrid: boolean;
+  designSize: 'xl' | 'lg' | 'md' | 'sm' | 'xs' | null;
   classes: {
     appBar: string;
     btnBarBtn: string;
@@ -111,6 +119,12 @@ class EditorControls extends React.Component<Props, State> {
       saving,
       selectedProfile,
       showSettings,
+      editGridLayout,
+      isEditingGrid,
+      saveLayout,
+      cancelEditingGrid,
+      toggleWidthOptions,
+      designSize,
     } = this.props;
 
     const {
@@ -129,77 +143,109 @@ class EditorControls extends React.Component<Props, State> {
           {(store: ProviderStore) => (
             <AppBar className={classes.appBar}>
               <Toolbar style={{ minHeight: 48 }}>
-                <IconButton
-                  color="default"
-                  onClick={() => {
-                    const sessionBrowserHistorys = store.state.sessionBrowserHistory.filter(
-                      path => path !== currentPath,
-                    );
-                    this.goBack(sessionBrowserHistorys[0]);
-                  }}
-                  aria-label="Close"
-                >
-                  <Icon>arrow_back</Icon>
-                </IconButton>
-                <Typography
-                  variant="h6"
-                  color="inherit"
-                  className={classes.btnBarBtn}
-                >
-                  Create{' '}
-                  {circle.type ? makeTypeHumanReadable(circle.type) : 'Circle'}
-                </Typography>
-                {circle.type === '' ? null : (
-                  <div className={classes.btnBarBtn}>
-                    {saving ? (
-                      <div className={classes.progressIcon}>
-                        <Progress hideBackground size={24} color={'inherit'} />
+                {isEditingGrid ? (
+                  <>
+                    <Button onClick={() => cancelEditingGrid()}>
+                      <Icon className={classes.btnIcon}>close</Icon>
+                      Cancel
+                    </Button>
+                    <FlexGrow />
+                    <Tooltip title="View and edit different screen sizes">
+                      <Button onClick={toggleWidthOptions}>
+                        <Icon className={classes.btnIcon}>phonelink</Icon>
+                        {designSize || 'Full'}
+                      </Button>
+                    </Tooltip>
+                    <Button onClick={() => saveLayout()}>
+                      <Icon className={classes.btnIcon}>check</Icon>
+                      Save
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <IconButton
+                      color="default"
+                      onClick={() => {
+                        const sessionBrowserHistorys = store.state.sessionBrowserHistory.filter(
+                          path => path !== currentPath,
+                        );
+                        this.goBack(sessionBrowserHistorys[0]);
+                      }}
+                      aria-label="Close"
+                    >
+                      <Icon>arrow_back</Icon>
+                    </IconButton>
+                    <Typography
+                      variant="h6"
+                      color="inherit"
+                      className={classes.btnBarBtn}
+                    >
+                      Create{' '}
+                      {circle.type
+                        ? makeTypeHumanReadable(circle.type)
+                        : 'Circle'}
+                    </Typography>
+                    {circle.type === '' ? null : (
+                      <div className={classes.btnBarBtn}>
+                        {saving ? (
+                          <div className={classes.progressIcon}>
+                            <Progress
+                              hideBackground
+                              size={24}
+                              color={'inherit'}
+                            />
+                          </div>
+                        ) : selectedProfile.id === 'guest' ? (
+                          <Tooltip title="Login to save to the Cloud. It is saved on your device currently">
+                            <Icon>cloud_off</Icon>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Saved">
+                            <Icon>cloud_done</Icon>
+                          </Tooltip>
+                        )}
                       </div>
-                    ) : selectedProfile.id === 'guest' ? (
-                      <Tooltip title="Login to save to the Cloud. It is saved on your device currently">
-                        <Icon>cloud_off</Icon>
-                      </Tooltip>
+                    )}
+                    <FlexGrow />
+                    <Button onClick={editGridLayout}>
+                      <Icon>dashboard</Icon>
+                    </Button>
+
+                    <Tooltip title="Settings">
+                      <Button
+                        variant="text"
+                        onClick={() => showSettings()}
+                        // className={classes.btnBarBtn}
+                      >
+                        <Icon
+                        // className={classes.btnIcon}
+                        >
+                          settings
+                        </Icon>
+                      </Button>
+                    </Tooltip>
+
+                    {selectedProfile.id === 'guest' ? (
+                      <Button variant="outlined" onClick={() => store.login()}>
+                        <Icon className={classes.btnIcon}>person</Icon>Login to
+                        Save
+                      </Button>
                     ) : (
-                      <Tooltip title="Saved">
-                        <Icon>cloud_done</Icon>
+                      <Tooltip title="View">
+                        <Button
+                          variant="text"
+                          disabled={!circle.type}
+                          onClick={() => this.navigateToCircle()}
+                        >
+                          <Icon
+                          // className={classes.btnIcon}
+                          >
+                            remove_red_eye
+                          </Icon>
+                        </Button>
                       </Tooltip>
                     )}
-                  </div>
-                )}
-                <FlexGrow />
-
-                <Tooltip title="Settings">
-                  <Button
-                    variant="text"
-                    onClick={() => showSettings()}
-                    // className={classes.btnBarBtn}
-                  >
-                    <Icon
-                    // className={classes.btnIcon}
-                    >
-                      settings
-                    </Icon>
-                  </Button>
-                </Tooltip>
-
-                {selectedProfile.id === 'guest' ? (
-                  <Button variant="outlined" onClick={() => store.login()}>
-                    <Icon className={classes.btnIcon}>person</Icon>Login to Save
-                  </Button>
-                ) : (
-                  <Tooltip title="View">
-                    <Button
-                      variant="text"
-                      disabled={!circle.type}
-                      onClick={() => this.navigateToCircle()}
-                    >
-                      <Icon
-                      // className={classes.btnIcon}
-                      >
-                        remove_red_eye
-                      </Icon>
-                    </Button>
-                  </Tooltip>
+                  </>
                 )}
               </Toolbar>
             </AppBar>

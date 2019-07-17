@@ -259,7 +259,7 @@ class Search extends React.Component<Props, State> {
                 value: tag,
               },
             ],
-            3,
+            5,
             null,
           ),
         );
@@ -288,7 +288,7 @@ class Search extends React.Component<Props, State> {
                 value: tag,
               },
             ],
-            3,
+            5,
             null,
           ),
         );
@@ -317,7 +317,7 @@ class Search extends React.Component<Props, State> {
                 value: tag,
               },
             ],
-            3,
+            5,
             null,
           ),
         );
@@ -347,7 +347,7 @@ class Search extends React.Component<Props, State> {
               value: tag,
             },
           ],
-          3,
+          5,
           null,
         ),
       );

@@ -16,7 +16,7 @@ import Switch from '@material-ui/core/Switch';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Consumer } from '../../../ReactContext';
-import { ForwardButton } from '../../../components/ForwardButton';
+import { ForwardButtonLink } from '../../../components/ForwardButtonLink';
 import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -49,7 +49,7 @@ interface Props {
   //   id: string;
   //   username: string;
   //   isDarkTheme: boolean;
-  //   isMyTheme: boolean;
+  //   overrideCircleTypes: boolean;
   //   addToHistory: boolean;
   //   myTheme: {
   //     id: string;
@@ -197,7 +197,13 @@ class AppMenuController extends React.Component<Props, State> {
             MyiWorlds
           </Typography>
           <FlexGrow />
-
+          <IconButton
+            component={ForwardButtonLink}
+            to={`/search`}
+            color="inherit"
+          >
+            <Icon>search</Icon>
+          </IconButton>
           <div>
             {user.id ? (
               <IconButton
@@ -218,7 +224,11 @@ class AppMenuController extends React.Component<Props, State> {
               open={open}
               onClose={this.handleClose}
             >
-              <MenuItem selected className={classes.selectedProfile}>
+              <MenuItem
+                component={ForwardButtonLink}
+                to={`/${selectedProfile.username}`}
+                className={classes.selectedProfile}
+              >
                 <ListItemIcon>
                   <Icon>account_circle</Icon>
                 </ListItemIcon>
@@ -287,7 +297,7 @@ class AppMenuController extends React.Component<Props, State> {
 
               <MenuItem
                 onClick={this.handleClose}
-                component={ForwardButton}
+                component={ForwardButtonLink}
                 to={'/account'}
               >
                 <ListItemIcon>
@@ -316,8 +326,19 @@ class AppMenuController extends React.Component<Props, State> {
                 <ListItemIcon>
                   <Icon>color_lens</Icon>
                 </ListItemIcon>
-                <ListItemText primary="My Custom Theme" />
-                <Switch checked={selectedProfile.isMyTheme} />
+                <ListItemText primary="My Theme" />
+                <Switch checked={selectedProfile.overrideCircleTypes} />
+              </MenuItem>
+
+              <MenuItem
+                component={ForwardButtonLink}
+                disabled={selectedProfile.id === 'guest'}
+                to={'/theme-color-picker'}
+              >
+                <ListItemIcon>
+                  <Icon>color_lens</Icon>
+                </ListItemIcon>
+                <ListItemText primary="Edit Theme" />
               </MenuItem>
 
               <Divider />

@@ -3,7 +3,7 @@ import Fade from '@material-ui/core/Fade';
 import Icon from '@material-ui/core/Icon';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import { ForwardButton } from '../../../../../components/ForwardButton';
+import { ForwardButtonLink } from '../../../../../components/ForwardButtonLink';
 import { IProfile } from '../../../../../../../types/profile';
 import { Link } from 'react-router-dom';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
@@ -80,7 +80,7 @@ class NoMoreResults extends React.Component<Props, State> {
             <br />
             <Button
               variant="contained"
-              component={ForwardButton}
+              component={ForwardButtonLink}
               to={'/create'}
             >
               <Icon className={classes.btnIcon}>add</Icon>

@@ -18,10 +18,28 @@ export const FullCircleFragment = gql`
     properties
     settings {
       id
+      editors {
+        id
+      }
+      creator {
+        id
+      }
+      owner {
+        id
+      }
       collection
       type
       lines {
         id
+        editors {
+          id
+        }
+        creator {
+          id
+        }
+        owner {
+          id
+        }
         type
         collection
         data

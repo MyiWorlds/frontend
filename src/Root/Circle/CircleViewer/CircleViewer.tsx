@@ -14,7 +14,7 @@ import Image from '../../components/Image';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import { createStyles, withStyles } from '@material-ui/styles';
-import { ForwardButton } from '../../components/ForwardButton';
+import { ForwardButtonLink } from '../../components/ForwardButtonLink';
 import { ICreatedCircle, Property } from '../../../../types/circle';
 import { IProfile } from '../../../../types/profile';
 import { Link } from 'react-router-dom';
@@ -58,14 +58,14 @@ const styles = (theme: Theme) =>
     },
   });
 
-class CircleGridEditor extends React.Component<Props, State> {
+class CircleViewer extends React.Component<Props, State> {
   render() {
     const { classes, circle, theme, selectedProfile } = this.props;
-
     const settings = circle.settings;
     let layouts: Layouts | null = null;
+
     if (settings && settings.lines && settings.lines.length) {
-      const layout = settings.lines.find(o => o.type === 'LAYOUTS');
+      const layout = settings.lines.find(o => o.type === 'LAYOUT');
       if (layout && layout.data) {
         layouts = layout.data;
       }
@@ -81,7 +81,7 @@ class CircleGridEditor extends React.Component<Props, State> {
       circleOptions = (
         <Tooltip title="Edit">
           <Button
-            component={ForwardButton}
+            component={ForwardButtonLink}
             to={`/edit/${circle.id}`}
             // className={classes.btnBarBtn}
           >
@@ -205,4 +205,4 @@ class CircleGridEditor extends React.Component<Props, State> {
   }
 }
 
-export default withStyles(styles)(withTheme(CircleGridEditor));
+export default withStyles(styles)(withTheme(CircleViewer));

@@ -254,14 +254,14 @@ class User extends React.Component<Props, State> {
 
   handleToggleStyleEnabled = () => {
     let selectedProfile = Object.assign({}, this.state.selectedProfile);
-    selectedProfile.isMyTheme = !selectedProfile.isMyTheme;
+    selectedProfile.overrideCircleTypes = !selectedProfile.overrideCircleTypes;
 
     this.setState({ selectedProfile });
 
     this.timeoutUpdateProfile = setTimeout(async () => {
       if (selectedProfile.id) {
         const updateProfile = await this.updateProfile(selectedProfile.id, {
-          isMyTheme: selectedProfile.isMyTheme,
+          overrideCircleTypes: selectedProfile.overrideCircleTypes,
         });
 
         if (updateProfile.data) {

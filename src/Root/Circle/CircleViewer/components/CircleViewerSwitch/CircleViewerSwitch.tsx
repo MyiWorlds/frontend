@@ -37,10 +37,7 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
           value={moment(circle[property]).format('MMMM Do YYYY h:mm a')}
         />
       );
-    case 'cached':
-    case 'passwordRequired':
     case 'public':
-    case 'pii':
     case 'boolean':
       return (
         <BooleanViewer property={property} value={circle[property] || false} />
@@ -49,7 +46,7 @@ const CircleViewerSwitch: React.SFC<Props> = ({ property, circle }) => {
       return (
         <FontIconViewer value={circle[property] ? circle[property]! : ''} />
       );
-
+    case 'owner':
     case 'creator':
       if (circle && circle[property] && circle[property]!.id) {
         return <PublicProfileViewer profileId={circle[property]!.id} />;

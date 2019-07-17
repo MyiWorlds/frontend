@@ -76,4 +76,3 @@ class GetCircleById extends React.Component<Props> {
 }
 
 export default GetCircleById;
-// export default withStyles(styles: object)(GetCircleById);

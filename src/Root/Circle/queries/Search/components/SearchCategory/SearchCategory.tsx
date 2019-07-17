@@ -144,19 +144,26 @@ class SearchCategory extends React.Component<Props, State> {
                   <div
                     style={{ position: 'relative', flex: 1, display: 'flex' }}
                   >
-                    <Button
-                      variant="outlined"
-                      style={{ flex: 1 }}
-                      onClick={() => {
-                        this.handleShowMore();
-                        showMoreResults(circle);
-                      }}
-                      disabled={loading}
-                    >
-                      Show More
-                    </Button>
-                    {loading && (
-                      <ProgressWithMessage hideBackground={true} size={24} />
+                    {loading ? (
+                      <ProgressWithMessage
+                        hideBackground={true}
+                        hideMessage={true}
+                        containerStylesOverride={{ margin: '12px auto' }}
+                        size={24}
+                      />
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        style={{ flex: 1 }}
+                        onClick={() => {
+                          this.handleShowMore();
+                          showMoreResults(circle);
+                        }}
+                        disabled={loading}
+                      >
+                        Show More
+                      </Button>
                     )}
                   </div>
                 ) : null}

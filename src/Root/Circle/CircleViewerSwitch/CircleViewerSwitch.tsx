@@ -12,7 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, withStyles } from '@material-ui/core';
-import { ForwardButton } from '../../components/ForwardButton';
+import { ForwardButtonLink } from '../../components/ForwardButtonLink';
 import { ICreatedCircle } from '../../../../types/circle';
 import { IProfile } from '../../../../types/profile';
 import { Link } from 'react-router-dom';
@@ -141,7 +141,7 @@ class Circle extends React.Component<Props> {
         <Tooltip title="Edit">
           <Button
             variant="outlined"
-            component={ForwardButton}
+            component={ForwardButtonLink}
             to={`/edit/${circle.id}`}
             // className={classes.btnBarBtn}
           >

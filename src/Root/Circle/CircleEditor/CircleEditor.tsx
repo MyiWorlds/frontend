@@ -1,15 +1,16 @@
 import * as React from 'react';
 import _ from 'lodash';
+import canEditCircle from '../functions/canEditCircle';
 import CircleGridEditor from './components/CircleGridEditor';
 import client from '../../../apolloClient';
+import cloneCircle from '../mutations/cloneCircle';
 import convertCreatedCircleToEditingCircle from '../functions/convertCreatedCircleToEditingCircle';
 import CREATE_CIRCLE from './mutations/CREATE_CIRCLE';
 import deepmerge from 'deepmerge';
 import Dialog from '@material-ui/core/Dialog';
-import EditorControls from './components/EditorControls';
 import emptyCircle from '../functions/emptyCircle';
-import FieldEditor from './components/FieldEditor';
 import generateDefaultGridLayouts from '../functions/generateDefaultGridLayouts';
+import getCircleById from '../queries/GetCircleById/getCircleById';
 import history from '../../../history';
 import Settings from './components/Settings';
 import Slide from '@material-ui/core/Slide';
@@ -225,7 +226,7 @@ class CircleEditor extends React.Component<Props, State> {
   // Check if layout is one of them
 
   // Should merge with saveCircle
-  createCircle = async (circle: IEditingCircle) => {
+  createCircle = async (circle: IEditingCircle): Promise<ICreatedCircle> => {
     const createCircle = await client.mutate({
       variables: circle,
       mutation: CREATE_CIRCLE,
@@ -346,7 +347,7 @@ class CircleEditor extends React.Component<Props, State> {
   newLayoutsCircle = (layouts: Layouts) => {
     return {
       id: firestore.collection('circles').doc().id,
-      type: 'LAYOUTS',
+      type: 'LAYOUT',
       creator: this.props.selectedProfile.id,
       owner: this.props.selectedProfile.id,
       public: true,
@@ -356,47 +357,131 @@ class CircleEditor extends React.Component<Props, State> {
     } as IEditingCircle;
   };
 
-  onGridLayoutSave = (layouts: Layouts) => {
+  onGridLayoutSave = async (layouts: Layouts) => {
     const { settings } = this.state;
-    let circle: null | IEditingCircle = null;
+    let layout: null | IEditingCircle = null;
     if (settings && settings.lines) {
       let existingLayouts:
         | IEditingCircle
         | ICreatedCircle
-        | undefined = settings.lines.find(o => o.type === 'LAYOUTS');
+        | undefined = settings.lines.find(o => o.type === 'LAYOUT');
 
       if (existingLayouts) {
-        existingLayouts = convertCreatedCircleToEditingCircle(
-          existingLayouts,
-          this.props.selectedProfile,
-        );
-        existingLayouts.data = layouts;
-        circle = existingLayouts;
+        if (canEditCircle(this.props.selectedProfile.id, existingLayouts)) {
+          existingLayouts = convertCreatedCircleToEditingCircle(
+            existingLayouts,
+            this.props.selectedProfile,
+          );
+          existingLayouts.data = layouts;
+          layout = existingLayouts;
+          this.updateSettingsChild(layout);
+          return;
+        } else {
+          const { clonedCircleId, message } = await cloneCircle(
+            existingLayouts.id,
+          );
+          console.log(message);
+          const createdLayout = await getCircleById(clonedCircleId);
+          if (!createdLayout) {
+            console.error("The Layout you just tried creating doesn't exist");
+            throw new Error();
+          }
+
+          if (canEditCircle(this.props.selectedProfile.id, settings)) {
+            layout = convertCreatedCircleToEditingCircle(
+              createdLayout,
+              this.props.selectedProfile,
+            );
+            this.updateSettingsChild(layout);
+            return;
+          } else {
+            // clone settings circle
+            let newClonedSettings: ICreatedCircle = {
+              ...settings,
+            };
+            delete newClonedSettings.id;
+
+            newClonedSettings.lines = [
+              ...settings.lines.filter(
+                (line: ICreatedCircle) => line.id !== existingLayouts!.id,
+              ),
+              createdLayout,
+            ];
+
+            const createdSettings = await this.createCircle(
+              convertCreatedCircleToEditingCircle(
+                newClonedSettings,
+                this.props.selectedProfile,
+              ),
+            );
+            const circle: IEditingCircle = {
+              ...this.state.circle,
+              settings: createdSettings.id,
+            };
+            this.setState(
+              {
+                settings: createdSettings,
+              },
+              () => {
+                this.updateCircle(circle, true);
+              },
+            );
+          }
+        }
       } else {
-        circle = this.newLayoutsCircle(layouts);
+        layout = this.newLayoutsCircle(layouts);
+        this.updateSettingsChild(layout);
       }
     } else {
-      circle = this.newLayoutsCircle(layouts);
+      const newLayout = await this.createCircle({
+        type: 'LAYOUT',
+        data: layouts,
+      });
+      const newSettings = await this.createCircle(
+        defaultSettings({
+          lines: [newLayout.id],
+        }),
+      );
+
+      layout = this.newLayoutsCircle(layouts);
+
+      const circle = {
+        ...this.state.circle,
+        settings: newSettings.id,
+      };
+      this.setState({
+        circle: {
+          ...circle,
+        },
+        settings: newSettings,
+      });
     }
-    this.updateSettingsChild(circle);
   };
 
   render() {
     const {
       circle,
-      saving,
-      showTypeSelector,
-      showSettings,
-      settings,
       changeRoute,
       navigateTo,
       isLocalStorageCircle,
+      saving,
+      settings,
+      showSettings,
+      showTypeSelector,
       fieldEditing,
     } = this.state;
     const { currentPath, selectedProfile } = this.props;
 
     if (changeRoute) {
       return <Redirect to={navigateTo} />;
+    }
+
+    let layouts = generateDefaultGridLayouts(circle.properties);
+    if (settings && settings.lines && settings.lines.length) {
+      const layout = settings.lines.find(o => o.type === 'LAYOUT');
+      if (layout && layout.data) {
+        layouts = layout.data;
+      }
     }
 
     const typeSelector = (
@@ -420,66 +505,37 @@ class CircleEditor extends React.Component<Props, State> {
       );
     }
 
-    let layouts = generateDefaultGridLayouts(circle.properties);
-    if (settings && settings.lines && settings.lines.length) {
-      const layout = settings.lines.find(o => o.type === 'LAYOUTS');
-      if (layout && layout.data) {
-        layouts = layout.data;
-      }
-    }
-
     return (
       <>
         {circle.type ? (
           <Dialog fullScreen open={true} TransitionComponent={Transition}>
-            <EditorControls
-              currentPath={currentPath}
-              circle={circle}
-              saving={saving}
-              saveCircle={this.saveCircle}
+            <CircleGridEditor
               showSettings={this.showSettings}
+              currentPath={currentPath}
+              saving={saving}
+              updateCircle={this.updateCircle}
+              circle={circle}
+              saveCircle={this.saveCircle}
+              fieldEditing={fieldEditing}
+              updateFieldEditing={this.updateFieldEditing}
               selectedProfile={selectedProfile}
+              onGridLayoutSave={this.onGridLayoutSave}
+              layouts={layouts}
             />
-            <div
-              style={{
-                marginTop: 48,
-                position: 'relative',
-                height: '100%',
-                width: '100%',
-                overflowY: 'scroll',
-              }}
-            >
-              {fieldEditing && (
-                <FieldEditor
-                  updateCircle={this.updateCircle}
-                  circle={circle}
-                  fieldEditing={fieldEditing}
-                  updateFieldEditing={this.updateFieldEditing}
-                />
-              )}
-              <CircleGridEditor
-                updateCircle={this.updateCircle}
-                circle={circle}
-                updateFieldEditing={this.updateFieldEditing}
-                selectedProfile={selectedProfile}
-                onGridLayoutSave={this.onGridLayoutSave}
-                layouts={layouts}
-              />
-              <Settings
-                showSettings={showSettings}
-                updateCircle={this.updateCircle}
-                showTypeSelector={this.showTypeSelector}
-                handleClose={this.hideSettings}
-                circle={circle}
-              />
-              <TypeSelector
-                selectedProfile={selectedProfile}
-                clonedFrom={circle.clonedFrom || null}
-                showTypeSelector={showTypeSelector}
-                updateCircle={this.updateCircle}
-                handleClose={this.hideTypeSelector}
-              />
-            </div>
+            <Settings
+              showSettings={showSettings}
+              updateCircle={this.updateCircle}
+              showTypeSelector={this.showTypeSelector}
+              handleClose={this.hideSettings}
+              circle={circle}
+            />
+            <TypeSelector
+              selectedProfile={selectedProfile}
+              clonedFrom={circle.clonedFrom || null}
+              showTypeSelector={showTypeSelector}
+              updateCircle={this.updateCircle}
+              handleClose={this.hideTypeSelector}
+            />
           </Dialog>
         ) : (
           typeSelector

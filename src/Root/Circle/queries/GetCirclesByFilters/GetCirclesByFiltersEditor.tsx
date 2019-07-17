@@ -20,7 +20,7 @@ import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { ApolloError } from 'apollo-client';
-import { ForwardButton } from '../../../components/ForwardButton';
+import { ForwardButtonLink } from '../../../components/ForwardButtonLink';
 import { ICreatedCircle, IFilter } from '../../../../../types/circle';
 import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
@@ -256,7 +256,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
               <div key={circle.id}>
                 <ListItem
                   button
-                  component={ForwardButton}
+                  component={ForwardButtonLink}
                   to={`/id/${circle.id}`}
                 >
                   <ListItemText inset primary={circle.type} />

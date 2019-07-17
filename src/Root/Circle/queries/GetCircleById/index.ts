@@ -1,1 +1,1 @@
-export { default } from './GetCircleById';
+export { default } from './GetCircleByIdComponent';

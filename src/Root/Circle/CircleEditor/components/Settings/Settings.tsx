@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import FieldsSelect from './FieldsSelect/FieldsSelect';
+import FieldsSelect from './FieldsSelect';
 import Icon from '@material-ui/core/Icon';
 import Slide from '@material-ui/core/Slide';
 import Spacer from '../../../../components/Spacer';
@@ -40,17 +40,13 @@ interface Props {
 }
 
 export type AvailableProperties = [
-  'cached',
-  'cache',
-  'pii',
   'parent',
   'clonedFrom',
-  'slug',
+  'type',
   'public',
-  'passwordRequired',
-  'settings',
   'rating',
   'tags',
+  'slug',
   'title',
   'subtitle',
   'description',
@@ -107,17 +103,13 @@ class Settings extends React.Component<Props, State> {
     super(props);
     this.state = {
       availableProperties: [
-        'cached',
-        'cache',
-        'pii',
         'parent',
         'clonedFrom',
-        'slug',
+        'type',
         'public',
-        'passwordRequired',
-        'settings',
         'rating',
         'tags',
+        'slug',
         'title',
         'subtitle',
         'description',

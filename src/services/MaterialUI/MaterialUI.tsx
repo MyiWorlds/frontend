@@ -55,7 +55,7 @@ class MaterialUI extends React.Component<Props> {
       selectedProfile &&
       selectedProfile.myTheme &&
       selectedProfile.myTheme.data &&
-      selectedProfile.isMyTheme
+      selectedProfile.overrideCircleTypes
         ? _.cloneDeep(selectedProfile.myTheme.data)
         : {
             palette: {

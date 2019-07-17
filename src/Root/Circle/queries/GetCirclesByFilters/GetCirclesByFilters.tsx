@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Slider from '@material-ui/lab/Slider';
 import { ApolloError } from 'apollo-client';
-import { ForwardButton } from '../../../components/ForwardButton';
+import { ForwardButtonLink } from '../../../components/ForwardButtonLink';
 import { ICreatedCircle, IFilter } from '../../../../../types/circle';
 import { IProfile } from '../../../../../types/profile';
 import { Link } from 'react-router-dom';
@@ -248,7 +248,7 @@ class GetCirclesByFilters extends React.Component<Props, State> {
               <div key={circle.id}>
                 <ListItem
                   button
-                  component={ForwardButton}
+                  component={ForwardButtonLink}
                   to={`/id/${circle.id}`}
                 >
                   <ListItemText inset primary={circle.type} />

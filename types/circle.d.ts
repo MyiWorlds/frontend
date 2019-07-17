@@ -8,18 +8,13 @@ export interface IFilter {
 }
 
 type Property =
-  | 'cached'
-  | 'cache'
-  | 'collection'
-  | 'pii'
   | 'parent'
   | 'clonedFrom'
-  | 'slug'
+  | 'type'
   | 'public'
-  | 'passwordRequired'
-  | 'settings'
   | 'rating'
   | 'tags'
+  | 'slug'
   | 'title'
   | 'subtitle'
   | 'description'

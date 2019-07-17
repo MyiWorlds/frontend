@@ -2,6 +2,8 @@ import * as React from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CircleEditorSwitch from '../CircleEditorSwitch';
+import EditorControls from '../EditorControls';
+import FieldEditor from '../FieldEditor';
 import generateDefaultGridLayouts from '../../../functions/generateDefaultGridLayouts';
 import Icon from '@material-ui/core/Icon';
 import { createStyles, withStyles } from '@material-ui/styles';
@@ -24,9 +26,14 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 interface Props {
   circle: IEditingCircle;
   updateCircle: (circle: IEditingCircle, noDelay?: boolean) => void;
-  onLayoutChange?: ResponsiveProps['onLayoutChange'];
   updateFieldEditing: (fieldEditing: Property | null) => void;
   onGridLayoutSave: (allLayouts: Layouts) => void;
+  saveCircle: () => void;
+  showSettings: () => void;
+  onLayoutChange?: ResponsiveProps['onLayoutChange'];
+  fieldEditing: Property | null;
+  saving: boolean;
+  currentPath: string;
   layouts: Layouts;
   theme: Theme;
   selectedProfile: IProfile;
@@ -61,7 +68,7 @@ const styles = (theme: Theme) =>
     contentWrapper: {
       position: 'relative',
       display: 'flex',
-      maxWidth: '100%',
+      height: '100%',
       margin: theme.spacing(1),
     },
     gridItemContentCover: {
@@ -175,9 +182,14 @@ class CircleGridEditor extends React.Component<Props, State> {
       classes,
       circle,
       selectedProfile,
+      saving,
       theme,
       updateCircle,
       updateFieldEditing,
+      currentPath,
+      saveCircle,
+      showSettings,
+      fieldEditing,
     } = this.props;
     const { layouts, designSize, isEditingGrid } = this.state;
 
@@ -207,11 +219,12 @@ class CircleGridEditor extends React.Component<Props, State> {
       }
     }
 
-    // console.log('start', JSON.stringify(layouts), 'END');
     const grid = (
       <ResponsiveGridLayout
         key={width}
-        className="layout"
+        className={isEditingGrid ? 'layout' : ''}
+        measureBeforeMount={true}
+        useCSSTransforms={false}
         layouts={layouts}
         // autoSize={true}
         rowHeight={theme.spacing(1) / 2}
@@ -268,42 +281,59 @@ class CircleGridEditor extends React.Component<Props, State> {
 
     return (
       <>
-        {isEditingGrid ? (
-          <>
-            <Button onClick={() => this.saveLayout()}>Save Grid</Button>
-            <Button onClick={() => this.cancelEditingGrid()}>Cancel</Button>
-          </>
-        ) : (
-          <Button onClick={this.editGridLayout}>
-            <Icon>dashboard</Icon>
-          </Button>
-        )}
-        {isEditingGrid && (
-          <Button onClick={this.toggleWidthOptions}>
-            <Icon>phonelink</Icon>
-            {designSize || 'Full'}
-          </Button>
-        )}
-        {isEditingGrid ? (
-          <Card
-            raised={true}
-            className={classes.container}
-            style={{
-              width,
-            }}
-          >
-            {grid}
-          </Card>
-        ) : (
-          <div
-            className={classes.container}
-            style={{
-              width,
-            }}
-          >
-            {grid}
-          </div>
-        )}
+        <EditorControls
+          currentPath={currentPath}
+          circle={circle}
+          saving={saving}
+          saveCircle={saveCircle}
+          saveLayout={this.saveLayout}
+          showSettings={showSettings}
+          selectedProfile={selectedProfile}
+          // enableEditingGrid={this.enableEditingGrid}
+          isEditingGrid={isEditingGrid}
+          designSize={designSize}
+          editGridLayout={this.editGridLayout}
+          cancelEditingGrid={this.cancelEditingGrid}
+          toggleWidthOptions={this.toggleWidthOptions}
+        />
+        <div
+          style={{
+            marginTop: 48,
+            position: 'relative',
+            height: '100%',
+            width: '100%',
+            overflowY: 'scroll',
+          }}
+        >
+          {fieldEditing && (
+            <FieldEditor
+              updateCircle={updateCircle}
+              circle={circle}
+              fieldEditing={fieldEditing}
+              updateFieldEditing={updateFieldEditing}
+            />
+          )}
+          {isEditingGrid ? (
+            <Card
+              raised={true}
+              className={classes.container}
+              style={{
+                width,
+              }}
+            >
+              {grid}
+            </Card>
+          ) : (
+            <div
+              className={classes.container}
+              style={{
+                width,
+              }}
+            >
+              {grid}
+            </div>
+          )}
+        </div>
       </>
     );
   }

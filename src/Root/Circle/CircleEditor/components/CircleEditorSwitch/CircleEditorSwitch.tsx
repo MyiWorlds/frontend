@@ -1,19 +1,21 @@
 import * as React from 'react';
 import BooleanEditor from '../../../../components/Boolean/BooleanEditor';
-import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
 import GetCircleById from '../../../queries/GetCircleById';
-import makePropertyHumanReadable from './../../../functions/makePropertyHumanReadable';
+import Icon from '@material-ui/core/Icon';
+import ImageEditor from '../../../../components/Image/ImageEditor';
+import makePropertyHumanReadable from '../../../functions/makePropertyHumanReadable';
+import makeTypeHumanReadable from '../../../functions/makeTypeHumanReadable';
 import moment from 'moment';
+import PublicProfilesViewer from '../../../../Profile/components/PublicProfilesViewer';
+import PublicProfileViewer from '../../../../Profile/components/PublicProfileViewer';
 import TagsEditor from '../TagsEditor';
 import Typography from '@material-ui/core/Typography';
 import { CodeEditor } from '../../../../components/Code';
 import { FontIconEditor } from '../../../../components/FontIcon';
+import { IEditingCircle, Property } from '../../../../../../types/circle';
 import { IProfile } from '../../../../../../types/profile';
 import { StringEditor, StringViewer } from '../../../../components/String';
-import {
-  IEditingCircle,
-  Property,
-} from '../../../../../../types/circle';
 
 interface Props {
   property: Property;
@@ -67,6 +69,13 @@ const CircleEditorSwitch: React.SFC<Props> = ({
           updateCircle={updateString}
         />
       );
+    case 'type':
+      return (
+        <StringViewer
+          property={makePropertyHumanReadable(property)}
+          value={makeTypeHumanReadable(circle[property] || '')}
+        />
+      );
     case 'dateUpdated':
     case 'dateCreated':
       // Uneditable fields displayed as strings
@@ -76,10 +85,7 @@ const CircleEditorSwitch: React.SFC<Props> = ({
           value={moment(circle[property]).format('MMMM Do YYYY h:mm a')}
         />
       );
-    case 'cached':
-    case 'passwordRequired':
     case 'public':
-    case 'pii':
     case 'boolean':
       return (
         <BooleanEditor
@@ -120,24 +126,34 @@ const CircleEditorSwitch: React.SFC<Props> = ({
         />
       );
     }
-    case 'settings':
-      return (
-        <>
-          <StringEditor
-            label={makePropertyHumanReadable(property)}
-            property={property}
-            fullWidth={true}
-            value={circle[property] ? circle[property]! : ''}
-            updateCircle={updateString}
+    case 'owner':
+    case 'creator':
+      if (circle[property]) {
+        return (
+          <PublicProfileViewer
+            profileId={circle[property]!}
+            secondary={makePropertyHumanReadable(property)}
           />
-          {circle && circle[property] && circle[property] && (
-            <GetCircleById
-              selectedProfile={selectedProfile}
-              id={circle[property] || ''}
-            />
-          )}
-        </>
-      );
+        );
+      } else {
+        return null;
+      }
+
+    case 'viewers':
+    case 'editors':
+      if (circle[property]) {
+        return (
+          <PublicProfilesViewer
+            profileIds={circle[property]!}
+            secondary={makePropertyHumanReadable(property)}
+          />
+        );
+      } else {
+        return null;
+      }
+
+    case 'media':
+      return <ImageEditor updateCircle={updateCircle} />;
     default:
       return (
         <div>

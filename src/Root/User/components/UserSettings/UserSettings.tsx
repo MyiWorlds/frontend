@@ -14,9 +14,8 @@ import ProgressWithMessage from '../../../components/ProgressWithMessage';
 import Spacer from '../../../components/Spacer';
 import Typography from '@material-ui/core/Typography';
 import { createStyles, withStyles } from '@material-ui/styles';
-import { ForwardButton } from '../../../components/ForwardButton';
+import { ForwardButtonLink } from '../../../components/ForwardButtonLink';
 import { IUser } from '../../../../../types/user';
-import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 
 interface Props {
@@ -93,7 +92,7 @@ class UserSettings extends React.Component<Props> {
               </div>
               <List>
                 <ListSubheader>Miscelanious</ListSubheader>
-                <ListItem component={ForwardButton} to="/">
+                <ListItem component={ForwardButtonLink} to="/">
                   <ListItemIcon>
                     <Icon>report</Icon>
                   </ListItemIcon>
@@ -101,7 +100,7 @@ class UserSettings extends React.Component<Props> {
                 </ListItem>
                 <Divider />
 
-                <ListItem component={ForwardButton} to="/">
+                <ListItem component={ForwardButtonLink} to="/">
                   <ListItemIcon>
                     <Icon>subject</Icon>
                   </ListItemIcon>
